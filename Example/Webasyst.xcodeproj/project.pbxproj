@@ -31,7 +31,7 @@
 		14ECA6BDAC08450E30A5F201 /* Pods_Webasyst_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Webasyst_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		39D6D9E16FD6E0AA008F6043 /* Pods-Webasyst_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Webasyst_Tests/Pods-Webasyst_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		432A9D9DB9C23E6402E3D261 /* Pods-Webasyst_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Example.debug.xcconfig"; path = "Target Support Files/Pods-Webasyst_Example/Pods-Webasyst_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		4E4C9EAE9F385B5D7CDBF4D5 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		4E4C9EAE9F385B5D7CDBF4D5 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Webasyst_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Webasyst_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,11 +42,11 @@
 		607FACE51AFB9204008FA782 /* Webasyst_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Webasyst_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		859BDFAF1B95860B2A0B4103 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		859BDFAF1B95860B2A0B4103 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		8B6CBE5053128F6B6017AC66 /* Pods-Webasyst_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Tests.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Tests/Pods-Webasyst_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		8B780C54621CF4A513168ED2 /* Pods-Webasyst_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Example.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Example/Pods-Webasyst_Example.release.xcconfig"; sourceTree = "<group>"; };
 		9E448A7588D4129B168CA853 /* Pods_Webasyst_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Webasyst_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A50A198C9D56B7453F271850 /* Webasyst.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = Webasyst.podspec; path = ../Webasyst.podspec; sourceTree = "<group>"; };
+		A50A198C9D56B7453F271850 /* Webasyst.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Webasyst.podspec; path = ../Webasyst.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,7 +147,6 @@
 				39D6D9E16FD6E0AA008F6043 /* Pods-Webasyst_Tests.debug.xcconfig */,
 				8B6CBE5053128F6B6017AC66 /* Pods-Webasyst_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -228,6 +227,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
