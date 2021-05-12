@@ -11,6 +11,7 @@
 		FD4CCDDC264BA05000C16027 /* Webasyst.podspec in Resources */ = {isa = PBXBuildFile; fileRef = FD4CCDD9264BA05000C16027 /* Webasyst.podspec */; };
 		FD4CCDDD264BA05000C16027 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FD4CCDDA264BA05000C16027 /* README.md */; };
 		FD4CCDDE264BA05000C16027 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = FD4CCDDB264BA05000C16027 /* LICENSE */; };
+		FD4CCDE0264BA80D00C16027 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CCDDF264BA80D00C16027 /* Networking.swift */; };
 		FD98819A264B99EA00918EEE /* Webasyst.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD988190264B99EA00918EEE /* Webasyst.framework */; };
 		FD98819F264B99EA00918EEE /* WebasystTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD98819E264B99EA00918EEE /* WebasystTests.swift */; };
 		FD9881A1264B99EA00918EEE /* Webasyst.h in Headers */ = {isa = PBXBuildFile; fileRef = FD988193264B99EA00918EEE /* Webasyst.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -31,6 +32,7 @@
 		FD4CCDD9264BA05000C16027 /* Webasyst.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Webasyst.podspec; sourceTree = "<group>"; };
 		FD4CCDDA264BA05000C16027 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FD4CCDDB264BA05000C16027 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		FD4CCDDF264BA80D00C16027 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		FD988190264B99EA00918EEE /* Webasyst.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Webasyst.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD988193264B99EA00918EEE /* Webasyst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Webasyst.h; sourceTree = "<group>"; };
 		FD988194264B99EA00918EEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -58,14 +60,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FD4CCDE1264BAAAE00C16027 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
 		FD988186264B99EA00918EEE = {
 			isa = PBXGroup;
 			children = (
 				FD4CCDDB264BA05000C16027 /* LICENSE */,
 				FD4CCDDA264BA05000C16027 /* README.md */,
 				FD4CCDD9264BA05000C16027 /* Webasyst.podspec */,
-				FD988192264B99EA00918EEE /* Webasyst */,
-				FD98819D264B99EA00918EEE /* WebasystTests */,
+				FD988192264B99EA00918EEE /* Sources */,
+				FD4CCDE1264BAAAE00C16027 /* SupportingFiles */,
+				FD98819D264B99EA00918EEE /* Tests */,
 				FD988191264B99EA00918EEE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -79,23 +89,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FD988192264B99EA00918EEE /* Webasyst */ = {
+		FD988192264B99EA00918EEE /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				FD988193264B99EA00918EEE /* Webasyst.h */,
 				FD988194264B99EA00918EEE /* Info.plist */,
 				FD4CCDD7264B9D3C00C16027 /* Webasyst.swift */,
+				FD4CCDDF264BA80D00C16027 /* Networking.swift */,
 			);
-			path = Webasyst;
+			path = Sources;
 			sourceTree = "<group>";
 		};
-		FD98819D264B99EA00918EEE /* WebasystTests */ = {
+		FD98819D264B99EA00918EEE /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				FD98819E264B99EA00918EEE /* WebasystTests.swift */,
 				FD9881A0264B99EA00918EEE /* Info.plist */,
 			);
-			path = WebasystTests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD4CCDD8264B9D3C00C16027 /* Webasyst.swift in Sources */,
+				FD4CCDE0264BA80D00C16027 /* Networking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
