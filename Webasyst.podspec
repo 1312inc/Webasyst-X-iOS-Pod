@@ -1,33 +1,42 @@
-Pod::Spec.new do |spec|
+#
+# Be sure to run `pod lib lint Webasyst.podspec' to ensure this is a
+# valid spec before submitting.
+#
+# Any lines starting with a # are optional, but their use is encouraged
+# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
+#
 
-    spec.name         = "Webasyst"
-    spec.version      = "0.0.1"
-    spec.summary      = "Cocoapods library to work with Webasyst"
-    spec.author       = { "viktkobst" => "viktkobst@gmail.com" }
-    spec.description  = <<-DESC
-        This library is designed to work with Webasyst
-        DESC
+Pod::Spec.new do |s|
+  s.name             = 'Webasyst'
+  s.version          = '0.1.0'
+  s.summary          = 'A short description of Webasyst.'
 
-    spec.homepage     = "https://github.com/1312inc/Webasyst-X-iOS-Pod"
-    spec.license      = { :type => "LGPL", :file => "LICENSE" }
+# This description is used to generate tags and improve search results.
+#   * Think: What does it do? Why did you write it? What is the focus?
+#   * Try to keep it short, snappy and to the point.
+#   * Write the description between the DESC delimiters below.
+#   * Finally, don't worry about the indent, CocoaPods strips it!
 
-    spec.ios.deployment_target = "13.0"
-    spec.swift_version = "4.2"
+  s.description      = <<-DESC
+TODO: Add long description of the pod here.
+                       DESC
 
-    spec.source        = { :git => "https://github.com/1312inc/Webasyst-X-iOS-Pod.git", :tag => "#{spec.version}" }
-    spec.source_files  = "Sources/**/*.{h,m,swift}"
-    spec.framework        = "Foundation"
-    spec.requires_arc     = true
-    spec.default_subspec  = 'Core'
-    
-    spec.subspec 'Core' do |core|
-        core.source_files           = 'Sources/Webasyst.swift'
-        core.public_header_files    = 'Sources/*.h'
-        core.dependency 'Webasyst/Networking'
-    end
-    
-    spec.subspec 'Networking' do |networking|
-        networking.source_files     = 'Sources/Networking.swift'
-    end
-    
+  s.homepage         = 'https://github.com/viktkobst/Webasyst'
+  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.author           = { 'viktkobst' => 'viktkobst@gmail.com' }
+  s.source           = { :git => 'https://github.com/viktkobst/Webasyst.git', :tag => s.version.to_s }
+  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+
+  s.ios.deployment_target = '9.0'
+
+  s.source_files = 'Webasyst/Classes/**/*'
+  
+  # s.resource_bundles = {
+  #   'Webasyst' => ['Webasyst/Assets/*.png']
+  # }
+
+  # s.public_header_files = 'Pod/Classes/**/*.h'
+  # s.frameworks = 'UIKit', 'MapKit'
+  # s.dependency 'AFNetworking', '~> 2.3'
 end
