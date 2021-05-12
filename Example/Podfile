@@ -8,9 +8,6 @@ target 'Webasyst_Example' do
   target 'Webasyst_Tests' do
     inherit! :search_paths
 
-    pod 'Quick', '~> 2.2.0'
-    pod 'Nimble', '~> 8.0.7'
     pod 'FBSnapshotTestCase' , '~> 2.1.4'
-    pod 'Nimble-Snapshots' , '~> 8.0.0'
   end
 end
