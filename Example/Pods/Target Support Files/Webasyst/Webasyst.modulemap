@@ -1,0 +1,6 @@
+framework module Webasyst {
+  umbrella header "Webasyst-umbrella.h"
+
+  export *
+  module * { export * }
+}
