@@ -7,7 +7,5 @@ target 'Webasyst_Example' do
 
   target 'Webasyst_Tests' do
     inherit! :search_paths
-
-    
   end
 end

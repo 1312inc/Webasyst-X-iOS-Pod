@@ -16,7 +16,15 @@
 		8C78A365AC08E2711C2F476D048757CB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		8E05AE547C0CCFF3C4D2E6C3657A3141 /* Webasyst-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 870E223A9B39F70F31CEA27DFC421A09 /* Webasyst-dummy.m */; };
 		9BF0E652EA5D01971820B3CDED85AEBE /* Pods-Webasyst_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E8CA7EE052DE4A709D2F93657A5D116F /* Pods-Webasyst_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FD4CCDF2264BC8CD00C16027 /* TestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CCDF1264BC8CD00C16027 /* TestClass.swift */; };
+		FD15E76F264CDEC900DFD52F /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E76E264CDEC900DFD52F /* Config.swift */; };
+		FD15E773264CF13600DFD52F /* WebasystNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E772264CF13600DFD52F /* WebasystNetworking.swift */; };
+		FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E776264D008E00DFD52F /* WebasystNetworkingManager.swift */; };
+		FD15E783264D0A9400DFD52F /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E77E264D0A9400DFD52F /* AuthViewModel.swift */; };
+		FD15E784264D0A9400DFD52F /* AuthCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */; };
+		FD15E785264D0A9400DFD52F /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E782264D0A9400DFD52F /* AuthViewController.swift */; };
+		FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */; };
+		FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */; };
+		FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +77,15 @@
 		F1460EBF041817C0B5E555F872A3A2F3 /* Pods_Webasyst_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Webasyst_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F527BD6F8133C9498DBA155C9AC4C408 /* Webasyst-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Webasyst-prefix.pch"; sourceTree = "<group>"; };
 		F7EA7CBD3F3FECEE0070FBD35F4E466A /* Pods-Webasyst_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Webasyst_Example-dummy.m"; sourceTree = "<group>"; };
-		FD4CCDF1264BC8CD00C16027 /* TestClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestClass.swift; path = Webasyst/Classes/TestClass.swift; sourceTree = "<group>"; };
+		FD15E76E264CDEC900DFD52F /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		FD15E772264CF13600DFD52F /* WebasystNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystNetworking.swift; sourceTree = "<group>"; };
+		FD15E776264D008E00DFD52F /* WebasystNetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystNetworkingManager.swift; sourceTree = "<group>"; };
+		FD15E77E264D0A9400DFD52F /* AuthViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthCoordinator.swift; sourceTree = "<group>"; };
+		FD15E782264D0A9400DFD52F /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystApp.swift; sourceTree = "<group>"; };
+		FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
+		FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,7 +176,7 @@
 		8EBB5FC81E7E48CFAEE61F0998D4441A /* Webasyst */ = {
 			isa = PBXGroup;
 			children = (
-				FD4CCDF1264BC8CD00C16027 /* TestClass.swift */,
+				FD4CCDF3264BCA8000C16027 /* Source */,
 				D69F0612614343CB28EE408984F07231 /* Pod */,
 				4A275A2CCD37F4C43229EEEEC119D80F /* Support Files */,
 			);
@@ -214,6 +230,48 @@
 			path = "Target Support Files/Pods-Webasyst_Example";
 			sourceTree = "<group>";
 		};
+		FD15E778264D08FF00DFD52F /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				FD15E77C264D0A9400DFD52F /* AuthModule */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		FD15E77C264D0A9400DFD52F /* AuthModule */ = {
+			isa = PBXGroup;
+			children = (
+				FD15E77F264D0A9400DFD52F /* Coordinator */,
+				FD15E77D264D0A9400DFD52F /* ViewModel */,
+				FD15E781264D0A9400DFD52F /* View */,
+			);
+			path = AuthModule;
+			sourceTree = "<group>";
+		};
+		FD15E77D264D0A9400DFD52F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				FD15E77E264D0A9400DFD52F /* AuthViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		FD15E77F264D0A9400DFD52F /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		FD15E781264D0A9400DFD52F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FD15E782264D0A9400DFD52F /* AuthViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		FD44ED35DC82AFD7A21DB4D2544BDFEF /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +279,60 @@
 				40F2FC92751DE1189073A1787C3E7A44 /* Pods-Webasyst_Tests */,
 			);
 			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		FD4CCDF3264BCA8000C16027 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				FDB0CAF2264E506A00A1E7F4 /* Application */,
+				FDB0CAF1264E505E00A1E7F4 /* Configuration */,
+				FDB0CAF0264E504E00A1E7F4 /* Networking */,
+				FDB0CAE6264E1D2E00A1E7F4 /* Extensions */,
+				FDB0CAED264E248800A1E7F4 /* KeychainManager */,
+				FD15E778264D08FF00DFD52F /* Modules */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		FDB0CAE6264E1D2E00A1E7F4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		FDB0CAED264E248800A1E7F4 /* KeychainManager */ = {
+			isa = PBXGroup;
+			children = (
+				FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */,
+			);
+			path = KeychainManager;
+			sourceTree = "<group>";
+		};
+		FDB0CAF0264E504E00A1E7F4 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				FD15E772264CF13600DFD52F /* WebasystNetworking.swift */,
+				FD15E776264D008E00DFD52F /* WebasystNetworkingManager.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		FDB0CAF1264E505E00A1E7F4 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				FD15E76E264CDEC900DFD52F /* Config.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		FDB0CAF2264E506A00A1E7F4 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */,
+			);
+			path = Application;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -375,8 +487,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD4CCDF2264BC8CD00C16027 /* TestClass.swift in Sources */,
 				8E05AE547C0CCFF3C4D2E6C3657A3141 /* Webasyst-dummy.m in Sources */,
+				FD15E773264CF13600DFD52F /* WebasystNetworking.swift in Sources */,
+				FD15E783264D0A9400DFD52F /* AuthViewModel.swift in Sources */,
+				FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */,
+				FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */,
+				FD15E785264D0A9400DFD52F /* AuthViewController.swift in Sources */,
+				FD15E784264D0A9400DFD52F /* AuthCoordinator.swift in Sources */,
+				FD15E76F264CDEC900DFD52F /* Config.swift in Sources */,
+				FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */,
+				FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -659,16 +779,17 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Webasyst/Webasyst-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Webasyst/Webasyst-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/Webasyst/Webasyst.modulemap";
 				PRODUCT_MODULE_NAME = Webasyst;
 				PRODUCT_NAME = Webasyst;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -724,17 +845,18 @@
 				GCC_PREFIX_HEADER = "Target Support Files/Webasyst/Webasyst-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/Webasyst/Webasyst-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/Webasyst/Webasyst.modulemap";
 				PRODUCT_MODULE_NAME = Webasyst;
 				PRODUCT_NAME = Webasyst;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};

@@ -5,7 +5,7 @@
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/viktkobst/Webasyst",
   "license": {
-    "type": "LGPL",
+    "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
@@ -18,5 +18,5 @@
   "platforms": {
     "ios": "9.0"
   },
-  "source_files": "Webasyst/Source/**/*"
+  "source_files": "Webasyst/Classes/**/*"
 }
