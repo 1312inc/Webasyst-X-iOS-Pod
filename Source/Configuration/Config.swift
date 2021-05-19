@@ -10,8 +10,18 @@ import Foundation
 internal struct WebasystConfig {
     
     var bundleId: String
+    var clientId: String
+    var host: String
+    var scope: String
     
-    init(bundleId: String) {
-        self.bundleId = bundleId
+    init(clientId: String, host: String, scope: String) {
+        self.bundleId = Bundle.main.bundleIdentifier ?? ""
+        self.clientId = clientId
+        self.host = host
+        self.scope = scope
     }
+}
+
+internal enum WebasystDBConfig {
+  static var dbFolder = "WebasystAppDataModel"
 }

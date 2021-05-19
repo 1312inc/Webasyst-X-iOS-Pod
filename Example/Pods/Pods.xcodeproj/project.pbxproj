@@ -22,7 +22,11 @@
 		FD15E783264D0A9400DFD52F /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E77E264D0A9400DFD52F /* AuthViewModel.swift */; };
 		FD15E784264D0A9400DFD52F /* AuthCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */; };
 		FD15E785264D0A9400DFD52F /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E782264D0A9400DFD52F /* AuthViewController.swift */; };
+		FD1C00CF2654E09700EFB307 /* NetworkingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C00CE2654E09700EFB307 /* NetworkingHelper.swift */; };
 		FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */; };
+		FD8BD99126524DFB00615C5E /* WebasystUserNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99026524DFB00615C5E /* WebasystUserNetworking.swift */; };
+		FD8BD99426525E3400615C5E /* WebasystAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99226525E3400615C5E /* WebasystAppDataModel.xcdatamodeld */; };
+		FD8BD99826525EC600615C5E /* WebasystDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99726525EC600615C5E /* WebasystDataModel.swift */; };
 		FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */; };
 		FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */; };
 /* End PBXBuildFile section */
@@ -83,7 +87,11 @@
 		FD15E77E264D0A9400DFD52F /* AuthViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthCoordinator.swift; sourceTree = "<group>"; };
 		FD15E782264D0A9400DFD52F /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		FD1C00CE2654E09700EFB307 /* NetworkingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingHelper.swift; sourceTree = "<group>"; };
 		FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystApp.swift; sourceTree = "<group>"; };
+		FD8BD99026524DFB00615C5E /* WebasystUserNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystUserNetworking.swift; sourceTree = "<group>"; };
+		FD8BD99326525E3400615C5E /* WebasystAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WebasystAppDataModel.xcdatamodel; sourceTree = "<group>"; };
+		FD8BD99726525EC600615C5E /* WebasystDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystDataModel.swift; sourceTree = "<group>"; };
 		FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
 		FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -284,6 +292,7 @@
 		FD4CCDF3264BCA8000C16027 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				FD8BD99626525E8C00615C5E /* DataModel */,
 				FDB0CAF2264E506A00A1E7F4 /* Application */,
 				FDB0CAF1264E505E00A1E7F4 /* Configuration */,
 				FDB0CAF0264E504E00A1E7F4 /* Networking */,
@@ -292,6 +301,15 @@
 				FD15E778264D08FF00DFD52F /* Modules */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		FD8BD99626525E8C00615C5E /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				FD8BD99226525E3400615C5E /* WebasystAppDataModel.xcdatamodeld */,
+				FD8BD99726525EC600615C5E /* WebasystDataModel.swift */,
+			);
+			path = DataModel;
 			sourceTree = "<group>";
 		};
 		FDB0CAE6264E1D2E00A1E7F4 /* Extensions */ = {
@@ -315,6 +333,8 @@
 			children = (
 				FD15E772264CF13600DFD52F /* WebasystNetworking.swift */,
 				FD15E776264D008E00DFD52F /* WebasystNetworkingManager.swift */,
+				FD8BD99026524DFB00615C5E /* WebasystUserNetworking.swift */,
+				FD1C00CE2654E09700EFB307 /* NetworkingHelper.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -488,13 +508,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E05AE547C0CCFF3C4D2E6C3657A3141 /* Webasyst-dummy.m in Sources */,
+				FD8BD99426525E3400615C5E /* WebasystAppDataModel.xcdatamodeld in Sources */,
 				FD15E773264CF13600DFD52F /* WebasystNetworking.swift in Sources */,
 				FD15E783264D0A9400DFD52F /* AuthViewModel.swift in Sources */,
 				FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */,
 				FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */,
+				FD8BD99826525EC600615C5E /* WebasystDataModel.swift in Sources */,
+				FD8BD99126524DFB00615C5E /* WebasystUserNetworking.swift in Sources */,
 				FD15E785264D0A9400DFD52F /* AuthViewController.swift in Sources */,
 				FD15E784264D0A9400DFD52F /* AuthCoordinator.swift in Sources */,
 				FD15E76F264CDEC900DFD52F /* Config.swift in Sources */,
+				FD1C00CF2654E09700EFB307 /* NetworkingHelper.swift in Sources */,
 				FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */,
 				FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */,
 			);
@@ -902,6 +926,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FD8BD99226525E3400615C5E /* WebasystAppDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FD8BD99326525E3400615C5E /* WebasystAppDataModel.xcdatamodel */,
+			);
+			currentVersion = FD8BD99326525E3400615C5E /* WebasystAppDataModel.xcdatamodel */;
+			path = WebasystAppDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 }

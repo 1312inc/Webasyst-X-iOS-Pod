@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CryptoKit
 
 internal protocol WebasystNetworkingProtocol {
     func buildAuthRequest() -> URLRequest?
@@ -45,7 +44,7 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
         
         let paramRequest: [String: String] = [
             "response_type": "code",
-            "client_id": clientId,
+            "client_id": config.clientId,
             "scope": "token:blog.site.shop.webasyst",
             "redirect_uri": "\(config.bundleId)://oidc_callback",
             "state": config.bundleId,
@@ -53,7 +52,9 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
             "code_challenge_method": "plain"
         ]
         
-        var request = URLRequest(url: buildWebasystUrl("/id/oauth2/auth/code", parameters: paramRequest))
+        guard let urlRequest = buildWebasystUrl("/id/oauth2/auth/code", parameters: paramRequest) else { return nil }
+ 
+        var request = URLRequest(url: urlRequest)
         request.httpMethod = "GET"
         return request
     }
@@ -66,22 +67,63 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
     func getAccessToken(_ authCode: String, stateString: String, completion: @escaping (Bool) -> Void) {
         
         guard let disposablePassword = self.disposablePasswordAuth else { return }
+        guard let config = self.config else { return }
         
         let paramRequest: Parameters = [
             "grant_type": "authorization_code",
             "code": authCode,
-            "redirect_uri": "\(String(describing: config?.bundleId ?? ""))://oidc_callback",
-            "client_id": clientId,
+            "redirect_uri": "\(String(describing: config.bundleId))://oidc_callback",
+            "client_id": config.clientId,
             "code_verifier": disposablePassword
         ]
         
-        let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:])
+        guard let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]) else { return }
         
         var request = URLRequest(url: url)
         
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         try! request.setMultipartFormData(paramRequest, encoding: String.Encoding.utf8)
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                switch httpResponse.statusCode {
+                case 200...299:
+                    if let data = data {
+                        let authData = try! JSONDecoder().decode(UserToken.self, from: data)
+                        let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                        let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                        if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                            completion(true)
+                        }
+                    }
+                default:
+                    completion(false)
+                }
+            }
+        }.resume()
+        
+    }
+    
+    internal func refreshAccessToken(completion: @escaping (Bool)->()) {
+        
+        let refreshToken = KeychainManager.load(key: "refreshToken")
+        let refreshTokenString = String(decoding: refreshToken ?? Data("".utf8), as: UTF8.self)
+        guard let config = self.config else { return }
+        
+        let paramsRequest: Parameters = [
+            "grant_type": "refresh_token",
+            "refresh_token": refreshTokenString,
+            "client_id": config.bundleId
+        ]
+        
+        guard let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]) else { return }
+        
+        var request = URLRequest(url: url)
+        
+        request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        try! request.setMultipartFormData(paramsRequest, encoding: String.Encoding.utf8)
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {

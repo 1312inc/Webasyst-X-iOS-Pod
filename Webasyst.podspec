@@ -30,7 +30,8 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '13.0'
 
-  s.source_files = 'Webasyst/Classes/**/*'
+  s.source_files = 'Source/**/*'
+  s.resources = "Source/**/*.xcdatamodeld"
   
   # s.resource_bundles = {
   #   'Webasyst' => ['Webasyst/Assets/*.png']
