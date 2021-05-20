@@ -32,11 +32,11 @@ final class Decoder {
         for char in encodeWord {
             for index in 0 ..< dictionary.count {
                 if char.lowercased() == dictionary[index].lowercased() {
-                    if index + self.shift <= dictionary.count - 1 {
-                        result.append(dictionary[index - shift])
+                    if index - self.shift < 0 {
+                        let difference = -(index - shift)
+                        result.append(dictionary[dictionary.count - difference])
                     } else {
-                        let minus = dictionary.count + index
-                        result.append(dictionary[shift + minus])
+                        result.append(dictionary[index - shift])
                     }
                 }
             }
@@ -45,7 +45,10 @@ final class Decoder {
     }
 }
 
-let encodeString = Decoder(5).encode(with: "password")
+let shift: Int = 3
+let stroka: String = "privet medved"
+
+let encodeString = Decoder(shift).encode(with: stroka)
 print(encodeString)
-let normalString = Decoder(3).decode(encodeString)
+let normalString = Decoder(shift).decode(encodeString)
 print(normalString)

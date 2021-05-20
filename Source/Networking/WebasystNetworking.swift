@@ -114,7 +114,7 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
         let paramsRequest: Parameters = [
             "grant_type": "refresh_token",
             "refresh_token": refreshTokenString,
-            "client_id": config.bundleId
+            "client_id": config.clientId
         ]
         
         guard let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]) else { return }

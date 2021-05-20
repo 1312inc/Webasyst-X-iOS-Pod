@@ -7,7 +7,16 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="Profile" representedClassName="Profile" syncable="YES" codeGenerationType="class">
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="firstName" optional="YES" attributeType="String"/>
+        <attribute name="fullName" optional="YES" attributeType="String"/>
+        <attribute name="lastName" optional="YES" attributeType="String"/>
+        <attribute name="middleName" optional="YES" attributeType="String"/>
+        <attribute name="userPic" optional="YES" attributeType="Binary"/>
+    </entity>
     <elements>
         <element name="InstallList" positionX="-63" positionY="-18" width="128" height="104"/>
+        <element name="Profile" positionX="-63" positionY="18" width="128" height="119"/>
     </elements>
 </model>

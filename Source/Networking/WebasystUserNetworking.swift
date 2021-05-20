@@ -66,8 +66,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     //        }
     //    }
     
-    //MARK: Get user data
-    internal func getUserData() {
+    //MARK: Download user data
+    internal func downloadUserData() {
         
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -89,7 +89,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 200...299:
                     if let data = data {
                         let userData = try! JSONDecoder().decode(UserData.self, from: data)
-                        print(userData)
+                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
+                            WebasystDataModel()?.saveProfileData(userData, avatar: data)
+                        }
                     }
                 default:
                     print(httpResponse.statusCode)
@@ -98,40 +100,89 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }.resume()
     }
     
-    //    //MARK: Get installation's list user
-    //    public func getInstallList(completion: @escaping (Bool, [InstallList]) -> ()) {
-    //
-    //        let accessToken = KeychainManager.load(key: "accessToken")
-    //        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
-    //
-    //        let headers: HTTPHeaders = [
-    //            "Authorization": accessTokenString
-    //        ]
-    //
-    //        AF.request(self.buildWebasystUrl("/id/api/v1/installations/", parameters: [:]), method: .get, headers: headers).response { (response) in
-    //            switch response.result {
-    //            case .success:
-    //                guard let statusCode = response.response?.statusCode else { return }
-    //                switch statusCode {
-    //                case 200...299:
-    //                    if let data = response.data {
-    //                        let installList = try! JSONDecoder().decode([InstallList].self, from: data)
-    //                        if UserDefaults.standard.string(forKey: "selectDomainUser") == nil {
-    //                            UserDefaults.standard.setValue(installList[0].domain, forKey: "selectDomainUser")
-    //                        }
-    //                        completion(true, installList)
-    //                    }
-    //                default:
-    //                    print("getInstallList server answer code not 200")
-    //                    completion(false, [])
-    //                }
-    //            case .failure:
-    //                print("getInstallList failure")
-    //                completion(false, [])
-    //            }
-    //        }
-    //
-    //    }
+    //MARK: Get installation's list user
+    public func getInstallList(completion: @escaping ([UserInstall]?) -> ()) {
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let headers: [String: String] = [
+            "Authorization": accessTokenString
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/installations/", parameters: [:]) else {
+            print("Webasyst error: Failed to retrieve list of user settings")
+            completion(nil)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                switch httpResponse.statusCode {
+                case 200...299:
+                    if let data = data {
+                        let installList = try! JSONDecoder().decode([UserInstall].self, from: data)
+                        completion(installList)
+                    }
+                default:
+                    completion(nil)
+                    print(httpResponse.statusCode)
+                }
+            }
+        }.resume()
+        
+    }
+    
+    func getAccessTokenApi(clientId: [String], completion: @escaping (Bool, [String: Any]?) -> ()) {
+        
+        let paramReqestApi: [String: Any] = [
+            "client_id": clientId
+        ]
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let headerRequest: [String: String] = [
+            "Authorization": accessTokenString
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/auth/client/", parameters: [:]) else {
+            completion(false, [:])
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        for (value, key) in headerRequest {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        do {
+            let body = try JSONSerialization.data(withJSONObject: paramReqestApi, options: .prettyPrinted)
+            request.httpBody = body
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpsResponse = response as? HTTPURLResponse {
+                switch httpsResponse.statusCode {
+                case 200...299:
+                    if let data = data {
+                        let accessTokens = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+                        completion(true, accessTokens)
+                    }
+                default:
+                    completion(false, nil)
+                }
+            }
+        }
+    }
     //
     //    func refreshAccessToken() {
     //
@@ -170,43 +221,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     //        }
     //    }
     //
-    //    func getAccessTokenApi(clientID: [String], completion: @escaping (Bool, [String: Any]) -> ()) {
     //
-    //        let paramReqestApi: Parameters = [
-    //            "client_id": clientID
-    //        ]
-    //
-    //        let accessToken = KeychainManager.load(key: "accessToken")
-    //        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
-    //
-    //        let headerRequest: HTTPHeaders = [
-    //            "Authorization": accessTokenString
-    //        ]
-    //
-    //        AF.request(self.buildWebasystUrl("/id/api/v1/auth/client/", parameters: [:]), method: .post, parameters: paramReqestApi, headers: headerRequest).response { (response) in
-    //            switch response.result {
-    //            case .success:
-    //                if let statusCode = response.response?.statusCode {
-    //                    switch statusCode {
-    //                    case 200...299:
-    //                        if let data = response.data {
-    //                            let accessTokens = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-    //                            completion(true, accessTokens)
-    //                        }
-    //                    default:
-    //                        print("getAccessTokenApi status code request \(statusCode)")
-    //                        completion(false, [:])
-    //                    }
-    //                } else {
-    //                    print("getAccessTokenApi status code error")
-    //                    completion(false, [:])
-    //                }
-    //            case .failure:
-    //                print("get center Api tokens list error request")
-    //                completion(false, [:])
-    //            }
-    //        }
-    //    }
     //
     //    func getAccessTokenInstall(_ installList: [InstallList], accessCodes: [String: Any], completion: @escaping (String, Bool) -> ()) {
     //        self.queue.async(group: dis) {

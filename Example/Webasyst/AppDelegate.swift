@@ -15,6 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         WebasystApp.configure(clientId: "96fa27732ea21b508a24f8599168ed49", host: "www.webasyst.com", scope: "blog,site,shop,webasyst")
+        WebasystApp.checkUserAuth { result in
+            switch result {
+            case .authorized:
+                print("User authorized")
+            case .nonAuthorized:
+                print("User non authorized")
+            case .error(message: let message):
+                print("Error: \(message)")
+            }
+        }
         return true
     }
 

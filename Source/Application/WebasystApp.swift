@@ -7,32 +7,54 @@
 
 import UIKit
 
+/// List of token types
 public enum TokenType {
     case access
     case refresh
 }
 
+/// User status lists (authorized/unauthorized)
 public enum UserStatus {
     case authorized
     case nonAuthorized
     case error(message: String)
 }
 
-public struct UserInstall {
+/// User profile data structure
+public struct ProfileData {
+    public let name: String
+    public let firstname: String
+    public let lastname: String
+    public let middlename: String
+    public let email: String
+    public let userpic_original_crop: Data?
+    
+    public init(name: String, firstname: String, lastname: String, middlename: String, email: String, userpic_original_crop: Data?) {
+        self.name = name
+        self.firstname = firstname
+        self.lastname = lastname
+        self.middlename = middlename
+        self.email = email
+        self.userpic_original_crop = userpic_original_crop
+    }
+}
+
+public struct Installs: Codable {
+    public var accessToken: String
+    public var clientId: String
+    public var domain: String
+    public var name: String
+    public var url: String
+}
+
+/// Structure of the settings list
+public struct UserInstall: Codable {
     
     public var name: String
     public var domain: String
     public var clientId: String
     public var accessToken: String
     public var url: String
-    
-    public init(name: String, url: String, accessToken: String, domain: String, clientId: String) {
-        self.name = name
-        self.domain = domain
-        self.url = domain
-        self.accessToken = accessToken
-        self.clientId = clientId
-    }
 }
 
 public class WebasystApp {
@@ -121,12 +143,27 @@ public class WebasystApp {
         return install
     }
     
+    /// Удаляет установку из базы данных
+    /// - Parameter clientId: clientId install
     public static func deleteInstall(_ clientId: String) {
         WebasystDataModel()?.deleteInstall(clientId: clientId)
     }
     
-    public static func getUserData() {
-        WebasystUserNetworking().getUserData()
+    /// Returns user profile data
+    /// - Returns: User profile data in ProfileData format
+    public static func getProfileData() -> ProfileData? {
+        var result: ProfileData?
+        WebasystDataModel()?.getProfile(completion: { profile in
+            result = profile
+        })
+        return result
+    }
+    
+    /// Exit a user from the account and delete all records in the database
+    public func logOutUser() {
+        let dataModel = WebasystDataModel()
+        dataModel?.resetInstallList()
+        dataModel?.deleteProfileData()
     }
     
 }

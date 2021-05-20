@@ -13,8 +13,4 @@ class Tests: XCTestCase {
         super.tearDown()
     }
     
-    func testGetUserData() {
-        WebasystApp.getUserData()
-    }
-    
 }
