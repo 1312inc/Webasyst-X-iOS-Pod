@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        WebasystApp.configure(clientId: "96fa27732ea21b508a24f8599168ed49", host: "www.webasyst.com", scope: "blog,site,shop,webasyst")
+        WebasystApp.configure(clientId: "96fa27732ea21b508a24f8599168ed49", host: "www.webasyst.com", scope: "blog,site,shop")
         WebasystApp.checkUserAuth { result in
             switch result {
             case .authorized:
@@ -23,6 +23,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("User non authorized")
             case .error(message: let message):
                 print("Error: \(message)")
+            }
+        }
+        WebasystApp.getAllUserInstall() { installList in
+            for install in installList ?? [] {
+                print(install.name)
             }
         }
         return true

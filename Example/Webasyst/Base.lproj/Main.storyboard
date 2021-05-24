@@ -19,18 +19,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0G-uL-c62">
-                                <rect key="frame" x="164" y="318" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0G-uL-c62">
+                                <rect key="frame" x="16" y="236.5" width="343" height="194"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="showAuth:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="wV4-Ub-f3L"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hjo-r7-I3A">
+                                <rect key="frame" x="26" y="54" width="323" height="172.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="hjo-r7-I3A" secondAttribute="height" multiplier="15:8" id="BTo-LQ-uKs"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="c0G-uL-c62" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="Bqg-uR-0hx"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="c0G-uL-c62" secondAttribute="trailing" id="FYT-K9-PNF"/>
+                            <constraint firstItem="hjo-r7-I3A" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="10" id="KwN-NI-2f7"/>
+                            <constraint firstItem="c0G-uL-c62" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Rff-x1-4mO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="hjo-r7-I3A" secondAttribute="trailing" constant="10" id="fpj-B0-LnR"/>
+                            <constraint firstItem="c0G-uL-c62" firstAttribute="top" secondItem="hjo-r7-I3A" secondAttribute="bottom" constant="10" id="lhv-fy-esm"/>
+                            <constraint firstItem="hjo-r7-I3A" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="10" id="qkJ-6d-Tak"/>
+                            <constraint firstItem="c0G-uL-c62" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="th1-p8-AHk"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DVn-HG-07B"/>
+                    <connections>
+                        <outlet property="button" destination="c0G-uL-c62" id="UWl-sm-syX"/>
+                        <outlet property="imageView" destination="hjo-r7-I3A" id="wot-Nx-XJO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

@@ -76,10 +76,10 @@ public class WebasystDataModel {
 //MARK: Internal method
 extension WebasystDataModel {
     
-    internal func saveInstall(_ userInstall: UserInstall, accessToken: String) {
+    internal func saveInstall(_ userInstall: UserInstall, accessToken: String, image: Data?) {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-        request.predicate = NSPredicate(format: "clientId == %@", userInstall.clientId)
+        request.predicate = NSPredicate(format: "clientId == %@", userInstall.id)
         
         guard let context = managedObjectContext else { return }
         
@@ -91,17 +91,19 @@ extension WebasystDataModel {
             if result.isEmpty {
                 let install = NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList
                 install.name = userInstall.name
-                install.clientId = userInstall.clientId
+                install.clientId = userInstall.id
                 install.domain = userInstall.domain
                 install.url = userInstall.url
                 install.accessToken = accessToken
+                install.image = image
                 save()
             } else {
                 result.first?.name = userInstall.name
-                result.first?.clientId = userInstall.clientId
+                result.first?.clientId = userInstall.id
                 result.first?.domain = userInstall.domain
-                result.first?.url = userInstall.domain
-                result.first?.accessToken = userInstall.accessToken
+                result.first?.url = userInstall.url
+                result.first?.accessToken = accessToken
+                result.first?.image = image
                 save()
             }
         } catch { }
@@ -120,7 +122,7 @@ extension WebasystDataModel {
                 return nil
             }
             if !(result?.isEmpty ?? true) {
-                let install = UserInstall(name: result?[0].name ?? "", domain: result?[0].url ?? "", clientId: result?[0].accessToken ?? "", accessToken: result?[0].domain ?? "", url: result?[0].clientId ?? "")
+                let install = UserInstall(name: result?[0].name ?? "", domain: result?[0].url ?? "", id: result?[0].accessToken ?? "", accessToken: result?[0].domain ?? "", url: result?[0].clientId ?? "", image: result?[0].image)
                 return install
             } else {
                 return nil
@@ -144,7 +146,7 @@ extension WebasystDataModel {
             
             var userInstall: [UserInstall] = []
             for task in tasks {
-                userInstall.append(UserInstall(name: task.name ?? "", domain: task.url ?? "", clientId: task.accessToken ?? "", accessToken: task.domain ?? "", url: task.clientId ?? ""))
+                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image))
             }
             return userInstall
         } catch {

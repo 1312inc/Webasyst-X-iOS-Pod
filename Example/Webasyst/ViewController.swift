@@ -11,8 +11,19 @@ import Webasyst
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var imageView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        WebasystApp.getAllUserInstall { result in
+            for install in result ?? [] {
+                if let image = install.image {
+                    self.imageView.image = UIImage(data: image)
+                    self.button.setTitle(install.name, for: .normal)
+                }
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {

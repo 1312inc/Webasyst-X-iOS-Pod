@@ -1,4 +1,4 @@
-# Webasyst iOS Pod
+# Webasyst
 
 [![CI Status](https://img.shields.io/travis/viktkobst/Webasyst.svg?style=flat)](https://travis-ci.org/viktkobst/Webasyst)
 [![Version](https://img.shields.io/cocoapods/v/Webasyst.svg?style=flat)](https://cocoapods.org/pods/Webasyst)
@@ -22,8 +22,8 @@ pod 'Webasyst'
 
 ## Author
 
-1312 Inc., hello@1312.io
+viktkobst, viktkobst@gmail.com
 
 ## License
 
-Webasyst Pod is available under the LGPL license. See the LICENSE file for more info.
+Webasyst is available under the MIT license. See the LICENSE file for more info.

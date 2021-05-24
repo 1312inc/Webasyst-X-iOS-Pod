@@ -4,6 +4,7 @@
         <attribute name="accessToken" optional="YES" attributeType="String"/>
         <attribute name="clientId" optional="YES" attributeType="String"/>
         <attribute name="domain" optional="YES" attributeType="String"/>
+        <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
@@ -16,7 +17,7 @@
         <attribute name="userPic" optional="YES" attributeType="Binary"/>
     </entity>
     <elements>
-        <element name="InstallList" positionX="-63" positionY="-18" width="128" height="104"/>
+        <element name="InstallList" positionX="-63" positionY="-18" width="128" height="119"/>
         <element name="Profile" positionX="-63" positionY="18" width="128" height="119"/>
     </elements>
 </model>

@@ -50,11 +50,12 @@ public struct Installs: Codable {
 /// Structure of the settings list
 public struct UserInstall: Codable {
     
-    public var name: String
+    public var name: String?
     public var domain: String
-    public var clientId: String
-    public var accessToken: String
+    public var id: String
+    public var accessToken: String?
     public var url: String
+    public var image: Data?
 }
 
 public class WebasystApp {
@@ -69,7 +70,12 @@ public class WebasystApp {
     ///   - clientId: Client Id Вашего приложения
     ///   - host: application server host
     public static func configure(clientId: String, host: String, scope: String) {
-        config = WebasystConfig(clientId: clientId, host: host, scope: scope)
+        if scope.contains("webasyst") {
+            config = WebasystConfig(clientId: clientId, host: host, scope: scope)
+        } else {
+            config = WebasystConfig(clientId: clientId, host: host, scope: "\(scope),webasyst")
+        }
+        
     }
     
     /// A method for getting Webasyst tokens
@@ -98,7 +104,15 @@ public class WebasystApp {
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
             case .success:
-                action(WebasystServerAnswer.success)
+                WebasystUserNetworking().preloadUserData { text, percentLoad, status in
+                    if status {
+                        print(text, percentLoad, status)
+                        action(WebasystServerAnswer.success)
+                    } else {
+                        print(text, percentLoad, status)
+                        action(WebasystServerAnswer.error(error: text))
+                    }
+                }
             case .error(error: let error):
                 action(WebasystServerAnswer.error(error: error))
             }
@@ -113,11 +127,13 @@ public class WebasystApp {
         let accessToken = KeychainManager.load(key: "accessToken")
         
         if accessToken != nil {
-            WebasystNetworking().refreshAccessToken { success in
-                if success {
+            WebasystUserNetworking().preloadUserData { text, percentLoad, status in
+                if status {
+                    print(text, percentLoad, status)
                     completion(UserStatus.authorized)
                 } else {
-                    completion(UserStatus.error(message: "WebasystApp Error: Access token is not update"))
+                    print(text, percentLoad, status)
+                    completion(UserStatus.error(message: text))
                 }
             }
         } else {
@@ -127,7 +143,7 @@ public class WebasystApp {
     
     /// Getting user install list
     /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
-    public func getAllUserInstall(_ result: @escaping ([UserInstall]?) -> ()) {
+    public static func getAllUserInstall(_ result: @escaping ([UserInstall]?) -> ()) {
         let installList = WebasystDataModel()?.getInstallList()
         result(installList)
     }
@@ -160,10 +176,20 @@ public class WebasystApp {
     }
     
     /// Exit a user from the account and delete all records in the database
-    public func logOutUser() {
-        let dataModel = WebasystDataModel()
-        dataModel?.resetInstallList()
-        dataModel?.deleteProfileData()
+    /// - Returns: Boolean value of deauthorization success
+    public func logOutUser(completion: @escaping (Bool) -> ()) {
+        WebasystUserNetworking().singUpUser { result in
+            if result {
+                let dataModel = WebasystDataModel()
+                dataModel?.resetInstallList()
+                dataModel?.deleteProfileData()
+                KeychainManager.deleteAllKeys()
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+        
     }
     
 }

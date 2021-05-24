@@ -20,51 +20,124 @@ public struct Email: Codable {
     public let value: String
 }
 
+internal struct InstallInfo: Decodable {
+    var name: String
+    var logo: Logo?
+}
+
+internal struct Logo: Decodable {
+    var mode: ImageType
+}
+
+enum ImageType: Decodable {
+    case image, gradient
+    case unknown(value: String)
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let status = try? container.decode(String.self)
+        switch status {
+        case "image": self = .image
+        case "gradient": self = .gradient
+        default:
+            self = .unknown(value: status ?? "unknown")
+        }
+    }
+}
+
+struct LogoGradient: Codable {
+    var name: String
+    var logo: Gradient?
+}
+
+struct Gradient: Codable {
+    var gradient: GradientType
+}
+
+struct GradientType: Codable {
+    var from: String
+    var to: String
+    var angle: String
+}
+
+struct LogoImage: Codable {
+    var name: String
+    var logo: TypeImage?
+}
+
+struct TypeImage: Codable {
+    var image: Original
+}
+
+struct Original: Codable {
+    var original: OriginalImage
+}
+
+struct OriginalImage: Codable {
+    var url: String
+}
+
 final class WebasystUserNetworking: WebasystNetworkingManager {
     
     private let bundleId: String = WebasystApp.config?.bundleId ?? ""
     private let profileInstallService = WebasystDataModel()
+    private let webasystNetworkingService = WebasystNetworking()
     private let networkingHelper = NetworkingHelper()
     private let queue = DispatchQueue(label: "com.webasyst.x.ios.WebasystUserNetworkingService", qos: .userInitiated)
     private let dispatchGroup = DispatchGroup()
+    private let config = WebasystApp.config
     
-    //    func preloadUserData() -> (String, Int, Bool) {
-    //        if self.networkingHelper.isConnectedToNetwork() {
-    //            self.queue.async(group: self.dispatchGroup) {
-    //                WebasystNetworking().refreshAccessToken { _ in }
-    //            }
-    //            self.queue.async {
-    //                self.getUserData()
-    //            }
-    //            self.dispatchGroup.notify(queue: self.queue) {
-    //                self.getInstallList { (successGetInstall, installList) in
-    //                    if successGetInstall {
-    //                        var clientId: [String] = []
-    //                        for install in installList {
-    //                            clientId.append(install.clientId ?? "")
-    //                        }
-    //                        self.getAccessTokenApi(clientID: clientId) { (success, accessToken) in
-    //                            if success {
-    //                                self.getAccessTokenInstall(installList, accessCodes: accessToken) { (loadText, saveSuccess) in
-    //                                    if !saveSuccess {
-    //
-    //                                    } else {
-    //
-    //                                    }
-    //                                }
-    //                            } else {
-    //
-    //                            }
-    //                        }
-    //                    } else {
-    //
-    //                    }
-    //                }
-    //            }
-    //        } else {
-    //
-    //        }
-    //    }
+    func preloadUserData(completion: @escaping (String, Int, Bool) -> ()) {
+        if self.networkingHelper.isConnectedToNetwork() {
+            self.queue.async(group: self.dispatchGroup) {
+                self.webasystNetworkingService.refreshAccessToken { result in
+                    if result {
+                        print("Webasyst refresh token is success")
+                    } else {
+                        print("Webasyst refresh token is error")
+                    }
+                }
+            }
+            self.queue.async {
+                self.downloadUserData()
+            }
+            self.dispatchGroup.notify(queue: self.queue) {
+                self.getInstallList { installList in
+                    guard let installs = installList else {
+                        completion(NSLocalizedString("loadingError", comment: ""), 30, true)
+                        return
+                    }
+                    var clientId: [String] = []
+                    for install in installs {
+                        clientId.append(install.id)
+                    }
+                    self.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
+                        if success {
+                            guard let token = accessToken else {
+                                completion("Webasyst Error: get access token error", 30, false)
+                                return
+                            }
+                            self.getAccessTokenInstall(installs, accessCodes: token) { (loadText, saveSuccess) in
+                                if !saveSuccess {
+                                    completion(loadText, 30, true)
+                                } else {
+                                    completion(loadText, 100, true)
+                                }
+                            }
+                        } else {
+                            print("Webasyst error: error in obtaining installation tokens")
+                        }
+                    }
+                    if installList != nil {
+                        
+                    } else {
+                        completion(NSLocalizedString("loadingError", comment: ""), 30, true)
+                    }
+                }
+            }
+        } else {
+            completion(NSLocalizedString("connectionAlertMessage", comment: ""), 0, false)
+        }
+    }
     
     //MARK: Download user data
     internal func downloadUserData() {
@@ -141,16 +214,12 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     func getAccessTokenApi(clientId: [String], completion: @escaping (Bool, [String: Any]?) -> ()) {
         
-        let paramReqestApi: [String: Any] = [
+        let paramReqestApi: Dictionary<String, Any> = [
             "client_id": clientId
         ]
         
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
-        
-        let headerRequest: [String: String] = [
-            "Authorization": accessTokenString
-        ]
         
         guard let url = buildWebasystUrl("/id/api/v1/auth/client/", parameters: [:]) else {
             completion(false, [:])
@@ -159,171 +228,168 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        for (value, key) in headerRequest {
-            request.addValue(value, forHTTPHeaderField: key)
-        }
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(accessTokenString, forHTTPHeaderField: "Authorization")
+        
         do {
-            let body = try JSONSerialization.data(withJSONObject: paramReqestApi, options: .prettyPrinted)
-            request.httpBody = body
-        } catch {
-            print(error.localizedDescription)
+            let data = try JSONSerialization.data(withJSONObject: paramReqestApi) as Data
+            request.addValue("\(data.count)", forHTTPHeaderField: "Content-Length")
+            request.httpBody = data
+        } catch let error {
+            print("Webasyst error: \(error.localizedDescription)")
         }
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let httpsResponse = response as? HTTPURLResponse {
-                switch httpsResponse.statusCode {
-                case 200...299:
-                    if let data = data {
-                        let accessTokens = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                        completion(true, accessTokens)
+            guard error == nil else {
+                return
+            }
+            
+            guard let data = data else {
+                return
+            }
+            
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    completion(true, json)
+                }
+            } catch let error {
+                print("Webasyst error: \(error.localizedDescription)")
+            }
+        }.resume()
+    }
+    
+    func getAccessTokenInstall(_ installList: [UserInstall], accessCodes: [String: Any], completion: @escaping (String, Bool) -> ()) {
+        
+        guard let config = WebasystApp.config else { return }
+        
+        for install in installList {
+            
+            let code = accessCodes[install.id] as! String
+            
+            let parameters: [String: String] = [
+                "code" : code,
+                "scope": config.scope,
+                "client_id": config.bundleId
+            ]
+            
+            guard let url = URL(string: "\(String(describing: install.url))/api.php/token-headless") else {
+                print("Webasyst error: Url install error")
+                break
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            do {
+                try request.setMultipartFormData(parameters, encoding: String.Encoding.utf8)
+            } catch {
+                print("Webasyst error: Failed to get request body")
+            }
+            
+            
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
+                guard error == nil else {
+                    return
+                }
+                
+                guard let data = data else {
+                    return
+                }
+                
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: String] {
+                        let installToken = UserInstall(name: "", domain: install.domain, id: install.id, accessToken: json["access_token"]  ?? "", url: install.url)
+                        self.getInstallInfo(installToken)
+                        completion("\(NSLocalizedString("loadingInstallMessage", comment: "")) \(install.domain)", false)
                     }
+                } catch let error {
+                    print("Webasyst error: Domain: \(install.url) \(error.localizedDescription)")
+                }
+            }.resume()
+        }
+    }
+    
+    func getInstallInfo(_ install: UserInstall) {
+        
+        guard let url = URL(string: "\(install.url)/api.php/webasyst.getInfo?access_token=\(install.accessToken ?? "")&format=json") else {
+            print("Webasyst error: Failed to generate a url when getting installation information")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard error == nil else {
+                return
+            }
+            
+            guard let data = data else {
+                return
+            }
+            
+            do {
+                let info = try JSONDecoder().decode(InstallInfo.self, from: data)
+                guard let logoMode = info.logo else {
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url)
+                    self.profileInstallService?.saveInstall(newInstall, accessToken: install.accessToken ?? "", image:  nil)
+                    return
+                }
+                switch logoMode.mode {
+                case .image:
+                    do {
+                        let imageInfo = try JSONDecoder().decode(LogoImage.self, from: data)
+                        self.downloadImage(imageInfo.logo?.image.original.url ?? "") { imageData in
+                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: nil)
+                            self.profileInstallService?.saveInstall(saveInstall, accessToken: install.accessToken ?? "", image: imageData)
+                        }
+                    } catch let error {
+                        print("Webasyst error: \(info.name) \(error.localizedDescription)")
+                    }
+                case .gradient:
+                    do {
+                        let imageInfo = try JSONDecoder().decode(LogoGradient.self, from: data)
+                        print("graient", imageInfo.logo?.gradient as Any)
+                    } catch let error {
+                        print("Webasyst error: \(info.name) \(error.localizedDescription)")
+                    }
+                case .unknown(value: _):
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url)
+                    self.profileInstallService?.saveInstall(newInstall, accessToken: install.accessToken ?? "", image:  nil)
+                }
+            } catch let error {
+                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url)
+                self.profileInstallService?.saveInstall(newInstall, accessToken: install.accessToken ?? "", image: nil)
+                print("Webasyst error: \(install.url) \(error.localizedDescription)")
+            }
+        }.resume()
+        
+    }
+    
+    func singUpUser(completion: @escaping (Bool) -> ()) {
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let headerRequest: [String: String] = [
+            "Authorization": accessTokenString
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/delete/", parameters: [:]) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.addValue(headerRequest.first?.value ?? "", forHTTPHeaderField: headerRequest.first?.key ?? "")
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                switch httpResponse.statusCode {
+                case 200...299:
+                    completion(true)
                 default:
-                    completion(false, nil)
+                    print("singUpUser status code request \(httpResponse.statusCode)")
+                    completion(false)
                 }
             }
         }
     }
-    //
-    //    func refreshAccessToken() {
-    //
-    //        let refreshToken = KeychainManager.load(key: "refreshToken")
-    //        let refreshTokenString = String(decoding: refreshToken ?? Data("".utf8), as: UTF8.self)
-    //
-    //        let paramsRequest: [String: String] = [
-    //            "grant_type": "refresh_token",
-    //            "refresh_token": refreshTokenString,
-    //            "client_id": clientId
-    //        ]
-    //        self.dispatchGroup.enter()
-    //        AF.upload(multipartFormData: { (multipartFormData) in
-    //            for (key, value) in paramsRequest {
-    //                multipartFormData.append("\(value)".data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: key)
-    //            }
-    //        }, to: buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]), method: .post).response { (response) in
-    //            switch response.result {
-    //            case .success:
-    //                guard let statusCode = response.response?.statusCode else { return }
-    //                switch statusCode {
-    //                case 200...299:
-    //                    if let data = response.data {
-    //                        let authData = try! JSONDecoder().decode(UserToken.self, from: data)
-    //                        let _ = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-    //                        let _ = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
-    //                        self.dispatchGroup.leave()
-    //                    }
-    //                default:
-    //                    print("refreshAccessToken error answer \(statusCode)")
-    //                    self.dispatchGroup.leave()
-    //                }
-    //            case .failure:
-    //                print("refreshAccessToken failure request")
-    //            }
-    //        }
-    //    }
-    //
-    //
-    //
-    //    func getAccessTokenInstall(_ installList: [InstallList], accessCodes: [String: Any], completion: @escaping (String, Bool) -> ()) {
-    //        self.queue.async(group: dis) {
-    //            for install in installList {
-    //                let code = accessCodes[install.id] ?? ""
-    //                self.dispatchGroup.enter()
-    //                AF.upload(multipartFormData: { (multipartFormData) in
-    //                    multipartFormData.append("\(String(describing: code))".data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "code")
-    //                    multipartFormData.append("blog,site,shop,webasyst".data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "scope")
-    //                    multipartFormData.append(self.bundleId.data(using: String.Encoding.utf8, allowLossyConversion: false)!, withName: "client_id")
-    //                }, to: "\(install.url)/api.php/token-headless", method: .post).response {response in
-    //                    switch response.result {
-    //                    case .success:
-    //                        if let statusCode = response.response?.statusCode {
-    //                            switch statusCode {
-    //                            case 200...299:
-    //                                if let data = response.data {
-    //                                    let accessTokenInstall = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-    //                                    self.profileInstallService.saveInstall(install, accessToken: "\(accessTokenInstall.first?.value ?? "")")
-    //                                    defer {
-    //                                        self.dispatchGroup.leave()
-    //                                    }
-    //                                    completion("\(NSLocalizedString("loadingInstallMessage", comment: "")) \(install.domain)", false)
-    //                                }
-    //                            default:
-    //                                self.profileInstallService.saveInstall(install, accessToken: "")
-    //                                defer {
-    //                                    self.dispatchGroup.leave()
-    //                                }
-    //                                completion("\(NSLocalizedString("errorInstallMessage", comment: "")) \(install.domain)", false)
-    //                            }
-    //                        }
-    //                    case .failure:
-    //                        defer {
-    //                            self.dispatchGroup.leave()
-    //                        }
-    //                        completion("\(NSLocalizedString("errorInstallMessage", comment: "")) \(install.domain)", false)
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        self.dispatchGroup.notify(queue: queue) {
-    //            completion(NSLocalizedString("deleteInstallMessage", comment: ""), false)
-    //            self.deleteNonActiveInstall(installList) { text, bool in
-    //                completion("", true)
-    //            }
-    //        }
-    //    }
-    //
-    //    func deleteNonActiveInstall(_ installList: [InstallList], completion: @escaping (String, Bool)->()) {
-    //        var saveInstallList = [ProfileInstallList]()
-    //
-    //        DispatchQueue.main.async {
-    //            self.profileInstallService.getInstallList()
-    //                .bind { (result) in
-    //                    switch result {
-    //                    case .Success(let install):
-    //                        saveInstallList = install
-    //                    case .Failure(_):
-    //                        saveInstallList = []
-    //                    }
-    //                }.disposed(by: self.disposeBag)
-    //
-    //            for install in saveInstallList {
-    //                let find = installList.filter({ $0.id == install.clientId ?? "" })
-    //                if find.isEmpty {
-    //                    self.profileInstallService.deleteInstall(clientId: install.clientId ?? "")
-    //                }
-    //            }
-    //            completion("", true)
-    //        }
-    //    }
-    //
-    //    func singUpUser(completion: @escaping (Bool) -> ()) {
-    //
-    //        let accessToken = KeychainManager.load(key: "accessToken")
-    //        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
-    //
-    //        let headerRequest: HTTPHeaders = [
-    //            "Authorization": accessTokenString
-    //        ]
-    //
-    //        AF.request(self.buildWebasystUrl("/id/api/v1/delete/", parameters: [:]), method: .delete, headers: headerRequest).response { (response) in
-    //            switch response.result {
-    //            case .success:
-    //                if let statusCode = response.response?.statusCode {
-    //                    switch statusCode {
-    //                    case 200...299:
-    //                        completion(true)
-    //                    default:
-    //                        print("singUpUser status code request \(statusCode)")
-    //                        completion(false)
-    //                    }
-    //                } else {
-    //                    print("singUpUser status code error")
-    //                    completion(false)
-    //                }
-    //            case .failure:
-    //                print("singUpUser error request")
-    //                completion(false)
-    //            }
-    //        }
-    //    }
-    
 }
