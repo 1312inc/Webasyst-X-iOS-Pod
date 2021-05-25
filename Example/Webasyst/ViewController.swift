@@ -11,36 +11,42 @@ import Webasyst
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var button: UIButton!
-    @IBOutlet weak var imageView: UIImageView!
+    private var install: [UserInstall] = []
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(InstallTableViewCell.self, forCellReuseIdentifier: InstallTableViewCell.identifier)
         WebasystApp.getAllUserInstall { result in
-            for install in result ?? [] {
-                if let image = install.image {
-                    self.imageView.image = UIImage(data: image)
-                    self.button.setTitle(install.name, for: .normal)
-                }
-            }
+            self.install = result ?? []
+            self.tableView.reloadData()
         }
+        let profile = WebasystApp.getProfileData()
+        print(profile)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    @IBAction func showAuth(_ sender: Any) {
-        WebasystApp.authWebasyst(navigationController: self.navigationController ?? UINavigationController()) { success in
-            switch success {
-            case .success:
-                print("Успех")
-            case .error(error: _):
-                print("не успех")
-            }
-        }
-        
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return install.count
     }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: InstallTableViewCell.identifier, for: indexPath) as! InstallTableViewCell
+        let install = install[indexPath.row]
+        cell.configure(install)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
+    }
+    
     
 }
 
