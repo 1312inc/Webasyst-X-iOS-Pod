@@ -7,26 +7,16 @@
 
 import Foundation
 
-internal protocol WebasystNetworkingProtocol {
-    func buildAuthRequest() -> URLRequest?
-    func getAccessToken(_ authCode: String, stateString: String, completion: @escaping (Bool) -> Void)
-}
-
 internal typealias Parameters = [String: String]
 
-internal struct UserToken: Codable {
-    let access_token: String
-    let token_type: String
-    let expires_in: Int
-    let refresh_token: String
-}
-
-internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworkingProtocol {
+internal class WebasystNetworking: WebasystNetworkingManager {
     
     private var config = WebasystApp.config
     private var disposablePasswordAuth: String?
     
-    //MARK: Generating a one-time password in Webasyst
+    /// Generating a temporary password for user authentication
+    /// - Parameter len: Length of the required password
+    /// - Returns: Returns the password in string representation
     private func generatePasswordHash(_ len: Int) -> String {
         let pswdChars = Array("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
         let rndPswd = String((0..<len).map{ _ in pswdChars[Int(arc4random_uniform(UInt32(pswdChars.count)))]})
@@ -34,7 +24,8 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
         return rndPswd
     }
     
-    //MARK: Build URLRequset in Webasyst Auth
+    /// Building a request for user authorization
+    /// - Returns: Returns authorization request
     internal func buildAuthRequest() -> URLRequest? {
         
         guard let config = self.config else {
@@ -42,7 +33,7 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
             return nil
         }
         
-        let paramRequest: [String: String] = [
+        let paramRequest: Parameters = [
             "response_type": "code",
             "client_id": config.clientId,
             "scope": "token:blog.site.shop.webasyst",
@@ -83,7 +74,11 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
         
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
-        try! request.setMultipartFormData(paramRequest, encoding: String.Encoding.utf8)
+        do {
+            try request.setMultipartFormData(paramRequest, encoding: String.Encoding.utf8)
+        } catch let error {
+            print("Webasyst error: \(error.localizedDescription)")
+        }
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
@@ -105,6 +100,9 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
         
     }
     
+    /// Token update method on the WAID server
+    /// - Parameter completion: Short-circuiting after work methods
+    /// - Returns: Returns the boolean value of token update success
     internal func refreshAccessToken(completion: @escaping (Bool)->()) {
         
         let refreshToken = KeychainManager.load(key: "refreshToken")
@@ -123,7 +121,13 @@ internal class WebasystNetworking: WebasystNetworkingManager, WebasystNetworking
         
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
-        try! request.setMultipartFormData(paramsRequest, encoding: String.Encoding.utf8)
+        
+        do {
+            try request.setMultipartFormData(paramsRequest, encoding: String.Encoding.utf8)
+        } catch let error {
+            print("Webasyst error: \(error.localizedDescription)")
+        }
+        
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {

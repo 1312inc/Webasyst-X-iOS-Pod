@@ -9,7 +9,7 @@ import Foundation
 
 extension URLRequest {
     
-    mutating func setMultipartFormData(_ parameters: [String: String], encoding: String.Encoding) throws {
+    mutating func setMultipartFormData(_ parameters: Parameters, encoding: String.Encoding) throws {
 
         let makeRandom = { UInt32.random(in: (.min)...(.max)) }
         let boundary = String(format: "------------------------%08X%08X", makeRandom(), makeRandom())

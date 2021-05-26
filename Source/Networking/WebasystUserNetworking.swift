@@ -7,84 +7,14 @@
 
 import Foundation
 
-public struct UserData: Codable {
-    public let name: String
-    public let firstname: String
-    public let lastname: String
-    public let middlename: String
-    public let email: [Email]
-    public let userpic_original_crop: String
-}
-
-public struct Email: Codable {
-    public let value: String
-}
-
-internal struct InstallInfo: Decodable {
-    var name: String
-    var logo: Logo?
-}
-
-internal struct Logo: Decodable {
-    var mode: ImageType
-}
-
-enum ImageType: Decodable {
-    case image, gradient
-    case unknown(value: String)
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let status = try? container.decode(String.self)
-        switch status {
-        case "image": self = .image
-        case "gradient": self = .gradient
-        default:
-            self = .unknown(value: status ?? "unknown")
-        }
-    }
-}
-
-struct LogoGradient: Codable {
-    var name: String
-    var logo: Gradient?
-}
-
-struct Gradient: Codable {
-    var gradient: GradientType
-}
-
-struct GradientType: Codable {
-    var from: String
-    var to: String
-    var angle: String
-}
-
-struct LogoImage: Codable {
-    var name: String
-    var logo: TypeImage?
-}
-
-struct TypeImage: Codable {
-    var image: Original
-}
-
-struct Original: Codable {
-    var original: OriginalImage
-}
-
-struct OriginalImage: Codable {
-    var url: String
-}
-
 final class WebasystUserNetworking: WebasystNetworkingManager {
     
-    private let bundleId: String = WebasystApp.config?.bundleId ?? ""
     private let profileInstallService = WebasystDataModel()
     private let webasystNetworkingService = WebasystNetworking()
     private let networkingHelper = NetworkingHelper()
-    private let queue = DispatchQueue(label: "com.webasyst.x.ios.WebasystUserNetworkingService", qos: .userInitiated)
     private let dispatchGroup = DispatchGroup()
     private let config = WebasystApp.config
+    private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     
     func preloadUserData(completion: @escaping (String, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
@@ -145,7 +75,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
         
-        let headers: [String: String] = [
+        let headers: Parameters = [
             "Authorization": accessTokenString
         ]
         
@@ -179,7 +109,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
         
-        let headers: [String: String] = [
+        let headers: Parameters = [
             "Authorization": accessTokenString
         ]
         
@@ -266,7 +196,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             
             let code = accessCodes[install.id] as! String
             
-            let parameters: [String: String] = [
+            let parameters: Parameters = [
                 "code" : code,
                 "scope": config.scope,
                 "client_id": config.bundleId
@@ -297,7 +227,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 }
                 
                 do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: String] {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
                         let installToken = UserInstall(name: "", domain: install.domain, id: install.id, accessToken: json["access_token"]  ?? "", url: install.url)
                         self.getInstallInfo(installToken)
                         completion("\(NSLocalizedString("loadingInstallMessage", comment: "")) \(install.domain)", false)
@@ -307,28 +237,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 }
             }.resume()
         }
-    }
-    
-    func hexStringToUIColor (hex:String) -> UIColor {
-        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-
-        if (cString.hasPrefix("#")) {
-            cString.remove(at: cString.startIndex)
-        }
-
-        if ((cString.count) != 6) {
-            return UIColor.gray
-        }
-
-        var rgbValue:UInt64 = 0
-        Scanner(string: cString).scanHexInt64(&rgbValue)
-
-        return UIColor(
-            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
-        )
     }
     
     func getInstallInfo(_ install: UserInstall) {
@@ -353,8 +261,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             do {
                 let info = try JSONDecoder().decode(InstallInfo.self, from: data)
                 guard let logoMode = info.logo else {
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url)
-                    self.profileInstallService?.saveInstall(newInstall, accessToken: install.accessToken ?? "", image:  nil)
+                    let imageData = self.createDefaultGradient()
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData)
+                    self.profileInstallService?.saveInstall(newInstall)
                     return
                 }
                 switch logoMode.mode {
@@ -362,8 +271,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     do {
                         let imageInfo = try JSONDecoder().decode(LogoImage.self, from: data)
                         self.downloadImage(imageInfo.logo?.image.original.url ?? "") { imageData in
-                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: nil)
-                            self.profileInstallService?.saveInstall(saveInstall, accessToken: install.accessToken ?? "", image: imageData)
+                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData)
+                            self.profileInstallService?.saveInstall(saveInstall)
                         }
                     } catch let error {
                         print("Webasyst error: \(info.name) \(error.localizedDescription)")
@@ -371,24 +280,28 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case .gradient:
                     do {
                         let imageInfo = try JSONDecoder().decode(LogoGradient.self, from: data)
-                        let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [self.hexStringToUIColor(hex: imageInfo.logo?.gradient.from ?? "#000").cgColor, self.hexStringToUIColor(hex: imageInfo.logo?.gradient.to ?? "#fff").cgColor])
-                        let imageData = UIImagePNGRepresentation(gradientImage)
-                        self.profileInstallService?.saveInstall(UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData), accessToken: install.accessToken ?? "", image: imageData)
+                        
+                        let imageData = self.createGradient(from: imageInfo.logo?.gradient.from ?? "#333", to: imageInfo.logo?.gradient.to ?? "#333")
+                        let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData)
+                        
+                        self.profileInstallService?.saveInstall(install)
                     } catch let error {
                         print("Webasyst error: \(info.name) \(error.localizedDescription)")
                     }
                 case .unknown(value: _):
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url)
-                    let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [UIColor(red: 236, green: 100, blue: 44, alpha: 1.0).cgColor, UIColor(red: 234, green: 52, blue: 117, alpha: 1.0).cgColor])
-                    let imageData = UIImagePNGRepresentation(gradientImage)
-                    self.profileInstallService?.saveInstall(newInstall, accessToken: install.accessToken ?? "", image:  imageData)
+                    let imageData = self.createDefaultGradient()
+                    
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData)
+                    
+                    self.profileInstallService?.saveInstall(newInstall)
                 }
             } catch let error {
-                let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [UIColor.magenta.cgColor, UIColor.systemPink.cgColor])
-                let imageData = UIImagePNGRepresentation(gradientImage)
+                let imageData = self.createDefaultGradient()
+                
                 let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData)
-                self.profileInstallService?.saveInstall(newInstall, accessToken: install.accessToken ?? "", image: imageData)
-                print("Webasyst error: \(install.url) \(error.localizedDescription)")
+                
+                self.profileInstallService?.saveInstall(newInstall)
+                print("Webasyst warning: \(install.url) \(error.localizedDescription)")
             }
         }.resume()
         
@@ -399,7 +312,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
         
-        let headerRequest: [String: String] = [
+        let headerRequest: Parameters = [
             "Authorization": accessTokenString
         ]
         
@@ -422,12 +335,50 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
 }
 
+//MARK: Private methods
+extension WebasystUserNetworking {
+    
+    fileprivate func createDefaultGradient() -> Data? {
+        let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [UIColor.magenta.cgColor, UIColor.systemPink.cgColor])
+        let imageData = UIImagePNGRepresentation(gradientImage)
+        return imageData
+    }
+    
+    fileprivate func createGradient(from: String, to: String) -> Data? {
+        let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [self.hexStringToUIColor(hex: from).cgColor, self.hexStringToUIColor(hex: to).cgColor])
+        let imageData = UIImagePNGRepresentation(gradientImage)
+        return imageData
+    }
+    
+    fileprivate func hexStringToUIColor (hex:String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+        
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+        
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+        
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
+    }
+    
+}
+
 extension UIImage {
     static func gradientImageWithBounds(bounds: CGRect, colors: [CGColor]) -> UIImage {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.colors = colors
-        
         UIGraphicsBeginImageContext(gradientLayer.bounds.size)
         gradientLayer.render(in: UIGraphicsGetCurrentContext()!)
         let image = UIGraphicsGetImageFromCurrentImageContext()

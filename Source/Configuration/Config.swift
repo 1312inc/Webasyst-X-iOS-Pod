@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal struct WebasystConfig {
+public struct WebasystConfig {
     
     var bundleId: String
     var clientId: String
@@ -24,4 +24,5 @@ internal struct WebasystConfig {
 
 internal enum WebasystDBConfig {
   static var dbFolder = "WebasystAppDataModel"
+  static let databaseName = "WebasystAppDataModel"
 }

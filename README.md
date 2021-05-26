@@ -1,15 +1,13 @@
-# Webasyst
+# Webasyst library
 
 [![CI Status](https://img.shields.io/travis/viktkobst/Webasyst.svg?style=flat)](https://travis-ci.org/viktkobst/Webasyst)
 [![Version](https://img.shields.io/cocoapods/v/Webasyst.svg?style=flat)](https://cocoapods.org/pods/Webasyst)
 [![License](https://img.shields.io/cocoapods/l/Webasyst.svg?style=flat)](https://cocoapods.org/pods/Webasyst)
 [![Platform](https://img.shields.io/cocoapods/p/Webasyst.svg?style=flat)](https://cocoapods.org/pods/Webasyst)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Requirements
+
+iOS version 13.0 or higher
 
 ## Installation
 
@@ -20,10 +18,17 @@ it, simply add the following line to your Podfile:
 pod 'Webasyst'
 ```
 
+## Errors
+*italic* In the event of a fault, all errors are displayed in the XCode console with the label Webasyst error. When contacting technical support you need to specify the error code and the message text 
+
+* *bold* 500: General library database error
+* *bold* 501: Database error when working with the list of user settings
+* *bold* 502: Database error when working with a user profile
+
 ## Author
 
-viktkobst, viktkobst@gmail.com
+Webasyst, 
 
 ## License
 
-Webasyst is available under the MIT license. See the LICENSE file for more info.
+Webasyst is available under the LGPL license. See the LICENSE file for more info.

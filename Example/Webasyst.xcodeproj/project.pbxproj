@@ -15,7 +15,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		CBAF73177C54DEF594FA67D6 /* Pods_Webasyst_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CC76A346198A6001F02F63C /* Pods_Webasyst_Example.framework */; };
 		F8966AE440F94D9EE2E55F2C /* Pods_Webasyst_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBC1119683546ADE3734351 /* Pods_Webasyst_Tests.framework */; };
-		FDFFA7CE265CEAA000F981DF /* InstallTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFFA7CC265CEAA000F981DF /* InstallTableViewCell.swift */; };
+		FD58E68D265E16E30037CF13 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FD58E68C265E16E30037CF13 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +48,7 @@
 		D05B7930FC6237D6DA2E6C92 /* Pods-Webasyst_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Tests.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Tests/Pods-Webasyst_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DF8AEE3A17DF7B5F7C420CB2 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		DFE86D84325521844551AF1A /* Pods-Webasyst_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Example.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Example/Pods-Webasyst_Example.release.xcconfig"; sourceTree = "<group>"; };
-		FDFFA7CC265CEAA000F981DF /* InstallTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallTableViewCell.swift; sourceTree = "<group>"; };
+		FD58E68C265E16E30037CF13 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +74,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				FD58E68C265E16E30037CF13 /* README.md */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Webasyst */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -101,7 +102,6 @@
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
-				FDFFA7CC265CEAA000F981DF /* InstallTableViewCell.swift */,
 			);
 			name = "Example for Webasyst";
 			path = Webasyst;
@@ -250,6 +250,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				FD58E68D265E16E30037CF13 /* README.md in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -335,7 +336,6 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
-				FDFFA7CE265CEAA000F981DF /* InstallTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
