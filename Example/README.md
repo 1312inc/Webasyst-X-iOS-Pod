@@ -26,7 +26,7 @@ pod install
 *In the event of a fault, all errors are displayed in the XCode console with the label Webasyst error. When contacting technical support you need to specify the error code and the message text.*
 
 Example of an error
-```swift
+```ruby
 Error Domain=Webasyst warning: https://1312.io The data couldn’t be read because it is missing. Code=205 "(null)"
 ```
 
