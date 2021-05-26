@@ -38,7 +38,6 @@
 		FD8BD99826525EC600615C5E /* WebasystDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99726525EC600615C5E /* WebasystDataModel.swift */; };
 		FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */; };
 		FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */; };
-		FDFFA7CB265CE91B00F981DF /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FDFFA7CA265CE91B00F981DF /* Color.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,7 +112,6 @@
 		FD8BD99726525EC600615C5E /* WebasystDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystDataModel.swift; sourceTree = "<group>"; };
 		FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
 		FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
-		FDFFA7CA265CE91B00F981DF /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -314,7 +312,6 @@
 			children = (
 				FD58E683265E08A40037CF13 /* Structs */,
 				FD58E676265E04A60037CF13 /* Enum */,
-				FDFFA7C9265CE90C00F981DF /* Resources */,
 				FD8BD99626525E8C00615C5E /* DataModel */,
 				FDB0CAF2264E506A00A1E7F4 /* Application */,
 				FDB0CAF1264E505E00A1E7F4 /* Configuration */,
@@ -399,14 +396,6 @@
 				FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */,
 			);
 			path = Application;
-			sourceTree = "<group>";
-		};
-		FDFFA7C9265CE90C00F981DF /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				FDFFA7CA265CE91B00F981DF /* Color.xcassets */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -537,7 +526,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FDFFA7CB265CE91B00F981DF /* Color.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
