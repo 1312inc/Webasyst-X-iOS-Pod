@@ -16,14 +16,15 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/1312inc/Webasyst-X-iOS-Pod'
   s.license          = { :type => 'LGBL', :file => 'LICENSE' }
   s.author           = { '1312 Inc.' => 'hello@1312.io' }
-  s.source           = { :git => 'https://github.com/1312inc/Webasyst-X-iOS-Pod.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/1312inc/Webasyst-X-iOS-Pod.git', :tag => "1.0.0" }
 
   s.ios.deployment_target = '13.0'
-  s.osx.deployment_target = '10.10'
-  s.tvos.deployment_target = '11.0'
-  s.watchos.deployment_target = '4.0'
+  s.module_name   = 'Rich'
+  s.swift_version = '4.0'
 
-  s.source_files = 'Source/**/*'
+  s.source_files = 'Source/**/*.swift'
   s.resources = "Source/**/*.xcdatamodeld"
   s.framework  = "Foundation"
+  s.framework  = "CoreData"
+  s.ios.framework  = "UIKit"
 end
