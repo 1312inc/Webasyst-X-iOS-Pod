@@ -44,12 +44,45 @@ webasyst.configure(
 
 *A description of all methods, including all parameters, can be obtained from the XCode autocomplete or via QuickHelp*
 
-* **configure** Webasyst library configuration method
-    *Parameters:*
+* **configure** Webasyst library configuration method.
+    ***Parameters:***
         ***bundleId**: Bundle Id of your application, required for authorization on the server*
         ***clientId**: Client Id of your application*
         ***host**: application server host*
 
+* **getToken** A method for getting Webasyst tokens.
+    ***Parameters:***
+        ***tokenType:** Type of token (Access Token or Refresh Token)*
+        ***Returns:*** Requested token in string format
+    
+* **authWebasyst** Webasyst server authorization method.
+***Parameters:***
+        ***navigationController:** UINavigationController to display the OAuth webasyst modal window*
+    ***action:** Closure to perform an action after authorization*
+    
+* **checkUserAuth** User authentication check on Webasyst server.
+    ***Parameters:***
+        ***completion:** The closure performed after the check returns a Bool value of whether the user is authorized or not*
+    ***Returns:*** Returns user status in the application (.authorized/.nonAuthorized/.error(message: String))
+    
+* **getAllUserInstall** Getting user install list.
+    ***Returns:*** List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
+    
+* **getUserInstall**  Obtaining user installation.
+    ***Parameters:***
+        ***clientId:** clientId setting*
+    ***Returns:*** Installation in User Install format 
+    
+* **deleteInstall** Deletes the installation from the database.
+    ***Parameters:***
+        ***clientId:** clientId install*
+        
+* **getProfileData** Returns user profile data
+    ***Returns:*** User profile data in ProfileData format
+    
+* **logOutUser** Exit a user from the account and delete all records in the database.
+    ***Returns:*** Boolean value of deauthorization success
+        
 ## Errors
 *In the event of a fault, all errors are displayed in the XCode console with the label Webasyst error. When contacting technical support you need to specify the error code and the message text.*
 

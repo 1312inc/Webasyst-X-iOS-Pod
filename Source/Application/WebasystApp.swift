@@ -78,6 +78,7 @@ public class WebasystApp {
     
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
+    /// - Returns Returns user status in the application (.authorized/.nonAuthorized/.error(message: String))
     public func checkUserAuth(completion: @escaping (UserStatus) -> ()) {
         
         let accessToken = KeychainManager.load(key: "accessToken")
@@ -113,7 +114,7 @@ public class WebasystApp {
         return install
     }
     
-    /// Удаляет установку из базы данных
+    /// Deletes the installation from the database
     /// - Parameter clientId: clientId install
     public func deleteInstall(_ clientId: String) {
         WebasystDataModel()?.deleteInstall(clientId: clientId)
