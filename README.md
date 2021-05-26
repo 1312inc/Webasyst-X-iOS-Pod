@@ -14,11 +14,11 @@ iOS version 13.0 or higher, Swift verison 4.0 or higher
 Webasyst is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
-```ruby
+```
 pod 'Webasyst'
 ```
 And execute in the terminal while in the project folder
-```ruby
+```
 pod install
 ```
 
