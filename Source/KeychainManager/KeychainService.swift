@@ -11,6 +11,11 @@ import Foundation
 
 class KeychainManager {
     
+    /// Saving an entry in the Keychain
+    /// - Parameters:
+    ///   - key: Key to save the record
+    ///   - data: Data for recording
+    /// - Returns: Returns data in OSStatus format
     class func save(key: String, data: Data) -> OSStatus {
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
@@ -23,6 +28,9 @@ class KeychainManager {
         return SecItemAdd(query as CFDictionary, nil)
     }
     
+    /// Retrieving data from the Keychain
+    /// - Parameter key: Record key
+    /// - Returns: Data in Data format
     class func load(key: String) -> Data? {
         let query = [
             kSecClass as String       : kSecClassGenericPassword,
@@ -41,14 +49,7 @@ class KeychainManager {
         }
     }
     
-    class func createUniqueID() -> String {
-        let uuid: CFUUID = CFUUIDCreate(nil)
-        let cfStr: CFString = CFUUIDCreateString(nil, uuid)
-        
-        let swiftString: String = cfStr as String
-        return swiftString
-    }
-    
+    /// Deletes all data from Kechain
     class func deleteAllKeys() {
         let secItemClasses = [kSecClassGenericPassword, kSecClassInternetPassword, kSecClassCertificate, kSecClassKey, kSecClassIdentity]
         for itemClass in secItemClasses {

@@ -322,7 +322,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 200...299:
                     completion(true)
                 default:
-                    print("singUpUser status code request \(httpResponse.statusCode)")
+                    print(NSError(domain: "Webasyst warning: singUpUser status code request \(httpResponse.statusCode)", code: 205, userInfo: nil))
                     completion(false)
                 }
             }
@@ -367,17 +367,4 @@ extension WebasystUserNetworking {
         )
     }
     
-}
-
-extension UIImage {
-    static func gradientImageWithBounds(bounds: CGRect, colors: [CGColor]) -> UIImage {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = bounds
-        gradientLayer.colors = colors
-        UIGraphicsBeginImageContext(gradientLayer.bounds.size)
-        gradientLayer.render(in: UIGraphicsGetCurrentContext()!)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
-    }
 }

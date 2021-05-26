@@ -32,6 +32,7 @@
 		FD58E687265E13FC0037CF13 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E686265E13FC0037CF13 /* UserData.swift */; };
 		FD58E689265E14110037CF13 /* InstallInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E688265E14110037CF13 /* InstallInfo.swift */; };
 		FD58E68B265E14360037CF13 /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E68A265E14360037CF13 /* ImageType.swift */; };
+		FD58E693265E23450037CF13 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E692265E23450037CF13 /* UIImage.swift */; };
 		FD8BD99126524DFB00615C5E /* WebasystUserNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99026524DFB00615C5E /* WebasystUserNetworking.swift */; };
 		FD8BD99426525E3400615C5E /* WebasystAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99226525E3400615C5E /* WebasystAppDataModel.xcdatamodeld */; };
 		FD8BD99826525EC600615C5E /* WebasystDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99726525EC600615C5E /* WebasystDataModel.swift */; };
@@ -106,6 +107,7 @@
 		FD58E686265E13FC0037CF13 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		FD58E688265E14110037CF13 /* InstallInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallInfo.swift; sourceTree = "<group>"; };
 		FD58E68A265E14360037CF13 /* ImageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageType.swift; sourceTree = "<group>"; };
+		FD58E692265E23450037CF13 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		FD8BD99026524DFB00615C5E /* WebasystUserNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystUserNetworking.swift; sourceTree = "<group>"; };
 		FD8BD99326525E3400615C5E /* WebasystAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WebasystAppDataModel.xcdatamodel; sourceTree = "<group>"; };
 		FD8BD99726525EC600615C5E /* WebasystDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystDataModel.swift; sourceTree = "<group>"; };
@@ -359,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */,
+				FD58E692265E23450037CF13 /* UIImage.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -578,6 +581,7 @@
 				FD15E76F264CDEC900DFD52F /* Config.swift in Sources */,
 				FD1C00CF2654E09700EFB307 /* NetworkingHelper.swift in Sources */,
 				FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */,
+				FD58E693265E23450037CF13 /* UIImage.swift in Sources */,
 				FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */,
 				FD58E687265E13FC0037CF13 /* UserData.swift in Sources */,
 				FD58E680265E08670037CF13 /* ProfileData.swift in Sources */,

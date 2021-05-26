@@ -22,6 +22,34 @@ And execute in the terminal while in the project folder
 pod install
 ```
 
+## Library configuration
+
+The library requires initial setup. The following steps are required:
+1) Import the library into your project's AppDelegate file
+```
+import Webasyst
+```
+2) In the didFinishLaunchingWithOptions method, call the WebasystApp configuration method
+```
+let webasyst = WebasystApp()
+webasyst.configure(
+    clientId: *clientId of your application*, 
+    host: *host of your server, or the host of the Webasyst central server*, 
+    scope: *the scope required by your application (separated by commas)*
+)
+```
+3) After configuring the bibiloteca, you can use the Webasyst bibiloteca anywhere in your application
+
+## Description of methods
+
+*A description of all methods, including all parameters, can be obtained from the XCode autocomplete or via QuickHelp*
+
+* **configure** Webasyst library configuration method
+    *Parameters:*
+        ***bundleId**: Bundle Id of your application, required for authorization on the server*
+        ***clientId**: Client Id of your application*
+        ***host**: application server host*
+
 ## Errors
 *In the event of a fault, all errors are displayed in the XCode console with the label Webasyst error. When contacting technical support you need to specify the error code and the message text.*
 

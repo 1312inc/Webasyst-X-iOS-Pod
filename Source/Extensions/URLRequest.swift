@@ -9,6 +9,11 @@ import Foundation
 
 extension URLRequest {
     
+    /// Encoding query parameters into Form Data format
+    /// - Parameters:
+    ///   - parameters: Request parameters
+    ///   - encoding: Encoding format
+    /// - Throws: Encoding error in request parameters
     mutating func setMultipartFormData(_ parameters: Parameters, encoding: String.Encoding) throws {
 
         let makeRandom = { UInt32.random(in: (.min)...(.max)) }
