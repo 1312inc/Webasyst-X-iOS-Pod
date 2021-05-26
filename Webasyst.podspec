@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/1312inc/Webasyst-X-iOS-Pod'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'LGBL', :file => 'LICENSE' }
-  s.author           = { 'viktkobst' => 'viktkobst@gmail.com' }
+  s.author           = { '1312 Inc.' => 'hello@1312.io' }
   s.source           = { :git => 'https://github.com/1312inc/Webasyst-X-iOS-Pod.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
