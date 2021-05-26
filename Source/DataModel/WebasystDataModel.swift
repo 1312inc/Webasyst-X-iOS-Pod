@@ -279,7 +279,7 @@ extension WebasystDataModel {
                 completion(nil)
             }
         } catch let error {
-            print("Webasyst Database error(method: getProfile): \(error.localizedDescription)")
+            print(NSError(domain: "Webasyst Database error(method: getProfile): \(error.localizedDescription)", code: 502, userInfo: nil))
         }
     }
     
@@ -292,7 +292,7 @@ extension WebasystDataModel {
             try context.execute(deleteRequest)
             self.save()
         } catch let error {
-            print("Webasyst Database error(method: deleteProfileData): \(error.localizedDescription)")
+            print(NSError(domain: "Webasyst Database error(method: deleteProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
         }
     }
     

@@ -29,7 +29,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     internal func buildAuthRequest() -> URLRequest? {
         
         guard let config = self.config else {
-            print(NSError(domain: "WebasystApp not configuration", code: -1, userInfo: nil))
+            print(NSError(domain: "Webasyst error(method: buildAuthRequest): WebasystApp not configuration", code: 400, userInfo: nil))
             return nil
         }
         
@@ -77,7 +77,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         do {
             try request.setMultipartFormData(paramRequest, encoding: String.Encoding.utf8)
         } catch let error {
-            print("Webasyst error: \(error.localizedDescription)")
+            print(NSError(domain: "Webasyst error(method: getAccessToken): \(error.localizedDescription)", code: 400, userInfo: nil))
         }
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -125,7 +125,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         do {
             try request.setMultipartFormData(paramsRequest, encoding: String.Encoding.utf8)
         } catch let error {
-            print("Webasyst error: \(error.localizedDescription)")
+            print(NSError(domain: "Webasyst error(method: refreshAccessToken): \(error.localizedDescription)", code: 400, userInfo: nil))
         }
         
         

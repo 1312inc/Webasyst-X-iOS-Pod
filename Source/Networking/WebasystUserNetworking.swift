@@ -21,9 +21,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             self.queue.async(group: self.dispatchGroup) {
                 self.webasystNetworkingService.refreshAccessToken { result in
                     if result {
-                        print("Webasyst refresh token is success")
+                        print(NSError(domain: "Webasyst success: Webasyst refresh token is success", code: 200, userInfo: nil))
                     } else {
-                        print("Webasyst refresh token is error")
+                        print(NSError(domain: "Webasyst success: Webasyst refresh token is success", code: 400, userInfo: nil))
                     }
                 }
             }
@@ -54,13 +54,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                                 }
                             }
                         } else {
-                            print("Webasyst error: error in obtaining installation tokens")
+                            print(NSError(domain: "Webasyst error: error in obtaining installation tokens", code: 400, userInfo: nil))
                         }
-                    }
-                    if installList != nil {
-                        
-                    } else {
-                        completion(NSLocalizedString("loadingError", comment: ""), 30, true)
                     }
                 }
             }
@@ -97,7 +92,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         }
                     }
                 default:
-                    print(httpResponse.statusCode)
+                    print(NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil))
                 }
             }
         }.resume()
@@ -114,7 +109,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/installations/", parameters: [:]) else {
-            print("Webasyst error: Failed to retrieve list of user settings")
+            print(NSError(domain: "Webasyst error: Failed to retrieve list of user settings", code: 400, userInfo: nil))
             completion(nil)
             return
         }
@@ -135,7 +130,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                 default:
                     completion(nil)
-                    print(httpResponse.statusCode)
+                    print(NSError(domain: "Webasyst error: Failed to retrieve list of user settings", code: 400, userInfo: nil))
                 }
             }
         }.resume()
@@ -166,7 +161,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue("\(data.count)", forHTTPHeaderField: "Content-Length")
             request.httpBody = data
         } catch let error {
-            print("Webasyst error: \(error.localizedDescription)")
+            print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
         }
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -183,7 +178,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     completion(true, json)
                 }
             } catch let error {
-                print("Webasyst error: \(error.localizedDescription)")
+                print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
             }
         }.resume()
     }
@@ -203,7 +198,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             ]
             
             guard let url = URL(string: "\(String(describing: install.url))/api.php/token-headless") else {
-                print("Webasyst error: Url install error")
+                print(NSError(domain: "Webasyst error: Url install error", code: 401, userInfo: nil))
                 break
             }
             
@@ -212,8 +207,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             
             do {
                 try request.setMultipartFormData(parameters, encoding: String.Encoding.utf8)
-            } catch {
-                print("Webasyst error: Failed to get request body")
+            } catch let error {
+                print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
             }
             
             
@@ -233,7 +228,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         completion("\(NSLocalizedString("loadingInstallMessage", comment: "")) \(install.domain)", false)
                     }
                 } catch let error {
-                    print("Webasyst error: Domain: \(install.url) \(error.localizedDescription)")
+                    print(NSError(domain: "Webasyst error: Domain: \(install.url) \(error.localizedDescription)", code: 401, userInfo: nil))
                 }
             }.resume()
         }
@@ -242,7 +237,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     func getInstallInfo(_ install: UserInstall) {
         
         guard let url = URL(string: "\(install.url)/api.php/webasyst.getInfo?access_token=\(install.accessToken ?? "")&format=json") else {
-            print("Webasyst error: Failed to generate a url when getting installation information")
+            print(NSError(domain: "Webasyst error: Failed to generate a url when getting installation information", code: 401, userInfo: nil))
             return
         }
         
@@ -275,7 +270,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                             self.profileInstallService?.saveInstall(saveInstall)
                         }
                     } catch let error {
-                        print("Webasyst error: \(info.name) \(error.localizedDescription)")
+                        print(NSError(domain: "Webasyst error: \(info.name) \(error.localizedDescription)", code: 401, userInfo: nil))
                     }
                 case .gradient:
                     do {
@@ -286,7 +281,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         
                         self.profileInstallService?.saveInstall(install)
                     } catch let error {
-                        print("Webasyst error: \(info.name) \(error.localizedDescription)")
+                        print(NSError(domain: "Webasyst error: \(info.name) \(error.localizedDescription)", code: 401, userInfo: nil))
                     }
                 case .unknown(value: _):
                     let imageData = self.createDefaultGradient()
@@ -301,7 +296,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData)
                 
                 self.profileInstallService?.saveInstall(newInstall)
-                print("Webasyst warning: \(install.url) \(error.localizedDescription)")
+                print(NSError(domain: "Webasyst warning: \(install.url) \(error.localizedDescription)", code: 205, userInfo: nil))
             }
         }.resume()
         
