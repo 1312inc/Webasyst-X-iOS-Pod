@@ -48,43 +48,49 @@ webasyst.configure(
 
 * **configure** Webasyst library configuration method.
     ***Parameters:***
-        ***bundleId**: Bundle Id of your application, required for authorization on the server*
-        ***clientId**: Client Id of your application*
-        ***host**: application server host*
+        ***bundleId**: Bundle Id of your application, required for authorization on the server;*
+        ***clientId**: Client Id of your application;*
+        ***host**: application server host;*
 
 * **getToken** A method for getting Webasyst tokens.
     ***Parameters:***
-        ***tokenType:** Type of token (Access Token or Refresh Token)*
-        ***Returns:*** Requested token in string format
+        ***tokenType:** Type of token (Access Token or Refresh Token);*
+        ***Returns:*** Requested token in string format;
     
 * **authWebasyst (DEPRECATED!!!)** Webasyst server authorization method. ![#f03c15]  `#f03c15`
 ***Parameters:***
-        ***navigationController:** UINavigationController to display the OAuth webasyst modal window*
-    ***action:** Closure to perform an action after authorization*
+        ***navigationController:** UINavigationController to display the OAuth webasyst modal window;*
+    ***action:** Closure to perform an action after authorization;*
     
+* **getAuthCode** Method for requesting a confirmation code for authorisation via WAID without a browser.
+***Parameters:***
+        ***value:** Email or telephone number to which a confirmation code should be sent;*
+        ***type:** Value type(.email/.phone);*
+        ***success:** Short-circuiting performing after a request has been made;*
+        ***Returns:** Returns the status of the request to the server in Bool format;*
     
 * **checkUserAuth** User authentication check on Webasyst server.
     ***Parameters:***
-        ***completion:** The closure performed after the check returns a Bool value of whether the user is authorized or not*
-    ***Returns:*** Returns user status in the application (.authorized/.nonAuthorized/.error(message: String))
+        ***completion:** The closure performed after the check returns a Bool value of whether the user is authorized or not;*
+    ***Returns:** Returns user status in the application (.authorized/.nonAuthorized/.error(message: String));*
     
 * **getAllUserInstall** Getting user install list.
-    ***Returns:*** List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
+    ***Returns:** List of all user installations in UserInstall format (name, clientId, domain, accessToken, url);*
     
 * **getUserInstall**  Obtaining user installation.
     ***Parameters:***
-        ***clientId:** clientId setting*
-    ***Returns:*** Installation in User Install format 
+        ***clientId:** clientId setting;*
+    ***Returns:*** Installation in User Install format;
     
 * **deleteInstall** Deletes the installation from the database.
     ***Parameters:***
-        ***clientId:** clientId install*
+        ***clientId:** clientId install;*
         
 * **getProfileData** Returns user profile data
-    ***Returns:*** User profile data in ProfileData format
+    ***Returns:*** User profile data in ProfileData format;
     
 * **logOutUser** Exit a user from the account and delete all records in the database.
-    ***Returns:*** Boolean value of deauthorization success
+    ***Returns:*** Boolean value of deauthorization success;
         
 ## Errors
 *In the event of a fault, all errors are displayed in the XCode console with the label Webasyst error. When contacting technical support you need to specify the error code and the message text.*
@@ -104,7 +110,8 @@ Error Domain=Webasyst warning: https://1312.io The data couldn’t be read becau
 
 ## Author
 
-1312 Inc. *hello@1312.io*
+**Company:** 1312 Inc. *hello@1312.io*
+**/Developer:** Viktor Kobykhno *ViktkobST@gmail.com*
 
 ## License
 
