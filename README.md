@@ -57,12 +57,11 @@ webasyst.configure(
         ***tokenType:** Type of token (Access Token or Refresh Token)*
         ***Returns:*** Requested token in string format
     
-* **authWebasyst** Webasyst server authorization method. ![#f03c15]  `#f03c15`
+* **authWebasyst (DEPRECATED!!!)** Webasyst server authorization method. ![#f03c15]  `#f03c15`
 ***Parameters:***
         ***navigationController:** UINavigationController to display the OAuth webasyst modal window*
     ***action:** Closure to perform an action after authorization*
     
-    * ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `DEPRECATED`
     
 * **checkUserAuth** User authentication check on Webasyst server.
     ***Parameters:***
