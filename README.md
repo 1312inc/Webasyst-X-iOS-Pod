@@ -97,6 +97,12 @@ webasyst.configure(
         `undefined`: Unknown error, in the value error transmits the text of the error.
         ```
     
+* **sendConfirmCode** Sending a confirmation code after calling the getAuthCode method.
+    ***Parameters:***
+        ***code:** Code received by user by e-mail or text message;*
+        ***success:** Closure performed after the method has been executed;*
+    ***Returns:** Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain;*
+    
 * **checkUserAuth** User authentication check on Webasyst server.
     ***Parameters:***
         ***completion:** The closure performed after the check returns a Bool value of whether the user is authorized or not;*

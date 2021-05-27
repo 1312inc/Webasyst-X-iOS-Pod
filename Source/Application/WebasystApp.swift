@@ -56,7 +56,7 @@ public class WebasystApp {
     /// - Parameters:
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
     ///   - action: Closure to perform an action after authorization
-    @available(*, deprecated, message: "This method is obsolete, use oAuthLoginWebasyst")
+    @available(*, deprecated, message: "This method is obsolete, use oAuthLogin")
     public func authWebasyst(navigationController: UINavigationController, action: @escaping ((_ result: WebasystServerAnswer) -> ())) {
         let coordinator = AuthCoordinator(navigationController)
         coordinator.start()
@@ -101,14 +101,25 @@ public class WebasystApp {
         coordinator.action = success
     }
     
-    /// Method for requesting a confirmation code for authorisation via WAID without a browser
+    /// Method for obtaining authorisation code without a browser
     /// - Parameters:
-    ///   - value: Email or telephone number to which a confirmation code should be sent
+    ///   - value: Phone number or email
     ///   - type: Value type(.email/.phone)
-    ///   - success: Short-circuiting performing after a request has been made
-    /// - Returns: Returns the status of the request to the server in Bool format
+    ///   - success: Closure performed after the method has been executed
+    /// - Returns: Status of code sent to the user by email or text message, see AuthResult documentation for a detailed description of statuses
     public func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
         WebasystNetworking().getAuthCode(value, type: type) { result in
+            success(result)
+        }
+    }
+    
+    /// Sending a confirmation code after calling the getAuthCode method
+    /// - Parameters:
+    ///   - code: Code received by user by e-mail or text message
+    ///   - success: Closure performed after the method has been executed
+    /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
+    public func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
+        WebasystNetworking().sendConfirmCode(code) { result in
             success(result)
         }
     }
