@@ -47,7 +47,7 @@
 		C7E1F46DBD3CBDA416ECF4BE /* Pods-Webasyst_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Example.debug.xcconfig"; path = "Target Support Files/Pods-Webasyst_Example/Pods-Webasyst_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D05B7930FC6237D6DA2E6C92 /* Pods-Webasyst_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Tests.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Tests/Pods-Webasyst_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DFE86D84325521844551AF1A /* Pods-Webasyst_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Example.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Example/Pods-Webasyst_Example.release.xcconfig"; sourceTree = "<group>"; };
-		FD58E690265E20460037CF13 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		FD58E690265E20460037CF13 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,7 +73,6 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
-				FD58E690265E20460037CF13 /* README.md */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Webasyst */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -135,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				4C523DE2CFE8162E5DE43839 /* Webasyst.podspec */,
+				FD58E690265E20460037CF13 /* README.md */,
 				910D7689F2F03DE03697D569 /* LICENSE */,
 			);
 			name = "Podspec Metadata";

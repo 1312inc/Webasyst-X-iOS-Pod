@@ -56,6 +56,7 @@ public class WebasystApp {
     /// - Parameters:
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
     ///   - action: Closure to perform an action after authorization
+    @available(*, deprecated, message: "This method is obsolete, use oAuthLoginWebasyst")
     public func authWebasyst(navigationController: UINavigationController, action: @escaping ((_ result: WebasystServerAnswer) -> ())) {
         let coordinator = AuthCoordinator(navigationController)
         coordinator.start()
@@ -74,6 +75,42 @@ public class WebasystApp {
             }
         }
         coordinator.action = success
+    }
+    
+    /// Webasyst server authorization method
+    /// - Parameters:
+    ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
+    ///   - action: Closure to perform an action after authorization
+    public func oAuthLogin(navigationController: UINavigationController, action: @escaping ((_ result: WebasystServerAnswer) -> ())) {
+        let coordinator = AuthCoordinator(navigationController)
+        coordinator.start()
+        let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
+            switch success {
+            case .success:
+                WebasystUserNetworking().preloadUserData { text, _, status in
+                    if status {
+                        action(WebasystServerAnswer.success)
+                    } else {
+                        action(WebasystServerAnswer.error(error: text))
+                    }
+                }
+            case .error(error: let error):
+                action(WebasystServerAnswer.error(error: error))
+            }
+        }
+        coordinator.action = success
+    }
+    
+    /// Method for requesting a confirmation code for authorisation via WAID without a browser
+    /// - Parameters:
+    ///   - value: Email or telephone number to which a confirmation code should be sent
+    ///   - type: Value type(.email/.phone)
+    ///   - success: Short-circuiting performing after a request has been made
+    /// - Returns: Returns the status of the request to the server in Bool format
+    public func getAuthCode(_ value: String, type: AuthType, success: @escaping (Bool) -> ()) {
+        WebasystNetworking().getAuthCode(value, type: type) { result in
+            success(result)
+        }
     }
     
     /// User authentication check on Webasyst server

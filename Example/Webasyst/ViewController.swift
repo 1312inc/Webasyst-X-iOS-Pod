@@ -13,8 +13,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        WebasystApp().getAllUserInstall { result in
-            
+        WebasystApp().authWebasyst(navigationController: UINavigationController()) { answer in
+            print(answer)
         }
     }
 

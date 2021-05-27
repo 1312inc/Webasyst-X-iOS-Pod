@@ -14,12 +14,11 @@ Pod::Spec.new do |s|
                           This library has been created to make working with Webasyst easier. The library allows you to authorise a user via a WAID server, get user settings and get tokens to work with them. The library has its own database to work with and requires no additional Core Data connection to the project.
                         DESC
   s.homepage         = 'https://github.com/1312inc/Webasyst-X-iOS-Pod'
-  s.license          = { :type => 'LGBL', :file => 'LICENSE' }
-  s.author           = { '1312 Inc.' => 'hello@1312.io' }
-  s.source           = { :git => 'https://github.com/1312inc/Webasyst-X-iOS-Pod.git', :tag => "1.0.0" }
+  s.license          = { :type => 'LGPL', :file => 'LICENSE' }
+  s.authors          = { '1312 Inc.' => 'hello@1312.io' }
+  s.source           = { :git => 'https://github.com/1312inc/Webasyst-X-iOS-Pod.git', :tag => "v1.0.0" }
 
   s.ios.deployment_target = '13.0'
-  s.module_name   = 'Rich'
   s.swift_version = '4.0'
 
   s.source_files = 'Source/**/*.swift'
