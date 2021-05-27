@@ -131,7 +131,7 @@ webasyst.configure(
 
 Example of an error
 ```ruby
-Error Domain=Webasyst warning: https://1312.io The data couldn’t be read because it is missing. Code=205 "(null)"
+Error Domain=Webasyst warning: https://1312.io The data couldn’t be read because it was missing. Code=205 "(null)"
 ```
 
 * **200:** Successful implementation of the method
