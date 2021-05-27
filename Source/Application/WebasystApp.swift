@@ -107,7 +107,7 @@ public class WebasystApp {
     ///   - type: Value type(.email/.phone)
     ///   - success: Short-circuiting performing after a request has been made
     /// - Returns: Returns the status of the request to the server in Bool format
-    public func getAuthCode(_ value: String, type: AuthType, success: @escaping (Bool) -> ()) {
+    public func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
         WebasystNetworking().getAuthCode(value, type: type) { result in
             success(result)
         }

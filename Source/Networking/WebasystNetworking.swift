@@ -54,13 +54,13 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// - Parameters:
     ///   - value: Phone number or email
     ///   - type: Value type(.email/.phone)
-    ///   - success: Boolean value of whether the request went through to the server
-    /// - Returns: Returns the success status of the request in Bool format
-    internal func getAuthCode(_ value: String, type: AuthType, success: @escaping (Bool) -> ()) {
+    ///   - success: Closure performed after the method has been executed
+    /// - Returns: Status of code sent to the user by email or text message, see AuthResult documentation for a detailed description of statuses
+    internal func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
         
         guard let config = self.config else {
-            print(NSError(domain: "Webasyst error(method: phoneOrLoginAuthentification): WebasystApp not configuration", code: 400, userInfo: nil))
-            success(false)
+            print(NSError(domain: "Webasyst error(method: getAuthCode): WebasystApp not configuration", code: 400, userInfo: nil))
+            success(AuthResult.undefined(error: "WebasystApp not configuration"))
             return
         }
         
@@ -80,7 +80,140 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         }
         
         guard let url = self.buildWebasystUrl("/id/oauth2/auth/headless/code/", parameters: [:]) else {
-            print(NSError(domain: "Webasyst error(method: phoneOrLoginAuthentification): Authorisation URL generation error", code: 400, userInfo: nil))
+            print(NSError(domain: "Webasyst error(method: getAuthCode): Authorisation URL generation error", code: 400, userInfo: nil))
+            success(AuthResult.undefined(error: "Authorisation URL generation error"))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        do {
+            try request.setMultipartFormData(parametersRequest, encoding: String.Encoding.utf8)
+        } catch let error {
+            print(NSError(domain: "Webasyst error(method: getAuthCode): \(error.localizedDescription)", code: 400, userInfo: nil))
+            success(AuthResult.undefined(error: error.localizedDescription))
+        }
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard error == nil else {
+                success(AuthResult.undefined(error: "Request error"))
+                print(NSError(domain: "Webasyst error(method: getAuthCode): Request error", code: 400, userInfo: nil))
+                return
+            }
+            
+            guard let data = data else {
+                success(AuthResult.undefined(error: "Error in receiving the server response body"))
+                print(NSError(domain: "Webasyst error(method: getAuthCode): Error in receiving the server response body", code: 400, userInfo: nil))
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                success(AuthResult.undefined(error: "Request error"))
+                print(NSError(domain: "Webasyst error(method: getAuthCode): Request error", code: 400, userInfo: nil))
+                return
+            }
+            
+            switch httpResponse.statusCode {
+            case 200...299:
+                success(AuthResult.success)
+            case 400:
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if json["error"] as! String == "no_channels" {
+                            success(AuthResult.no_channels)
+                        } else if json["error"] as! String == "invalid_client" {
+                            success(AuthResult.invalid_client)
+                        } else if json["error"] as! String == "require_code_challenge" {
+                            success(AuthResult.require_code_challenge)
+                        } else if json["error"] as! String == "invalid_email" {
+                            success(AuthResult.invalid_email)
+                        } else if json["error"] as! String == "invalid_phone" {
+                            success(AuthResult.invalid_phone)
+                        } else {
+                            if json["error"] != nil {
+                                success(AuthResult.undefined(error: json["error"] as? String ?? ""))
+                            } else {
+                                success(AuthResult.undefined(error: "undefined server error"))
+                            }
+                        }
+                    } else {
+                        success(AuthResult.undefined(error: "Undefined error"))
+                    }
+                } catch let error {
+                    success(AuthResult.undefined(error: error.localizedDescription))
+                }
+            case 408:
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if json["error"] as! String == "request_timeout_limit" {
+                            success(AuthResult.request_timeout_limit)
+                        } else {
+                            if json["error"] != nil {
+                                success(AuthResult.undefined(error: json["error"] as? String ?? ""))
+                            } else {
+                                success(AuthResult.undefined(error: "undefined server error"))
+                            }
+                        }
+                    } else {
+                        success(AuthResult.undefined(error: "Undefined error"))
+                    }
+                } catch let error {
+                    success(AuthResult.undefined(error: error.localizedDescription))
+                }
+            case 500:
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if json["error"] as! String == "sent_notification_fail" {
+                            success(AuthResult.sent_notification_fail)
+                        } else if json["error"] as! String == "server_error" {
+                            success(AuthResult.server_error)
+                        } else {
+                            if json["error"] != nil {
+                                success(AuthResult.undefined(error: json["error"] as? String ?? ""))
+                            } else {
+                                success(AuthResult.undefined(error: "undefined server error"))
+                            }
+                        }
+                    } else {
+                        success(AuthResult.undefined(error: "Undefined error"))
+                    }
+                } catch let error {
+                    success(AuthResult.undefined(error: error.localizedDescription))
+                }
+            default:
+                success(AuthResult.server_error)
+            }
+        }.resume()
+    }
+    
+    /// Sending a confirmation code after calling the getAuthCode method
+    /// - Parameters:
+    ///   - code: Code received by user by e-mail or text message
+    ///   - success: Closure performed after the method has been executed
+    /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
+    internal func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
+        
+        guard let config = self.config else {
+            print(NSError(domain: "Webasyst error(method: sendConfirmCode): WebasystApp not configuration", code: 400, userInfo: nil))
+            success(false)
+            return
+        }
+        
+        guard let passwordHash = self.disposablePasswordAuth else {
+            print(NSError(domain: "Webasyst error(method: sendConfirmCode): Failed to obtain a one-time password", code: 400, userInfo: nil))
+            success(false)
+            return
+        }
+        
+        let parametersRequest: Parameters = [
+            "client_id": config.clientId,
+            "code_challenge": passwordHash,
+            "code": code
+        ]
+        
+        guard let url = buildWebasystUrl("/id/oauth2/auth/headless/token/", parameters: [:]) else {
+            print(NSError(domain: "Webasyst error(method: sendConfirmCode): Authorisation URL generation error", code: 400, userInfo: nil))
             success(false)
             return
         }
@@ -91,31 +224,63 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         do {
             try request.setMultipartFormData(parametersRequest, encoding: String.Encoding.utf8)
         } catch let error {
-            print(NSError(domain: "Webasyst error(method: phoneOrLoginAuthentification): \(error.localizedDescription)", code: 400, userInfo: nil))
+            print(NSError(domain: "Webasyst error(method: sendConfirmCode): \(error.localizedDescription))'", code: 400, userInfo: nil))
             success(false)
         }
         
-        URLSession.shared.dataTask(with: request) { _, response, error in
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            
             guard error == nil else {
+                print(NSError(domain: "Webasyst error(method: sendConfirmCode): Request error", code: 400, userInfo: nil))
                 success(false)
-                print(NSError(domain: "Webasyst error(method: phoneOrLoginAuthentification): Request error", code: 400, userInfo: nil))
                 return
             }
             
-            guard let response = response as? HTTPURLResponse else {
+            guard let data = data else {
                 success(false)
-                print(NSError(domain: "Webasyst error(method: phoneOrLoginAuthentification): Request data error", code: 400, userInfo: nil))
+                print(NSError(domain: "Webasyst error(method: sendConfirmCode): Error in receiving the server response body", code: 400, userInfo: nil))
                 return
             }
             
-            if response.statusCode == 200 {
-                success(true)
-            } else {
+            guard let httpResponse = response as? HTTPURLResponse else {
                 success(false)
+                print(NSError(domain: "Webasyst error(method: sendConfirmCode): Request error", code: 400, userInfo: nil))
+                return
+            }
+            
+            switch httpResponse.statusCode {
+            case 200...299:
+                do {
+                    let authData = try JSONDecoder().decode(UserToken.self, from: data)
+                    let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                    let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                    if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                        success(true)
+                    }
+                } catch let error {
+                    success(false)
+                    print(NSError(domain: "Webasyst error(method: sendConfirmCode): \(error.localizedDescription)", code: 400, userInfo: nil))
+                }
+            default:
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if json["error"] != nil {
+                            success(false)
+                            print(NSError(domain: "Webasyst error(method: sendConfirmCode): \(json["error"] as! String)", code: 400, userInfo: nil))
+                        } else {
+                            success(false)
+                            print(NSError(domain: "Webasyst error(method: sendConfirmCode): undefined server error", code: 400, userInfo: nil))
+                        }
+                    } else {
+                        success(false)
+                        print(NSError(domain: "Webasyst error(method: sendConfirmCode): undefined server error", code: 400, userInfo: nil))
+                    }
+                } catch let error {
+                    print(NSError(domain: "Webasyst error(method: sendConfirmCode): \(error.localizedDescription)", code: 400, userInfo: nil))
+                }
             }
             
         }.resume()
-        
     }
     
     /// Getting a permanent Webasyst token

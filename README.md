@@ -66,8 +66,36 @@ webasyst.configure(
 ***Parameters:***
         ***value:** Email or telephone number to which a confirmation code should be sent;*
         ***type:** Value type(.email/.phone);*
-        ***success:** Short-circuiting performing after a request has been made;*
-        ***Returns:** Returns the status of the request to the server in Bool format;*
+        ***success:** Closure performed after the method has been executed;*
+        ***Returns:** Status of code sent to the user by email or text message, see AuthResult documentation for a detailed description of statuses;*
+
+        ```
+        AuthResult
+
+        Server response when authentication is requested
+
+        Values:
+
+        `success`: Successful request Tokens saved in Keychain.
+
+        `no_channels`: Incorrect clientId.
+
+        `invalid_client`: Not transmitted code_challenge.
+
+        `require_code_challenge`: Not transmitted code_challenge.
+
+        `invalid_email`: An invalid string is passed as an email.
+
+        `invalid_phone`: An invalid string is passed as the phone.
+
+        `request_timeout_limit`: Repeat request sent before timeout expires for repeat request.
+
+        `sent_notification_fail`: The server was unable to send the code.
+
+        `server_error`: Server error.
+
+        `undefined`: Unknown error, in the value error transmits the text of the error.
+        ```
     
 * **checkUserAuth** User authentication check on Webasyst server.
     ***Parameters:***
@@ -111,7 +139,7 @@ Error Domain=Webasyst warning: https://1312.io The data couldn’t be read becau
 ## Author
 
 **Company:** 1312 Inc. *hello@1312.io*
-**/Developer:** Viktor Kobykhno *ViktkobST@gmail.com*
+**Developer:** Viktor Kobykhno *ViktkobST@gmail.com*
 
 ## License
 
