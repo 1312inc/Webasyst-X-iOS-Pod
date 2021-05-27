@@ -73,6 +73,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				FD58E690265E20460037CF13 /* README.md */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Webasyst */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -134,7 +135,6 @@
 			isa = PBXGroup;
 			children = (
 				4C523DE2CFE8162E5DE43839 /* Webasyst.podspec */,
-				FD58E690265E20460037CF13 /* README.md */,
 				910D7689F2F03DE03697D569 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
