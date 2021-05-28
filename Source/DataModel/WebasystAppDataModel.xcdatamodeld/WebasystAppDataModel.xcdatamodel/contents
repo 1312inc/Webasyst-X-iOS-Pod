@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E241" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="InstallList" representedClassName="InstallList" syncable="YES" codeGenerationType="class">
+    <entity name="InstallList" representedClassName="InstallList" syncable="YES">
         <attribute name="accessToken" optional="YES" attributeType="String"/>
         <attribute name="clientId" optional="YES" attributeType="String"/>
         <attribute name="domain" optional="YES" attributeType="String"/>
@@ -8,7 +8,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
-    <entity name="Profile" representedClassName="Profile" syncable="YES" codeGenerationType="class">
+    <entity name="Profile" representedClassName="Profile" syncable="YES">
         <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="firstName" optional="YES" attributeType="String"/>
         <attribute name="fullName" optional="YES" attributeType="String"/>
