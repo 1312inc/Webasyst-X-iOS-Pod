@@ -16,9 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let webasyst = WebasystApp()
         webasyst.configure(clientId: "96fa27732ea21b508a24f8599168ed49", host: "www.webasyst.com", scope: "blog,site,shop")
-        webasyst.getAuthCode("79145016004", type: .phone) { result in
-            print(result)
-        }
         return true
     }
 

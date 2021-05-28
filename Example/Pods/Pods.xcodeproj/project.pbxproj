@@ -18,10 +18,6 @@
 		9BF0E652EA5D01971820B3CDED85AEBE /* Pods-Webasyst_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E8CA7EE052DE4A709D2F93657A5D116F /* Pods-Webasyst_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FD01687A265F551900BBF9EB /* AuthType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD016879265F551900BBF9EB /* AuthType.swift */; };
 		FD01687D265F799D00BBF9EB /* AuthResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD01687C265F799D00BBF9EB /* AuthResult.swift */; };
-		FD0AF4D62660B06400159FC9 /* Profile+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0AF4D22660B06400159FC9 /* Profile+CoreDataClass.swift */; };
-		FD0AF4D72660B06400159FC9 /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0AF4D32660B06400159FC9 /* Profile+CoreDataProperties.swift */; };
-		FD0AF4D82660B06400159FC9 /* InstallList+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0AF4D42660B06400159FC9 /* InstallList+CoreDataClass.swift */; };
-		FD0AF4D92660B06400159FC9 /* InstallList+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0AF4D52660B06400159FC9 /* InstallList+CoreDataProperties.swift */; };
 		FD15E76F264CDEC900DFD52F /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E76E264CDEC900DFD52F /* Config.swift */; };
 		FD15E773264CF13600DFD52F /* WebasystNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E772264CF13600DFD52F /* WebasystNetworking.swift */; };
 		FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E776264D008E00DFD52F /* WebasystNetworkingManager.swift */; };
@@ -98,10 +94,6 @@
 		F7EA7CBD3F3FECEE0070FBD35F4E466A /* Pods-Webasyst_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Webasyst_Example-dummy.m"; sourceTree = "<group>"; };
 		FD016879265F551900BBF9EB /* AuthType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthType.swift; sourceTree = "<group>"; };
 		FD01687C265F799D00BBF9EB /* AuthResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResult.swift; sourceTree = "<group>"; };
-		FD0AF4D22660B06400159FC9 /* Profile+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataClass.swift"; sourceTree = "<group>"; };
-		FD0AF4D32660B06400159FC9 /* Profile+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		FD0AF4D42660B06400159FC9 /* InstallList+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InstallList+CoreDataClass.swift"; sourceTree = "<group>"; };
-		FD0AF4D52660B06400159FC9 /* InstallList+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InstallList+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		FD15E76E264CDEC900DFD52F /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		FD15E772264CF13600DFD52F /* WebasystNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystNetworking.swift; sourceTree = "<group>"; };
 		FD15E776264D008E00DFD52F /* WebasystNetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystNetworkingManager.swift; sourceTree = "<group>"; };
@@ -362,10 +354,6 @@
 		FD8BD99626525E8C00615C5E /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				FD0AF4D22660B06400159FC9 /* Profile+CoreDataClass.swift */,
-				FD0AF4D32660B06400159FC9 /* Profile+CoreDataProperties.swift */,
-				FD0AF4D42660B06400159FC9 /* InstallList+CoreDataClass.swift */,
-				FD0AF4D52660B06400159FC9 /* InstallList+CoreDataProperties.swift */,
 				FD8BD99226525E3400615C5E /* WebasystAppDataModel.xcdatamodeld */,
 				FD8BD99726525EC600615C5E /* WebasystDataModel.swift */,
 			);
@@ -569,14 +557,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E05AE547C0CCFF3C4D2E6C3657A3141 /* Webasyst-dummy.m in Sources */,
-				FD0AF4D62660B06400159FC9 /* Profile+CoreDataClass.swift in Sources */,
 				FD58E67E265E05020037CF13 /* UserStatus.swift in Sources */,
 				FD8BD99426525E3400615C5E /* WebasystAppDataModel.xcdatamodeld in Sources */,
 				FD58E689265E14110037CF13 /* InstallInfo.swift in Sources */,
-				FD0AF4D92660B06400159FC9 /* InstallList+CoreDataProperties.swift in Sources */,
 				FD15E773264CF13600DFD52F /* WebasystNetworking.swift in Sources */,
 				FD15E783264D0A9400DFD52F /* AuthViewModel.swift in Sources */,
-				FD0AF4D72660B06400159FC9 /* Profile+CoreDataProperties.swift in Sources */,
 				FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */,
 				FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */,
 				FD8BD99826525EC600615C5E /* WebasystDataModel.swift in Sources */,
@@ -590,7 +575,6 @@
 				FD58E67C265E04EB0037CF13 /* TokenType.swift in Sources */,
 				FD15E76F264CDEC900DFD52F /* Config.swift in Sources */,
 				FD1C00CF2654E09700EFB307 /* NetworkingHelper.swift in Sources */,
-				FD0AF4D82660B06400159FC9 /* InstallList+CoreDataClass.swift in Sources */,
 				FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */,
 				FD58E693265E23450037CF13 /* UIImage.swift in Sources */,
 				FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */,

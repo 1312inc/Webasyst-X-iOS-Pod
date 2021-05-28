@@ -123,11 +123,11 @@ extension WebasystDataModel {
         guard let context = managedObjectContext else { return nil }
         
         do {
-            guard let result = try context.fetch(request) as? [InstallList]? else {
+            guard let result = try context.fetch(request) as? [InstallList] else {
                 return nil
             }
-            if !(result?.isEmpty ?? true) {
-                let install = UserInstall(name: result?[0].name ?? "", domain: result?[0].url ?? "", id: result?[0].accessToken ?? "", accessToken: result?[0].domain ?? "", url: result?[0].clientId ?? "", image: result?[0].image)
+            if !(result.isEmpty) {
+                let install = UserInstall(name: result[0].name ?? "", domain: result[0].domain ?? "", id: result[0].clientId ?? "", accessToken: result[0].accessToken ?? "", url: result[0].url ?? "", image: result[0].image)
                 return install
             } else {
                 return nil
