@@ -326,7 +326,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     completion(false)
                 }
             }
-        }
+        }.resume()
     }
 }
 
