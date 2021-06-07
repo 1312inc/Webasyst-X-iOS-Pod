@@ -11,10 +11,37 @@ import Webasyst
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var authButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         WebasystApp().checkUserAuth { result in
-            print(result)
+            switch result {
+            case .authorized:
+                DispatchQueue.main.async {
+                    self.authButton.setTitle("Вы уже авторизованы", for: .normal)
+                }
+            case .nonAuthorized:
+                DispatchQueue.main.async {
+                    self.authButton.setTitle("Авторизация", for: .normal)
+                }
+            case .error(message: _):
+                DispatchQueue.main.async {
+                    self.authButton.setTitle("Ошибка авторизации", for: .normal)
+                }
+                
+            }
+        }
+    }
+    
+    @IBAction func authButtonTap(_ sender: Any) {
+        WebasystApp().oAuthLogin(navigationController: self.navigationController ?? UINavigationController()) { result in
+            switch result {
+            case .success:
+                print("success")
+            case .error(error: let error):
+                print(error)
+            }
         }
     }
 

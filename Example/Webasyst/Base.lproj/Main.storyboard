@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ONr-Jm-bPF">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -18,11 +18,47 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MFY-9V-ipV">
+                                <rect key="frame" x="26" y="318.5" width="323" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="authButtonTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Iie-5g-CUY"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="MFY-9V-ipV" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="RCM-tJ-yRW"/>
+                            <constraint firstItem="MFY-9V-ipV" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="Ygc-b0-BVq"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="MFY-9V-ipV" secondAttribute="trailing" constant="10" id="fac-y0-ox8"/>
+                            <constraint firstItem="MFY-9V-ipV" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="10" id="sLq-Th-RYt"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="DVn-HG-07B"/>
+                    <connections>
+                        <outlet property="authButton" destination="MFY-9V-ipV" id="I5l-6O-nLY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2012" y="124.58770614692655"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="BR3-pu-P4f">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ONr-Jm-bPF" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="9el-yM-Ko1">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="6YN-xJ-Wtz"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WF6-Aw-UPR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1072.8" y="124.58770614692655"/>
         </scene>

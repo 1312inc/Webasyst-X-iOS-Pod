@@ -191,9 +191,13 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             
             let code = accessCodes[install.id] as! String
             
+            let replaceScope = config.scope
+            
             let parameters: Parameters = [
                 "code" : code,
-                "scope": config.scope,
+                "scope": String(replaceScope.map {
+                    $0 == "." ? "," : $0
+                }),
                 "client_id": config.bundleId
             ]
             
@@ -367,4 +371,10 @@ extension WebasystUserNetworking {
         )
     }
     
+}
+
+extension String {
+    func replace(target: String, withString: String) -> String {
+        return self.replacingOccurrences(of: target, with: withString, options: NSString.CompareOptions.literal, range: nil)
+    }
 }

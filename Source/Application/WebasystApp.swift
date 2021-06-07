@@ -31,7 +31,7 @@ public class WebasystApp {
         if scope.contains("webasyst") {
             WebasystApp.config = WebasystConfig(clientId: clientId, host: host, scope: scope)
         } else {
-            WebasystApp.config = WebasystConfig(clientId: clientId, host: host, scope: "\(scope),webasyst")
+            WebasystApp.config = WebasystConfig(clientId: clientId, host: host, scope: "\(scope).webasyst")
         }
         
     }
