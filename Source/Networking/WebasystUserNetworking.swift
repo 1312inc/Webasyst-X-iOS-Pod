@@ -126,6 +126,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 200...299:
                     if let data = data {
                         let installList = try! JSONDecoder().decode([UserInstall].self, from: data)
+                        let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser")
+                        if activeInstall == nil {
+                            UserDefaults.standard.setValue(installList[0].id, forKey: "selectDomainUser")
+                        }
                         completion(installList)
                     }
                 default:

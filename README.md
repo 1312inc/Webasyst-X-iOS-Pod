@@ -42,6 +42,9 @@ webasyst.configure(
 ```
 3) After configuration of the bibiloteca, you can easily use the Webasyst bibiloteca anywhere in your application
 
+**Warning!** 
+After retrieving the list of user settings at login, the library will set the active setting from the list to UserDefaults, by the selectDomainUser key
+
 ## Description of methods
 
 *A description of all methods, including all parameters, can be obtained from the XCode autocomplete or via QuickHelp*
