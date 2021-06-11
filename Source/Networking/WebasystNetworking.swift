@@ -208,7 +208,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         
         let parametersRequest: Parameters = [
             "client_id": config.clientId,
-            "code_challenge": passwordHash,
+            "code_verifier": passwordHash,
             "code": code
         ]
         
