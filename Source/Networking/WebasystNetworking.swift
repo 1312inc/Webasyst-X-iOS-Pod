@@ -200,11 +200,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             return
         }
         
-        guard let passwordHash = self.disposablePasswordAuth else {
-            print(NSError(domain: "Webasyst error(method: sendConfirmCode): Failed to obtain a one-time password", code: 400, userInfo: nil))
-            success(false)
-            return
-        }
+        let passwordHash = self.generatePasswordHash(64)
         
         let parametersRequest: Parameters = [
             "client_id": config.clientId,
