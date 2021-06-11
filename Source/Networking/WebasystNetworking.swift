@@ -12,7 +12,7 @@ internal typealias Parameters = [String: String]
 internal class WebasystNetworking: WebasystNetworkingManager {
     
     private var config = WebasystApp.config
-    private var disposablePasswordAuth: String?
+    private static var disposablePasswordAuth: String?
     
     /// Generating a temporary password for user authentication
     /// - Parameter len: Length of the required password
@@ -20,7 +20,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     private func generatePasswordHash(_ len: Int) -> String {
         let pswdChars = Array("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
         let rndPswd = String((0..<len).map{ _ in pswdChars[Int(arc4random_uniform(UInt32(pswdChars.count)))]})
-        self.disposablePasswordAuth = rndPswd
+        WebasystNetworking.disposablePasswordAuth = rndPswd
         return rndPswd
     }
     
@@ -200,7 +200,11 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             return
         }
         
-        let passwordHash = self.generatePasswordHash(64)
+        guard let passwordHash = WebasystNetworking.disposablePasswordAuth else {
+            print(NSError(domain: "Webasyst error(method: sendConfirmCode): Failed to obtain a one-time password", code: 400, userInfo: nil))
+            success(false)
+            return
+        }
         
         let parametersRequest: Parameters = [
             "client_id": config.clientId,
@@ -286,7 +290,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     ///   - completion: Result of a request to the server
     func getAccessToken(_ authCode: String, stateString: String, completion: @escaping (Bool) -> Void) {
         
-        guard let disposablePassword = self.disposablePasswordAuth else { return }
+        guard let disposablePassword = WebasystNetworking.disposablePasswordAuth else { return }
         guard let config = self.config else { return }
         
         let paramRequest: Parameters = [
