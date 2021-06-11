@@ -120,7 +120,13 @@ public class WebasystApp {
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
     public func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
         WebasystNetworking().sendConfirmCode(code) { result in
-            success(result)
+            if result {
+                WebasystUserNetworking().preloadUserData { text, _, status in
+                    success(status)
+                }
+            } else {
+                success(false)
+            }
         }
     }
     
