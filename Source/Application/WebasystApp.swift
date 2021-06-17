@@ -63,13 +63,8 @@ public class WebasystApp {
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
             case .success:
-                WebasystUserNetworking().preloadUserData { text, _, status in
-                    if status {
-                        action(WebasystServerAnswer.success)
-                    } else {
-                        action(WebasystServerAnswer.error(error: text))
-                    }
-                }
+                action(WebasystServerAnswer.success)
+                WebasystUserNetworking().preloadUserData { _, _, _ in }
             case .error(error: let error):
                 action(WebasystServerAnswer.error(error: error))
             }
