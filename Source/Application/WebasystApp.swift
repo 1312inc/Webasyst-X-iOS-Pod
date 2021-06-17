@@ -82,13 +82,8 @@ public class WebasystApp {
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
             case .success:
-                WebasystUserNetworking().preloadUserData { text, _, status in
-                    if status {
-                        action(WebasystServerAnswer.success)
-                    } else {
-                        action(WebasystServerAnswer.error(error: text))
-                    }
-                }
+                action(WebasystServerAnswer.success)
+                WebasystUserNetworking().preloadUserData { _, _, _ in }
             case .error(error: let error):
                 action(WebasystServerAnswer.error(error: error))
             }
@@ -115,12 +110,9 @@ public class WebasystApp {
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
     public func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
         WebasystNetworking().sendConfirmCode(code) { result in
+            success(result)
             if result {
-                WebasystUserNetworking().preloadUserData { text, _, status in
-                    success(status)
-                }
-            } else {
-                success(false)
+                WebasystUserNetworking().preloadUserData { _, _, _ in }
             }
         }
     }
