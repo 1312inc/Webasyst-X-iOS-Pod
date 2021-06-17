@@ -125,13 +125,8 @@ public class WebasystApp {
         let accessToken = KeychainManager.load(key: "accessToken")
         
         if accessToken != nil {
-            WebasystUserNetworking().preloadUserData { text, _, status in
-                if status {
-                    completion(UserStatus.authorized)
-                } else {
-                    completion(UserStatus.error(message: text))
-                }
-            }
+            completion(UserStatus.authorized)
+            WebasystUserNetworking().preloadUserData { _, _, _ in }
         } else {
             completion(UserStatus.nonAuthorized)
         }
