@@ -310,6 +310,67 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
     }
     
+    func createWebasystAccount(completion: @escaping (Bool, String?)->()) {
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let headers: Parameters = [
+            "Authorization": accessTokenString
+        ]
+        
+        let parametersRequest: Parameters = [
+            "bundle": "allwebasyst"
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/profile/", parameters: [:]) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        do {
+            try request.setMultipartFormData(parametersRequest, encoding: String.Encoding.utf8)
+        } catch let error {
+            completion(false, nil)
+            print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
+        }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
+            if let error = error {
+                print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
+                completion(false, nil)
+                return
+            }
+            
+            guard let data = data else {
+                print(NSError(domain: "Webasyst error: no response data", code: 401, userInfo: nil))
+                completion(false, nil)
+                return
+            }
+            
+            do {
+                let json = try JSONDecoder().decode(CreateNewAccount.self, from: data)
+                var newInstall: [UserInstall] = []
+                self.getAccessTokenApi(clientId: [json.id]) { success, accessCode in
+                    if success {
+                        newInstall.append(UserInstall(name: nil, domain: json.domain, id: json.id, accessToken: nil, url: json.url, image: nil))
+                        self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { _, success in
+                            completion(true, json.url)
+                        }
+                    }
+                }
+            } catch let error {
+                completion(false, nil)
+                print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
+            }
+            
+        }.resume()
+    }
+    
     func singUpUser(completion: @escaping (Bool) -> ()) {
         
         let accessToken = KeychainManager.load(key: "accessToken")

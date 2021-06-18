@@ -166,6 +166,15 @@ public class WebasystApp {
         return result
     }
     
+    /// Creating a new Webasyst account
+    /// - Parameter success: Closure performed after executing the method
+    /// - Returns: Boolean value if the account was created and url install
+    public func createWebasystAccount(success: @escaping (Bool, String?)->()) {
+        WebasystUserNetworking().createWebasystAccount { result, urlInstall in
+            success(result, urlInstall)
+        }
+    }
+    
     /// Exit a user from the account and delete all records in the database
     /// - Returns: Boolean value of deauthorization success
     public func logOutUser(completion: @escaping (Bool) -> ()) {
