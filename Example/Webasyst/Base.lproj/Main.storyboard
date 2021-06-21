@@ -23,7 +23,7 @@
                                 <rect key="frame" x="26" y="318.5" width="323" height="30"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
-                                    <action selector="authButtonTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Iie-5g-CUY"/>
+                                    <action selector="authButtonTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Tlo-wW-FYj"/>
                                 </connections>
                             </button>
                         </subviews>

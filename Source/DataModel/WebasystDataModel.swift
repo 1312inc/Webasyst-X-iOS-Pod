@@ -98,6 +98,7 @@ extension WebasystDataModel {
                 install.url = userInstall.url
                 install.accessToken = userInstall.accessToken
                 install.image = userInstall.image
+                install.imageLogo = userInstall.imageLogo ?? false
                 save()
             } else {
                 result.first?.name = userInstall.name
@@ -106,6 +107,7 @@ extension WebasystDataModel {
                 result.first?.url = userInstall.url
                 result.first?.accessToken = userInstall.accessToken
                 result.first?.image = userInstall.image
+                result.first?.imageLogo = userInstall.imageLogo ?? false
                 save()
             }
         } catch { }
@@ -127,7 +129,7 @@ extension WebasystDataModel {
                 return nil
             }
             if !(result.isEmpty) {
-                let install = UserInstall(name: result[0].name ?? "", domain: result[0].domain ?? "", id: result[0].clientId ?? "", accessToken: result[0].accessToken ?? "", url: result[0].url ?? "", image: result[0].image)
+                let install = UserInstall(name: result[0].name ?? "", domain: result[0].domain ?? "", id: result[0].clientId ?? "", accessToken: result[0].accessToken ?? "", url: result[0].url ?? "", image: result[0].image, imageLogo: result[0].imageLogo)
                 return install
             } else {
                 return nil
@@ -154,7 +156,7 @@ extension WebasystDataModel {
             
             var userInstall: [UserInstall] = []
             for task in tasks {
-                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image))
+                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo))
             }
             return userInstall
         } catch let error {

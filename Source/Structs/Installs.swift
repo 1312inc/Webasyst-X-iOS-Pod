@@ -17,12 +17,22 @@ public struct Installs: Codable {
 }
 
 /// Structure of the settings list
-public struct UserInstall: Codable {
-    
+public struct UserInstallCodable: Codable {
     public var name: String?
     public var domain: String
     public var id: String
     public var accessToken: String?
     public var url: String
     public var image: Data?
+}
+
+/// Structure of the settings list
+public struct UserInstall: Codable {
+    public var name: String?
+    public var domain: String
+    public var id: String
+    public var accessToken: String?
+    public var url: String
+    public var image: Data?
+    public var imageLogo: Bool?
 }

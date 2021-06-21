@@ -178,18 +178,11 @@ public class WebasystApp {
     /// Exit a user from the account and delete all records in the database
     /// - Returns: Boolean value of deauthorization success
     public func logOutUser(completion: @escaping (Bool) -> ()) {
-        WebasystUserNetworking().singUpUser { result in
-            if result {
-                let dataModel = WebasystDataModel()
-                dataModel?.resetInstallList()
-                dataModel?.deleteProfileData()
-                KeychainManager.deleteAllKeys()
-                completion(true)
-            } else {
-                completion(false)
-            }
-        }
-        
+        let dataModel = WebasystDataModel()
+        dataModel?.resetInstallList()
+        dataModel?.deleteProfileData()
+        KeychainManager.deleteAllKeys()
+        completion(true)
     }
     
 }

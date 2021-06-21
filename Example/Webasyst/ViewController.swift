@@ -32,6 +32,9 @@ class ViewController: UIViewController {
                 
             }
         }
+        WebasystApp().getAllUserInstall { result in
+            print(result)
+        }
     }
     
     @IBAction func authButtonTap(_ sender: Any) {

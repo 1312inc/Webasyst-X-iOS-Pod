@@ -99,7 +99,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     //MARK: Get installation's list user
-    public func getInstallList(completion: @escaping ([UserInstall]?) -> ()) {
+    public func getInstallList(completion: @escaping ([UserInstallCodable]?) -> ()) {
         
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -125,7 +125,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 switch httpResponse.statusCode {
                 case 200...299:
                     if let data = data {
-                        let installList = try! JSONDecoder().decode([UserInstall].self, from: data)
+                        let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser")
                         if activeInstall == nil {
                             UserDefaults.standard.setValue(installList[0].id, forKey: "selectDomainUser")
@@ -187,7 +187,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }.resume()
     }
     
-    func getAccessTokenInstall(_ installList: [UserInstall], accessCodes: [String: Any], completion: @escaping (String, Bool) -> ()) {
+    func getAccessTokenInstall(_ installList: [UserInstallCodable], accessCodes: [String: Any], completion: @escaping (String, Bool) -> ()) {
         
         guard let config = WebasystApp.config else { return }
         
@@ -231,7 +231,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
-                        let installToken = UserInstall(name: "", domain: install.domain, id: install.id, accessToken: json["access_token"]  ?? "", url: install.url)
+                        let installToken = UserInstallCodable(name: "", domain: install.domain, id: install.id, accessToken: json["access_token"]  ?? "", url: install.url)
                         self.getInstallInfo(installToken)
                         completion("\(NSLocalizedString("loadingInstallMessage", comment: "")) \(install.domain)", false)
                     }
@@ -242,7 +242,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
     }
     
-    func getInstallInfo(_ install: UserInstall) {
+    func getInstallInfo(_ install: UserInstallCodable) {
         
         guard let url = URL(string: "\(install.url)/api.php/webasyst.getInfo?access_token=\(install.accessToken ?? "")&format=json") else {
             print(NSError(domain: "Webasyst error: Failed to generate a url when getting installation information", code: 401, userInfo: nil))
@@ -265,7 +265,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 let info = try JSONDecoder().decode(InstallInfo.self, from: data)
                 guard let logoMode = info.logo else {
                     let imageData = self.createDefaultGradient()
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData)
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
                     self.profileInstallService?.saveInstall(newInstall)
                     return
                 }
@@ -274,7 +274,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     do {
                         let imageInfo = try JSONDecoder().decode(LogoImage.self, from: data)
                         self.downloadImage(imageInfo.logo?.image.original.url ?? "") { imageData in
-                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData)
+                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true)
                             self.profileInstallService?.saveInstall(saveInstall)
                         }
                     } catch let error {
@@ -285,7 +285,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let imageInfo = try JSONDecoder().decode(LogoGradient.self, from: data)
                         
                         let imageData = self.createGradient(from: imageInfo.logo?.gradient.from ?? "#333", to: imageInfo.logo?.gradient.to ?? "#333")
-                        let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData)
+                        let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
                         
                         self.profileInstallService?.saveInstall(install)
                     } catch let error {
@@ -294,14 +294,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case .unknown(value: _):
                     let imageData = self.createDefaultGradient()
                     
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData)
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
                     
                     self.profileInstallService?.saveInstall(newInstall)
                 }
             } catch let error {
                 let imageData = self.createDefaultGradient()
                 
-                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData)
+                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
                 
                 self.profileInstallService?.saveInstall(newInstall)
                 print(NSError(domain: "Webasyst warning: \(install.url) \(error.localizedDescription)", code: 205, userInfo: nil))
@@ -354,10 +354,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             
             do {
                 let json = try JSONDecoder().decode(CreateNewAccount.self, from: data)
-                var newInstall: [UserInstall] = []
+                var newInstall: [UserInstallCodable] = []
                 self.getAccessTokenApi(clientId: [json.id]) { success, accessCode in
                     if success {
-                        newInstall.append(UserInstall(name: nil, domain: json.domain, id: json.id, accessToken: nil, url: json.url, image: nil))
+                        newInstall.append(UserInstallCodable(name: nil, domain: json.domain, id: json.id, accessToken: nil, url: json.url, image: nil))
                         self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { _, success in
                             completion(true, json.url)
                         }
