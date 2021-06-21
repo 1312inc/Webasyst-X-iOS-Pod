@@ -18,15 +18,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     func preloadUserData(completion: @escaping (String, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
-            self.queue.async(group: self.dispatchGroup) {
-                self.webasystNetworkingService.refreshAccessToken { result in
-                    if result {
-                        print(NSError(domain: "Webasyst success: Webasyst refresh token is success", code: 200, userInfo: nil))
-                    } else {
-                        print(NSError(domain: "Webasyst success: Webasyst refresh token is success", code: 400, userInfo: nil))
-                    }
-                }
-            }
             self.queue.async {
                 self.downloadUserData()
             }
