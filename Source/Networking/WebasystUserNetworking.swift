@@ -322,7 +322,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "bundle": "allwebasyst"
         ]
         
-        guard let url = buildWebasystUrl("/id/api/v1/profile/", parameters: [:]) else { return }
+        guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         
