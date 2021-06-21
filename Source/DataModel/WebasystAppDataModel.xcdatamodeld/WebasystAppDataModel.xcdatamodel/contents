@@ -6,6 +6,8 @@
         <attribute name="domain" optional="YES" attributeType="String"/>
         <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="imageLogo" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="logoColorText" optional="YES" attributeType="String"/>
+        <attribute name="logoText" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
@@ -18,7 +20,7 @@
         <attribute name="userPic" optional="YES" attributeType="Binary"/>
     </entity>
     <elements>
-        <element name="InstallList" positionX="-63" positionY="-18" width="128" height="134"/>
+        <element name="InstallList" positionX="-63" positionY="-18" width="128" height="164"/>
         <element name="Profile" positionX="-63" positionY="18" width="128" height="119"/>
     </elements>
 </model>

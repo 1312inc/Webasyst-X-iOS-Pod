@@ -35,4 +35,6 @@ public struct UserInstall: Codable {
     public var url: String
     public var image: Data?
     public var imageLogo: Bool?
+    public var logoText: String
+    public var logoTextColor: String
 }

@@ -265,7 +265,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 let info = try JSONDecoder().decode(InstallInfo.self, from: data)
                 guard let logoMode = info.logo else {
                     let imageData = self.createDefaultGradient()
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
                     self.profileInstallService?.saveInstall(newInstall)
                     return
                 }
@@ -274,7 +274,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     do {
                         let imageInfo = try JSONDecoder().decode(LogoImage.self, from: data)
                         self.downloadImage(imageInfo.logo?.image.original.url ?? "") { imageData in
-                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true)
+                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true, logoText: "", logoTextColor: "")
                             self.profileInstallService?.saveInstall(saveInstall)
                         }
                     } catch let error {
@@ -285,7 +285,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let imageInfo = try JSONDecoder().decode(LogoGradient.self, from: data)
                         
                         let imageData = self.createGradient(from: imageInfo.logo?.gradient.from ?? "#333", to: imageInfo.logo?.gradient.to ?? "#333")
-                        let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
+                        let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
                         
                         self.profileInstallService?.saveInstall(install)
                     } catch let error {
@@ -294,14 +294,13 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case .unknown(value: _):
                     let imageData = self.createDefaultGradient()
                     
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
                     
                     self.profileInstallService?.saveInstall(newInstall)
                 }
             } catch let error {
                 let imageData = self.createDefaultGradient()
-                
-                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false)
+                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: "", logoTextColor: "")
                 
                 self.profileInstallService?.saveInstall(newInstall)
                 print(NSError(domain: "Webasyst warning: \(install.url) \(error.localizedDescription)", code: 205, userInfo: nil))

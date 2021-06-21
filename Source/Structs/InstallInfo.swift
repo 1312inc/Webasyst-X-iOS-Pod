@@ -14,6 +14,12 @@ internal struct InstallInfo: Decodable {
 
 internal struct Logo: Decodable {
     var mode: ImageType
+    var text: TextInfo
+}
+
+internal struct TextInfo: Decodable {
+    var value: String
+    var color: String
 }
 
 struct LogoGradient: Codable {

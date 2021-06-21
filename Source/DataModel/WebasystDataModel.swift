@@ -99,6 +99,8 @@ extension WebasystDataModel {
                 install.accessToken = userInstall.accessToken
                 install.image = userInstall.image
                 install.imageLogo = userInstall.imageLogo ?? false
+                install.logoText = userInstall.logoText
+                install.logoColorText = userInstall.logoTextColor
                 save()
             } else {
                 result.first?.name = userInstall.name
@@ -108,6 +110,8 @@ extension WebasystDataModel {
                 result.first?.accessToken = userInstall.accessToken
                 result.first?.image = userInstall.image
                 result.first?.imageLogo = userInstall.imageLogo ?? false
+                result.first?.logoText = userInstall.logoText
+                result.first?.logoColorText = userInstall.logoTextColor
                 save()
             }
         } catch { }
@@ -129,7 +133,7 @@ extension WebasystDataModel {
                 return nil
             }
             if !(result.isEmpty) {
-                let install = UserInstall(name: result[0].name ?? "", domain: result[0].domain ?? "", id: result[0].clientId ?? "", accessToken: result[0].accessToken ?? "", url: result[0].url ?? "", image: result[0].image, imageLogo: result[0].imageLogo)
+                let install = UserInstall(name: result[0].name ?? "", domain: result[0].domain ?? "", id: result[0].clientId ?? "", accessToken: result[0].accessToken ?? "", url: result[0].url ?? "", image: result[0].image, imageLogo: result[0].imageLogo, logoText: result[0].logoText ?? "", logoTextColor: result[0].logoColorText ?? "")
                 return install
             } else {
                 return nil
@@ -156,7 +160,7 @@ extension WebasystDataModel {
             
             var userInstall: [UserInstall] = []
             for task in tasks {
-                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo))
+                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo, logoText: task.logoText ?? "", logoTextColor: task.logoColorText ?? ""))
             }
             return userInstall
         } catch let error {
