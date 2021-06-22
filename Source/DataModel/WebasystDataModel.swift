@@ -236,7 +236,7 @@ extension WebasystDataModel {
         guard let context = managedObjectContext else { return }
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
-        request.predicate = NSPredicate(format: "email == %@", user.email[0].value)
+        request.predicate = NSPredicate(format: "email == %@", !user.email.isEmpty ? user.email[0].value : "")
         
         do {
             guard let result = try context.fetch(request) as? [Profile] else {

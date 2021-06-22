@@ -413,10 +413,12 @@ extension WebasystUserNetworking {
         
         var deleteInstall: [UserInstallCodable] = []
         
-        for index in 0 ... installList.count {
-            if !installList.contains(where: { $0.id == saveInstalls[index].id }) {
-                let install = UserInstallCodable(name: saveInstalls[index].name ?? "", domain: saveInstalls[index].domain, id: saveInstalls[index].id, accessToken: nil, url: saveInstalls[index].url, image: nil)
-                deleteInstall.append(install)
+        for _ in installList {
+            for isntall in saveInstalls {
+                if !installList.contains(where: { $0.id == isntall.id }) {
+                    let install = UserInstallCodable(name: isntall.name ?? "", domain: isntall.domain, id: isntall.id, accessToken: nil, url: isntall.url, image: nil)
+                    deleteInstall.append(install)
+                }
             }
         }
         
