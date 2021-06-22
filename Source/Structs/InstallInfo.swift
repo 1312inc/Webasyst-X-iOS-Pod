@@ -34,7 +34,6 @@ struct Gradient: Codable {
 struct GradientType: Codable {
     var from: String
     var to: String
-    var angle: String
 }
 
 struct LogoImage: Codable {

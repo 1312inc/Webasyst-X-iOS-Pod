@@ -122,6 +122,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                             UserDefaults.standard.setValue(installList[0].id, forKey: "selectDomainUser")
                         }
                         completion(installList)
+                        self.deleteNonActiveInstall(installList: installList)
                     }
                 default:
                     completion(nil)
@@ -402,6 +403,27 @@ extension WebasystUserNetworking {
         let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [self.hexStringToUIColor(hex: from).cgColor, self.hexStringToUIColor(hex: to).cgColor])
         let imageData = UIImagePNGRepresentation(gradientImage)
         return imageData
+    }
+    
+    private func deleteNonActiveInstall(installList: [UserInstallCodable]) {
+        
+        guard let saveInstalls = WebasystDataModel()?.getInstallList() else {
+            return
+        }
+        
+        var deleteInstall: [UserInstallCodable] = []
+        
+        for index in 0 ... installList.count {
+            if !installList.contains(where: { $0.id == saveInstalls[index].id }) {
+                let install = UserInstallCodable(name: saveInstalls[index].name ?? "", domain: saveInstalls[index].domain, id: saveInstalls[index].id, accessToken: nil, url: saveInstalls[index].url, image: nil)
+                deleteInstall.append(install)
+            }
+        }
+        
+        for delete in deleteInstall {
+            WebasystDataModel()?.deleteInstall(clientId: delete.id)
+        }
+        
     }
     
     fileprivate func hexStringToUIColor (hex:String) -> UIColor {
