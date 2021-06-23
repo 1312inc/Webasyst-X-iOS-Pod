@@ -82,8 +82,11 @@ public class WebasystApp {
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
             case .success:
-                action(WebasystServerAnswer.success)
-                WebasystUserNetworking().preloadUserData { _, _, _ in }
+                WebasystUserNetworking().preloadUserData { _, _, successPreload in
+                    if successPreload {
+                        action(WebasystServerAnswer.success)
+                    }
+                }
             case .error(error: let error):
                 action(WebasystServerAnswer.error(error: error))
             }
@@ -110,9 +113,10 @@ public class WebasystApp {
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
     public func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
         WebasystNetworking().sendConfirmCode(code) { result in
-            success(result)
             if result {
-                WebasystUserNetworking().preloadUserData { _, _, _ in }
+                WebasystUserNetworking().preloadUserData { _, _, result in
+                    success(result)
+                }
             }
         }
     }
@@ -147,7 +151,7 @@ public class WebasystApp {
     
     /// Obtaining user installation
     /// - Parameter clientId: clientId setting
-    /// - Returns: Installation in User Install format 
+    /// - Returns: Installation in User Install format
     public func getUserInstall(_ clientId: String) -> UserInstall? {
         let installRequest = WebasystDataModel()?.getInstall(with: clientId)
         guard let install = installRequest else {
@@ -188,6 +192,9 @@ public class WebasystApp {
         dataModel?.resetInstallList()
         dataModel?.deleteProfileData()
         KeychainManager.deleteAllKeys()
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.synchronize()
         completion(true)
     }
     
