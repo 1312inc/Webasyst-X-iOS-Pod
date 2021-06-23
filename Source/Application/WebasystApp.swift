@@ -129,6 +129,11 @@ public class WebasystApp {
         let accessToken = KeychainManager.load(key: "accessToken")
         
         if accessToken != nil {
+            guard UserDefaults.standard.bool(forKey: "firstStart") else {
+                UserDefaults.standard.setValue(true, forKey: "firstStart")
+                completion(UserStatus.error(message: "first launch"))
+                return
+            }
             WebasystNetworking().refreshAccessToken { result in
                 if result {
                     completion(UserStatus.authorized)

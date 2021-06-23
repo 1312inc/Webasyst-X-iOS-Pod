@@ -177,7 +177,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         guard let config = WebasystApp.config else { return }
         
-        let dispatchQueue = DispatchQueue(label: "com.alfianlosari.test", qos: .userInitiated, attributes: .concurrent)
+        let dispatchQueue = DispatchQueue(label: "\(config.bundleId).WebasystUserNetworkingService", qos: .userInitiated, attributes: .concurrent)
         let dispatchGroup = DispatchGroup()
         let dispatchSemaphore = DispatchSemaphore(value: 1)
         
