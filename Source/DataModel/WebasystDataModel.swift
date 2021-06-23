@@ -248,7 +248,7 @@ extension WebasystDataModel {
                 profile.firstName = user.firstname
                 profile.lastName = user.lastname
                 profile.middleName = user.middlename
-                profile.email = user.email[0].value
+                profile.email = user.email.isEmpty ? "" : user.email[0].value
                 profile.userPic = avatar
                 self.save()
             } else {
