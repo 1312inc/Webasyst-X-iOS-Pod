@@ -30,7 +30,11 @@ final class AuthViewModel: AuthViewModelProtocol {
         networkingService.getAccessToken(code, stateString: state) { success in
             DispatchQueue.main.async {
                 if success {
-                    self.delegate.successAuth()
+                    WebasystUserNetworking().preloadUserData { _, _, success in
+                        if success {
+                            self.delegate.successAuth()
+                        }
+                    }
                 } else {
                     self.delegate.errorAuth()
                 }
