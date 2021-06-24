@@ -128,23 +128,27 @@ public class WebasystApp {
         
         let accessToken = KeychainManager.load(key: "accessToken")
         
-        if accessToken != nil {
-            guard UserDefaults.standard.bool(forKey: "firstStart") else {
-                UserDefaults.standard.setValue(true, forKey: "firstStart")
-                completion(UserStatus.error(message: "first launch"))
-                return
-            }
-            WebasystNetworking().refreshAccessToken { result in
-                if result {
-                    completion(UserStatus.authorized)
-                    WebasystUserNetworking().preloadUserData { _, _, _ in }
-                } else {
-                    completion(UserStatus.error(message: "not success refresh token"))
+        let launchedBefore = UserDefaults.standard.bool(forKey: "firstStart")
+        if launchedBefore  {
+            if accessToken != nil {
+                WebasystNetworking().refreshAccessToken { result in
+                    if result {
+                        completion(UserStatus.authorized)
+                        WebasystUserNetworking().preloadUserData { _, _, _ in }
+                    } else {
+                        completion(UserStatus.error(message: "not success refresh token"))
+                    }
                 }
+            } else {
+                completion(UserStatus.nonAuthorized)
             }
         } else {
-            completion(UserStatus.nonAuthorized)
+            logOutUser { _ in
+                UserDefaults.standard.set(true, forKey: "firstStart")
+                completion(UserStatus.error(message: "First launch"))
+            }
         }
+
     }
     
     /// Getting user install list

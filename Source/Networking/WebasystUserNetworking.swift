@@ -177,9 +177,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         guard let config = WebasystApp.config else { return }
         
-        let dispatchQueue = DispatchQueue(label: "\(config.bundleId).WebasystUserNetworkingService", qos: .userInitiated, attributes: .concurrent)
+        let dispatchQueue = DispatchQueue(label: "\(String(describing: Bundle.main.bundleIdentifier)).getAccessTokenInstall", qos: .userInitiated, attributes: .concurrent)
         let dispatchGroup = DispatchGroup()
-        let dispatchSemaphore = DispatchSemaphore(value: 1)
+        let dispatchSemaphore = DispatchSemaphore(value: installList.count + 1)
         
         dispatchQueue.async(group: dispatchGroup) {
             for install in installList {
@@ -224,9 +224,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     do {
                         if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
                             let installToken = UserInstallCodable(name: "", domain: install.domain, id: install.id, accessToken: json["access_token"]  ?? "", url: install.url)
-                            self.getInstallInfo(installToken)
-                            dispatchGroup.leave()
-                            dispatchSemaphore.signal()
+                            self.getInstallInfo(installToken) { _ in
+                                dispatchGroup.leave()
+                                dispatchSemaphore.signal()
+                            }
                         }
                     } catch let error {
                         print(NSError(domain: "Webasyst error: Domain: \(install.url) \(error.localizedDescription)", code: 401, userInfo: nil))
@@ -240,7 +241,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
     }
     
-    func getInstallInfo(_ install: UserInstallCodable) {
+    func getInstallInfo(_ install: UserInstallCodable, loadSucces: @escaping (Bool) -> ()) {
         
         guard let url = URL(string: "\(install.url)/api.php/webasyst.getInfo?access_token=\(install.accessToken ?? "")&format=json") else {
             print(NSError(domain: "Webasyst error: Failed to generate a url when getting installation information", code: 401, userInfo: nil))
@@ -265,6 +266,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     let imageData = self.createDefaultGradient()
                     let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
                     self.profileInstallService?.saveInstall(newInstall)
+                    loadSucces(true)
                     return
                 }
                 switch logoMode.mode {
@@ -274,6 +276,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         self.downloadImage(imageInfo.logo?.image.original.url ?? "") { imageData in
                             let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true, logoText: "", logoTextColor: "")
                             self.profileInstallService?.saveInstall(saveInstall)
+                            loadSucces(true)
                         }
                     } catch let error {
                         print(NSError(domain: "Webasyst error: \(info.name) \(error.localizedDescription)", code: 401, userInfo: nil))
@@ -286,6 +289,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
                         
                         self.profileInstallService?.saveInstall(install)
+                        loadSucces(true)
                     } catch let error {
                         print(NSError(domain: "Webasyst error: \(info.name) \(error.localizedDescription)", code: 401, userInfo: nil))
                     }
@@ -295,12 +299,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
                     
                     self.profileInstallService?.saveInstall(newInstall)
+                    loadSucces(true)
                 }
             } catch let error {
                 let imageData = self.createDefaultGradient()
                 let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: "", logoTextColor: "")
                 
                 self.profileInstallService?.saveInstall(newInstall)
+                loadSucces(true)
                 print(NSError(domain: "Webasyst warning: \(install.url) \(error.localizedDescription)", code: 205, userInfo: nil))
             }
         }.resume()
