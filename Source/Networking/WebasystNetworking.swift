@@ -276,6 +276,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                         print(NSError(domain: "Webasyst error(method: sendConfirmCode): undefined server error", code: 400, userInfo: nil))
                     }
                 } catch let error {
+                    success(false)
                     print(NSError(domain: "Webasyst error(method: sendConfirmCode): \(error.localizedDescription)", code: 400, userInfo: nil))
                 }
             }
