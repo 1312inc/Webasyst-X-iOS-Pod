@@ -133,7 +133,7 @@ extension WebasystDataModel {
                 return nil
             }
             if !(result.isEmpty) {
-                let install = UserInstall(name: result[0].name ?? "", domain: result[0].domain ?? "", id: result[0].clientId ?? "", accessToken: result[0].accessToken ?? "", url: result[0].url ?? "", image: result[0].image, imageLogo: result[0].imageLogo, logoText: result[0].logoText ?? "", logoTextColor: result[0].logoColorText ?? "")
+                let install = UserInstall(name: result.first?.name ?? "", domain: result.first?.domain ?? "", id: result.first?.clientId ?? "", accessToken: result.first?.accessToken ?? "", url: result.first?.url ?? "", image: result.first?.image, imageLogo: result.first?.imageLogo, logoText: result.first?.logoText ?? "", logoTextColor: result.first?.logoColorText ?? "")
                 return install
             } else {
                 return nil
@@ -236,7 +236,7 @@ extension WebasystDataModel {
         guard let context = managedObjectContext else { return }
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
-        request.predicate = NSPredicate(format: "email == %@", !user.email.isEmpty ? user.email[0].value : "")
+        request.predicate = NSPredicate(format: "email == %@", user.email.first?.value ?? "")
         
         do {
             guard let result = try context.fetch(request) as? [Profile] else {
@@ -248,7 +248,7 @@ extension WebasystDataModel {
                 profile.firstName = user.firstname
                 profile.lastName = user.lastname
                 profile.middleName = user.middlename
-                profile.email = user.email.isEmpty ? "" : user.email[0].value
+                profile.email = user.email.first?.value ?? ""
                 profile.userPic = avatar
                 self.save()
             } else {
@@ -257,6 +257,7 @@ extension WebasystDataModel {
                 result.first?.lastName = user.lastname
                 result.first?.middleName = user.middlename
                 result.first?.userPic = avatar
+                result.first?.email = user.email.first?.value ?? ""
                 self.save()
             }
         } catch let error {

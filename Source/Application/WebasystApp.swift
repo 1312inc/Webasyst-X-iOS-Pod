@@ -131,12 +131,19 @@ public class WebasystApp {
         let accessToken = KeychainManager.load(key: "accessToken")
         
         if accessToken != nil {
-            WebasystNetworking().refreshAccessToken { result in
-                if result {
-                    completion(UserStatus.authorized)
-                    WebasystUserNetworking().preloadUserData { _, _, _ in }
-                } else {
-                    completion(UserStatus.error(message: "not success refresh token"))
+            if UserDefaults.standard.bool(forKey: "firstLaunch") {
+                WebasystNetworking().refreshAccessToken { result in
+                    if result {
+                        completion(UserStatus.authorized)
+                        WebasystUserNetworking().preloadUserData { _, _, _ in }
+                    } else {
+                        completion(UserStatus.error(message: "not success refresh token"))
+                    }
+                }
+            } else {
+                self.logOutUser { _ in
+                    UserDefaults.standard.setValue(true, forKey: "firstLaunch")
+                    completion(UserStatus.error(message: "firstLaunch"))
                 }
             }
         } else {

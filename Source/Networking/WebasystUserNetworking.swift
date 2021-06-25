@@ -113,7 +113,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser")
                         if activeInstall == nil {
-                            UserDefaults.standard.setValue(installList[0].id, forKey: "selectDomainUser")
+                            UserDefaults.standard.setValue(installList.first?.id ?? "", forKey: "selectDomainUser")
                         }
                         completion(installList)
                         self.deleteNonActiveInstall(installList: installList)
