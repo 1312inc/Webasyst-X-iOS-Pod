@@ -181,68 +181,56 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         guard let config = WebasystApp.config else { return }
         
-        let dispatchQueue = DispatchQueue(label: "\(String(describing: Bundle.main.bundleIdentifier)).getAccessTokenInstall", qos: .userInitiated, attributes: .concurrent)
-        let dispatchGroup = DispatchGroup()
-        let dispatchSemaphore = DispatchSemaphore(value: installList.count + 1)
-        
-        dispatchQueue.async(group: dispatchGroup) {
-            for install in installList {
-                dispatchGroup.enter()
-                dispatchSemaphore.wait()
-                let code = accessCodes[install.id] as! String
-                
-                let replaceScope = config.scope
-                
-                let parameters: Parameters = [
-                    "code" : code,
-                    "scope": String(replaceScope.map {
-                        $0 == "." ? "," : $0
-                    }),
-                    "client_id": config.bundleId
-                ]
-                
-                guard let url = URL(string: "\(String(describing: install.url))/api.php/token-headless") else {
-                    print(NSError(domain: "Webasyst error: Url install error", code: 401, userInfo: nil))
-                    break
+        for index in 0 ..< installList.count {
+            let code = accessCodes[installList[index].id] as! String
+            
+            let replaceScope = config.scope
+            
+            let parameters: Parameters = [
+                "code" : code,
+                "scope": String(replaceScope.map {
+                    $0 == "." ? "," : $0
+                }),
+                "client_id": config.bundleId
+            ]
+            
+            guard let url = URL(string: "\(String(describing: installList[index].url))/api.php/token-headless") else {
+                print(NSError(domain: "Webasyst error: Url install error", code: 401, userInfo: nil))
+                break
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            do {
+                try request.setMultipartFormData(parameters, encoding: String.Encoding.utf8)
+            } catch let error {
+                print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
+            }
+            
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
+                guard error == nil else {
+                    return
                 }
                 
-                var request = URLRequest(url: url)
-                request.httpMethod = "POST"
+                guard let data = data else {
+                    return
+                }
                 
                 do {
-                    try request.setMultipartFormData(parameters, encoding: String.Encoding.utf8)
-                } catch let error {
-                    print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
-                }
-                
-                
-                URLSession.shared.dataTask(with: request) { (data, response, error) in
-                    guard error == nil else {
-                        return
-                    }
-                    
-                    guard let data = data else {
-                        return
-                    }
-                    
-                    do {
-                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
-                            let installToken = UserInstallCodable(name: "", domain: install.domain, id: install.id, accessToken: json["access_token"]  ?? "", url: install.url)
-                            self.getInstallInfo(installToken) { _ in
-                                dispatchGroup.leave()
-                                dispatchSemaphore.signal()
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
+                        let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: json["access_token"]  ?? "", url: installList[index].url)
+                        self.getInstallInfo(installToken) { _ in
+                            if index == 0 {
+                                completion("\(NSLocalizedString("loadingInstallMessage", comment: ""))", true)
                             }
                         }
-                    } catch let error {
-                        print(NSError(domain: "Webasyst error: Domain: \(install.url) \(error.localizedDescription)", code: 401, userInfo: nil))
                     }
-                }.resume()
-            }
+                } catch let error {
+                    print(NSError(domain: "Webasyst error: Domain: \(installList[index].url) \(error.localizedDescription)", code: 401, userInfo: nil))
+                }
+            }.resume()
         }
-        dispatchGroup.notify(queue: dispatchQueue) {
-            completion("\(NSLocalizedString("loadingInstallMessage", comment: ""))", true)
-        }
-        
     }
     
     func getInstallInfo(_ install: UserInstallCodable, loadSucces: @escaping (Bool) -> ()) {

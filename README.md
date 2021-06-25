@@ -34,9 +34,9 @@ import Webasyst
 2) In the root of your project, create a configuration file Webasyst.plist, which has the following fields
 
 ```
-"clientId": String //  *host of your server, or the host of the Webasyst central server**clientId of your application*
-"host": String //  *host of your server, or the host of the Webasyst central server*
-"scope": String // *the scope required by your application (separated by commas)*
+"clientId": String //  *clientId of your application. Example: "72at75391ea785412a24f4568528ed49"*
+"host": String //  *host of your server, or the host of the Webasyst central serve. Example: "www.webasyst.com"r*
+"scope": String // *the scope required by your application (separated by dot). Example: "site.blog.shop"*
 ```
 
 ***You can see an example file in the project repository, the file Webasyst.sample.plist***
