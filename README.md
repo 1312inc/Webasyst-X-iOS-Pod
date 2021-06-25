@@ -39,6 +39,8 @@ import Webasyst
 "scope": String // *the scope required by your application (separated by commas)*
 ```
 
+***You can see an example file in the project repository, the file Webasyst.sample.plist***
+
 After creating this file, in the didFinishLaunchingWithOptions method of the AppDelegate file, call the WebasystApp configuration method 
 ```
 let webasyst = WebasystApp()

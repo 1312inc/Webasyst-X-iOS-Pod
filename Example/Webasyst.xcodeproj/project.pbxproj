@@ -15,6 +15,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		CBAF73177C54DEF594FA67D6 /* Pods_Webasyst_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CC76A346198A6001F02F63C /* Pods_Webasyst_Example.framework */; };
 		F8966AE440F94D9EE2E55F2C /* Pods_Webasyst_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBC1119683546ADE3734351 /* Pods_Webasyst_Tests.framework */; };
+		FD3BBA0E2685BD3E0011259A /* Webasyst.sample.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD3BBA0D2685BD3E0011259A /* Webasyst.sample.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		D05B7930FC6237D6DA2E6C92 /* Pods-Webasyst_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Tests.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Tests/Pods-Webasyst_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DFE86D84325521844551AF1A /* Pods-Webasyst_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Webasyst_Example.release.xcconfig"; path = "Target Support Files/Pods-Webasyst_Example/Pods-Webasyst_Example.release.xcconfig"; sourceTree = "<group>"; };
 		FD01687B265F6C3F00BBF9EB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		FD3BBA0D2685BD3E0011259A /* Webasyst.sample.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Webasyst.sample.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				FD3BBA0D2685BD3E0011259A /* Webasyst.sample.plist */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Webasyst */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -246,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				FD3BBA0E2685BD3E0011259A /* Webasyst.sample.plist in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
