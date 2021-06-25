@@ -26,6 +26,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     guard let installs = installList else {
                         return
                     }
+                    guard !installs.isEmpty else {
+                        completion("Empty install list", 30, true)
+                        return
+                    }
                     var clientId: [String] = []
                     for install in installs {
                         clientId.append(install.id)
