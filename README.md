@@ -31,14 +31,18 @@ The library requires an initial setup. The following steps are needed:
 ```
 import Webasyst
 ```
-2) In the didFinishLaunchingWithOptions method, call the WebasystApp configuration method
+2) In the root of your project, create a configuration file Webasyst.plist, which has the following fields
+
+```
+"clientId": String //  *host of your server, or the host of the Webasyst central server**clientId of your application*
+"host": String //  *host of your server, or the host of the Webasyst central server*
+"scope": String // *the scope required by your application (separated by commas)*
+```
+
+After creating this file, in the didFinishLaunchingWithOptions method of the AppDelegate file, call the WebasystApp configuration method 
 ```
 let webasyst = WebasystApp()
-webasyst.configure(
-    clientId: *clientId of your application*, 
-    host: *host of your server, or the host of the Webasyst central server*, 
-    scope: *the scope required by your application (separated by commas)*
-)
+webasyst.configure()
 ```
 3) After configuration of the bibiloteca, you can easily use the Webasyst bibiloteca anywhere in your application
 

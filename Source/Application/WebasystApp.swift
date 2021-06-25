@@ -23,17 +23,16 @@ public class WebasystApp {
     public init() {}
     
     /// Webasyst library configuration method
-    /// - Parameters:
-    ///   - bundleId: Bundle Id of your application, required for authorization on the server
-    ///   - clientId: Client Id of your application
-    ///   - host: application server host
-    public func configure(clientId: String, host: String, scope: String) {
-        if scope.contains("webasyst") {
-            WebasystApp.config = WebasystConfig(clientId: clientId, host: host, scope: scope)
+    public func configure() {
+        if  let path = Bundle.main.path(forResource: "Webasyst", ofType: "plist"), let xml = FileManager.default.contents(atPath: path), let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml) {
+            if preferences.scope.contains("webasyst") {
+                WebasystApp.config = WebasystConfig(clientId: preferences.clientId, host: preferences.host, scope: preferences.scope)
+            } else {
+                WebasystApp.config = WebasystConfig(clientId: preferences.clientId, host: preferences.host, scope: "\(preferences.scope).webasyst")
+            }
         } else {
-            WebasystApp.config = WebasystConfig(clientId: clientId, host: host, scope: "\(scope).webasyst")
+            print(NSError(domain: "Webasyst error(method: configure): Webasyst configuration error, check if there is a Webasyst.plist file in the root of the project", code: 500, userInfo: nil))
         }
-        
     }
     
     /// A method for getting Webasyst tokens

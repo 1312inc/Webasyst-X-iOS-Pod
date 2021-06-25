@@ -25,6 +25,7 @@
 		FD15E784264D0A9400DFD52F /* AuthCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */; };
 		FD15E785264D0A9400DFD52F /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E782264D0A9400DFD52F /* AuthViewController.swift */; };
 		FD1C00CF2654E09700EFB307 /* NetworkingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C00CE2654E09700EFB307 /* NetworkingHelper.swift */; };
+		FD3BBA01268599430011259A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3BBA00268599430011259A /* Preferences.swift */; };
 		FD46B9B9267C873A00A6597A /* CreateNewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD46B9B8267C873A00A6597A /* CreateNewAccount.swift */; };
 		FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */; };
 		FD58E67C265E04EB0037CF13 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E67B265E04EB0037CF13 /* TokenType.swift */; };
@@ -102,6 +103,7 @@
 		FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthCoordinator.swift; sourceTree = "<group>"; };
 		FD15E782264D0A9400DFD52F /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		FD1C00CE2654E09700EFB307 /* NetworkingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingHelper.swift; sourceTree = "<group>"; };
+		FD3BBA00268599430011259A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		FD46B9B8267C873A00A6597A /* CreateNewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewAccount.swift; sourceTree = "<group>"; };
 		FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystApp.swift; sourceTree = "<group>"; };
 		FD58E67B265E04EB0037CF13 /* TokenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenType.swift; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 				FD58E686265E13FC0037CF13 /* UserData.swift */,
 				FD58E688265E14110037CF13 /* InstallInfo.swift */,
 				FD46B9B8267C873A00A6597A /* CreateNewAccount.swift */,
+				FD3BBA00268599430011259A /* Preferences.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -584,6 +587,7 @@
 				FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */,
 				FD01687A265F551900BBF9EB /* AuthType.swift in Sources */,
 				FD58E687265E13FC0037CF13 /* UserData.swift in Sources */,
+				FD3BBA01268599430011259A /* Preferences.swift in Sources */,
 				FD58E680265E08670037CF13 /* ProfileData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
