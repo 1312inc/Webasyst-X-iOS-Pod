@@ -265,7 +265,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case .image:
                     do {
                         let imageInfo = try JSONDecoder().decode(LogoImage.self, from: data)
-                        self.downloadImage(imageInfo.logo?.image.original.url ?? "") { imageData in
+                        self.downloadImage(imageInfo.logo?.image.thumbs.first?.value.url ?? "") { imageData in
                             let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true, logoText: "", logoTextColor: "")
                             self.profileInstallService?.saveInstall(saveInstall)
                             loadSucces(true)

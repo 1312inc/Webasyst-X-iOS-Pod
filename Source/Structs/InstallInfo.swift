@@ -46,7 +46,7 @@ struct TypeImage: Codable {
 }
 
 struct Original: Codable {
-    var original: OriginalImage
+    var thumbs: [String: OriginalImage]
 }
 
 struct OriginalImage: Codable {
