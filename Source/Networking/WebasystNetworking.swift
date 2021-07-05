@@ -29,7 +29,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     internal func buildAuthRequest() -> URLRequest? {
         
         guard let config = self.config else {
-            print(NSError(domain: "Webasyst error(method: buildAuthRequest): WebasystApp not configuration", code: 400, userInfo: nil))
+            print(NSError(domain: "Webasyst error(method: buildAuthRequest): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             return nil
         }
         
@@ -59,8 +59,8 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     internal func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
         
         guard let config = self.config else {
-            print(NSError(domain: "Webasyst error(method: getAuthCode): WebasystApp not configuration", code: 400, userInfo: nil))
-            success(AuthResult.undefined(error: "WebasystApp not configuration"))
+            print(NSError(domain: "Webasyst error(method: getAuthCode): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
+            success(AuthResult.undefined(error: "Webasyst ID app Client Id is invalid. Please contact the app developer."))
             return
         }
         
@@ -195,7 +195,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     internal func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
         
         guard let config = self.config else {
-            print(NSError(domain: "Webasyst error(method: sendConfirmCode): WebasystApp not configuration", code: 400, userInfo: nil))
+            print(NSError(domain: "Webasyst error(method: sendConfirmCode): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             success(false)
             return
         }
