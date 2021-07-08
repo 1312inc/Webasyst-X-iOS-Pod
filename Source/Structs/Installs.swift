@@ -8,7 +8,7 @@
 import Foundation
 
 /// Structure of the settings
-public struct Installs: Codable {
+public struct Installs: Decodable {
     public var accessToken: String
     public var clientId: String
     public var domain: String
@@ -17,17 +17,27 @@ public struct Installs: Codable {
 }
 
 /// Structure of the settings list
-public struct UserInstallCodable: Codable {
+public struct UserInstallCodable: Decodable {
     public var name: String?
     public var domain: String
     public var id: String
     public var accessToken: String?
     public var url: String
     public var image: Data?
+    public var cloudPlanId: String?
+    public var cloudExpireDate: String?
+    public var cloudTrial: Bool?
+    
+    enum CodingKeys: String, CodingKey {
+        case name, domain, id, accessToken, url, image
+        case cloudPlanId = "cloud_plan_id"
+        case cloudExpireDate = "cloud_expire_date"
+        case cloudTrial = "cloud_trial"
+    }
 }
 
 /// Structure of the settings list
-public struct UserInstall: Codable {
+public struct UserInstall: Decodable {
     public var name: String?
     public var domain: String
     public var id: String
@@ -37,4 +47,7 @@ public struct UserInstall: Codable {
     public var imageLogo: Bool?
     public var logoText: String
     public var logoTextColor: String
+    public var cloudPlanId: String?
+    public var cloudExpireDate: String?
+    public var cloudTrial: Bool?
 }

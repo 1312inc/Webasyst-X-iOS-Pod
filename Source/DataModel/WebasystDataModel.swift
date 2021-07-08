@@ -101,6 +101,9 @@ extension WebasystDataModel {
                 install.imageLogo = userInstall.imageLogo ?? false
                 install.logoText = userInstall.logoText
                 install.logoColorText = userInstall.logoTextColor
+                install.cloudPlanId = userInstall.cloudPlanId
+                install.cloudExpireDate = userInstall.cloudExpireDate
+                install.cloudTrial = userInstall.cloudTrial ?? false
                 save()
             } else {
                 result.first?.name = userInstall.name
@@ -112,6 +115,9 @@ extension WebasystDataModel {
                 result.first?.imageLogo = userInstall.imageLogo ?? false
                 result.first?.logoText = userInstall.logoText
                 result.first?.logoColorText = userInstall.logoTextColor
+                result.first?.cloudPlanId = userInstall.cloudPlanId
+                result.first?.cloudExpireDate = userInstall.cloudExpireDate
+                result.first?.cloudTrial = userInstall.cloudTrial ?? false
                 save()
             }
         } catch { }
@@ -133,7 +139,7 @@ extension WebasystDataModel {
                 return nil
             }
             if !(result.isEmpty) {
-                let install = UserInstall(name: result.first?.name ?? "", domain: result.first?.domain ?? "", id: result.first?.clientId ?? "", accessToken: result.first?.accessToken ?? "", url: result.first?.url ?? "", image: result.first?.image, imageLogo: result.first?.imageLogo, logoText: result.first?.logoText ?? "", logoTextColor: result.first?.logoColorText ?? "")
+                let install = UserInstall(name: result.first?.name ?? "", domain: result.first?.domain ?? "", id: result.first?.clientId ?? "", accessToken: result.first?.accessToken ?? "", url: result.first?.url ?? "", image: result.first?.image, imageLogo: result.first?.imageLogo, logoText: result.first?.logoText ?? "", logoTextColor: result.first?.logoColorText ?? "", cloudPlanId: result.first?.cloudPlanId, cloudExpireDate: result.first?.cloudExpireDate, cloudTrial: result.first?.cloudTrial)
                 return install
             } else {
                 return nil
@@ -160,7 +166,7 @@ extension WebasystDataModel {
             
             var userInstall: [UserInstall] = []
             for task in tasks {
-                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo, logoText: task.logoText ?? "", logoTextColor: task.logoColorText ?? ""))
+                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo, logoText: task.logoText ?? "", logoTextColor: task.logoColorText ?? "", cloudPlanId: task.cloudPlanId, cloudExpireDate: task.cloudExpireDate, cloudTrial: task.cloudTrial))
             }
             return userInstall
         } catch let error {

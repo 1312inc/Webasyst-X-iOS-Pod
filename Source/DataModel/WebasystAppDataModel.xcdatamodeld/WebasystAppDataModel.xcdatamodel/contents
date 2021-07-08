@@ -3,6 +3,9 @@
     <entity name="InstallList" representedClassName="InstallList" syncable="YES" codeGenerationType="class">
         <attribute name="accessToken" optional="YES" attributeType="String"/>
         <attribute name="clientId" optional="YES" attributeType="String"/>
+        <attribute name="cloudExpireDate" optional="YES" attributeType="String"/>
+        <attribute name="cloudPlanId" optional="YES" attributeType="String"/>
+        <attribute name="cloudTrial" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="domain" optional="YES" attributeType="String"/>
         <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="imageLogo" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -20,7 +23,7 @@
         <attribute name="userPic" optional="YES" attributeType="Binary"/>
     </entity>
     <elements>
-        <element name="InstallList" positionX="-63" positionY="-18" width="128" height="164"/>
+        <element name="InstallList" positionX="-63" positionY="-18" width="128" height="209"/>
         <element name="Profile" positionX="-63" positionY="18" width="128" height="119"/>
     </elements>
 </model>

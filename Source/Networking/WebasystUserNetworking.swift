@@ -219,7 +219,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
-                        let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: json["access_token"]  ?? "", url: installList[index].url)
+                        let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: json["access_token"]  ?? "", url: installList[index].url, cloudPlanId: installList[index].cloudPlanId, cloudExpireDate: installList[index].cloudExpireDate, cloudTrial: installList[index].cloudTrial)
                         self.getInstallInfo(installToken) { _ in
                             if index == 0 {
                                 completion("\(NSLocalizedString("loadingInstallMessage", comment: ""))", true)
@@ -256,7 +256,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 let info = try JSONDecoder().decode(InstallInfo.self, from: data)
                 guard let logoMode = info.logo else {
                     let imageData = self.createDefaultGradient()
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                     self.profileInstallService?.saveInstall(newInstall)
                     loadSucces(true)
                     return
@@ -266,7 +266,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     do {
                         let imageInfo = try JSONDecoder().decode(LogoImage.self, from: data)
                         self.downloadImage(imageInfo.logo?.image.thumbs.first?.value.url ?? "") { imageData in
-                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true, logoText: "", logoTextColor: "")
+                            let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true, logoText: "", logoTextColor: "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                             self.profileInstallService?.saveInstall(saveInstall)
                             loadSucces(true)
                         }
@@ -278,7 +278,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let imageInfo = try JSONDecoder().decode(LogoGradient.self, from: data)
                         
                         let imageData = self.createGradient(from: imageInfo.logo?.gradient.from ?? "#333", to: imageInfo.logo?.gradient.to ?? "#333")
-                        let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
+                        let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                         
                         self.profileInstallService?.saveInstall(install)
                         loadSucces(true)
@@ -288,14 +288,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case .unknown(value: _):
                     let imageData = self.createDefaultGradient()
                     
-                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "")
+                    let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                     
                     self.profileInstallService?.saveInstall(newInstall)
                     loadSucces(true)
                 }
             } catch let error {
                 let imageData = self.createDefaultGradient()
-                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: "", logoTextColor: "")
+                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: "", logoTextColor: "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                 
                 self.profileInstallService?.saveInstall(newInstall)
                 loadSucces(true)
