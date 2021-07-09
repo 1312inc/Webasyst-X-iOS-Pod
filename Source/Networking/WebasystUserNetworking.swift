@@ -277,7 +277,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     do {
                         let imageInfo = try JSONDecoder().decode(LogoGradient.self, from: data)
                         
-                        let imageData = self.createGradient(from: imageInfo.logo?.gradient.from ?? "#333", to: imageInfo.logo?.gradient.to ?? "#333")
+                        let imageData = self.createGradient(from: imageInfo.logo?.gradient.from ?? "#FF0078", to: imageInfo.logo?.gradient.to ?? "#FF5900")
                         let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                         
                         self.profileInstallService?.saveInstall(install)
@@ -398,7 +398,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 extension WebasystUserNetworking {
     
     fileprivate func createDefaultGradient() -> Data? {
-        let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [UIColor.magenta.cgColor, UIColor.systemPink.cgColor])
+        let gradientImage = UIImage.gradientImageWithBounds(bounds: CGRect(x: 0, y: 0, width: 200, height: 200), colors: [self.hexStringToUIColor(hex: "#FF0078").cgColor, self.hexStringToUIColor(hex: "#FF5900").cgColor])
         let imageData = UIImagePNGRepresentation(gradientImage)
         return imageData
     }
