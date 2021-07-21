@@ -83,6 +83,7 @@ public class WebasystApp {
             case .success:
                 WebasystUserNetworking().preloadUserData { _, _, successPreload in
                     if successPreload {
+                        UserDefaults.standard.setValue(true, forKey: "firstLaunch")
                         action(WebasystServerAnswer.success)
                     }
                 }
@@ -114,6 +115,7 @@ public class WebasystApp {
         WebasystNetworking().sendConfirmCode(code) { result in
             if result {
                 WebasystUserNetworking().preloadUserData { _, _, result in
+                    UserDefaults.standard.setValue(true, forKey: "firstLaunch")
                     success(result)
                 }
             } else {
