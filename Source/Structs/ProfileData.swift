@@ -8,7 +8,7 @@
 import Foundation
 
 /// User profile data structure
-public struct ProfileData {
+public struct ProfileData: Codable {
     public let name: String
     public let firstname: String
     public let lastname: String
