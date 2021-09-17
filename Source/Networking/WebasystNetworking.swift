@@ -40,7 +40,8 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "redirect_uri": "\(config.bundleId)://oidc_callback",
             "state": config.bundleId,
             "code_challenge": "\(self.generatePasswordHash(64))",
-            "code_challenge_method": "plain"
+            "code_challenge_method": "plain",
+            "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
         
         guard let urlRequest = buildWebasystUrl("/id/oauth2/auth/code", parameters: paramRequest) else { return nil }
@@ -66,10 +67,11 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         
         var parametersRequest: Parameters = [
             "client_id": config.clientId,
+            "device_id": UIDevice.current.identifierForVendor!.uuidString,
             "code_challenge": "\(self.generatePasswordHash(64))",
             "code_challenge_method": "plain",
             "scope": "token:\(config.scope)",
-            "locale": "RU",
+            "locale": "RU"
         ]
         
         switch type {
@@ -209,7 +211,8 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         let parametersRequest: Parameters = [
             "client_id": config.clientId,
             "code_verifier": passwordHash,
-            "code": code
+            "code": code,
+            "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
         
         guard let url = buildWebasystUrl("/id/oauth2/auth/headless/token/", parameters: [:]) else {
@@ -299,7 +302,8 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "code": authCode,
             "redirect_uri": "\(String(describing: config.bundleId))://oidc_callback",
             "client_id": config.clientId,
-            "code_verifier": disposablePassword
+            "code_verifier": disposablePassword,
+            "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
         
         guard let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]) else { return }
@@ -346,7 +350,8 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         let paramsRequest: Parameters = [
             "grant_type": "refresh_token",
             "refresh_token": refreshTokenString,
-            "client_id": config.clientId
+            "client_id": config.clientId,
+            "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
         
         guard let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]) else { return }
