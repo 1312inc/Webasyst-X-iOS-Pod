@@ -41,7 +41,8 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "state": config.bundleId,
             "code_challenge": "\(self.generatePasswordHash(64))",
             "code_challenge_method": "plain",
-            "device_id": UIDevice.current.identifierForVendor!.uuidString
+            "device_id": UIDevice.current.identifierForVendor!.uuidString,
+            "auth_type": "onetime_password"
         ]
         
         guard let urlRequest = buildWebasystUrl("/id/oauth2/auth/code", parameters: paramRequest) else { return nil }
