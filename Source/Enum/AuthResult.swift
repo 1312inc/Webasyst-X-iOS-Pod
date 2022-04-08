@@ -33,7 +33,7 @@ import Foundation
  `undefined`: Unknown error, in the value error transmits the text of the error.
  
  */
-public enum AuthResult {
+public enum AuthResult: Equatable {
     case success
     case no_channels
     case invalid_client
