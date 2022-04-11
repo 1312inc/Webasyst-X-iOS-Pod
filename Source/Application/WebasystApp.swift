@@ -84,8 +84,6 @@ public class WebasystApp {
                 WebasystUserNetworking().preloadUserData { isEmpty, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(true, forKey: "firstLaunch")
-                    } else if isEmpty.contains(WebasystUserNetworking.installsIsEmpty) {
-                        
                     }
                     action(success)
                 }
