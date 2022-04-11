@@ -17,8 +17,9 @@ final class AuthViewModel: AuthViewModelProtocol {
     
     private var networkingService: WebasystNetworking
     private var coordinator: AuthCoordinatorProtocol
+    private var webAsystNetworking = WebasystUserNetworking()
     var authRequest: URLRequest?
-    var delegate: AuthCoordinatorDelegate!
+    var delegate: AuthCoordinatorDelegate?
     
     init(networkingService: WebasystNetworking, coordinator: AuthCoordinatorProtocol) {
         self.networkingService = networkingService
@@ -30,13 +31,15 @@ final class AuthViewModel: AuthViewModelProtocol {
         networkingService.getAccessToken(code, stateString: state) { success in
             DispatchQueue.main.async {
                 if success {
-                    WebasystUserNetworking().preloadUserData { _, _, success in
-                        if success {
-                            self.delegate.successAuth()
+                    self.webAsystNetworking.preloadUserData { isEmpty, _, success in
+                        if success && !isEmpty.contains(WebasystUserNetworking.installsIsEmpty) {
+                            self.delegate?.successAuth()
+                        } else {
+                            self.delegate?.listIsEmpty()
                         }
                     }
                 } else {
-                    self.delegate.errorAuth()
+                    self.delegate?.errorAuth()
                 }
             }
         }

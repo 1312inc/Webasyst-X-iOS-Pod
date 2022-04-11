@@ -21,7 +21,7 @@ public class WebasystApp {
     internal static var config: WebasystConfig?
     
     public init() {}
-    
+
     /// Webasyst library configuration method
     public func configure() {
         if  let path = Bundle.main.path(forResource: "Webasyst", ofType: "plist"), let xml = FileManager.default.contents(atPath: path), let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml) {
@@ -61,7 +61,7 @@ public class WebasystApp {
         coordinator.start()
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
-            case .success:
+            case .success, .successButNoneInstalls:
                 action(WebasystServerAnswer.success)
                 WebasystUserNetworking().preloadUserData { _, _, _ in }
             case .error(error: let error):
@@ -80,12 +80,14 @@ public class WebasystApp {
         coordinator.start()
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
-            case .success:
-                WebasystUserNetworking().preloadUserData { _, _, successPreload in
+            case .success, .successButNoneInstalls:
+                WebasystUserNetworking().preloadUserData { isEmpty, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(true, forKey: "firstLaunch")
-                        action(WebasystServerAnswer.success)
+                    } else if isEmpty.contains(WebasystUserNetworking.installsIsEmpty) {
+                        
                     }
+                    action(success)
                 }
             case .error(error: let error):
                 action(WebasystServerAnswer.error(error: error))
@@ -135,8 +137,13 @@ public class WebasystApp {
             if UserDefaults.standard.bool(forKey: "firstLaunch") {
                 WebasystNetworking().refreshAccessToken { result in
                     if result {
-                        completion(UserStatus.authorized)
-                        WebasystUserNetworking().preloadUserData { _, _, _ in }
+                        WebasystUserNetworking().preloadUserData { isEmpty, _, _ in
+                            if isEmpty.contains(WebasystUserNetworking.installsIsEmpty) {
+                                completion(.authorizedButNonInstalls)
+                            } else {
+                                completion(UserStatus.authorized)
+                            }
+                        }
                     } else {
                         completion(UserStatus.error(message: "not success refresh token"))
                     }

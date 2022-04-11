@@ -12,18 +12,19 @@ protocol AuthCoordinatorProtocol {
 }
 
 public enum WebasystServerAnswer {
+    case successButNoneInstalls
     case success
     case error(error: String)
 }
 
-protocol AuthCoordinatorDelegate {
+protocol AuthCoordinatorDelegate: AnyObject {
     func successAuth()
+    func listIsEmpty()
     func errorAuth()
 }
 
 
 protocol Coordinator: AnyObject {
-    var childCoordinator: [Coordinator] { get }
     func start()
 }
 
@@ -36,9 +37,7 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordina
     public required init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-    
-    private(set) var childCoordinator: [Coordinator] = []
-    
+        
     public func start() {
         let authViewController = AuthViewController()
         let authCoordinator = AuthCoordinator(self.navigationController)
@@ -53,6 +52,13 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordina
         DispatchQueue.main.async {
             self.navigationController.dismiss(animated: true, completion: nil)
             self.action(WebasystServerAnswer.success)
+        }
+    }
+    
+    func listIsEmpty() {
+        DispatchQueue.main.async {
+            self.navigationController.dismiss(animated: true, completion: nil)
+            self.action(.successButNoneInstalls)
         }
     }
     
