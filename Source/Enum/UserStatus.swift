@@ -9,6 +9,7 @@ import Foundation
 
 /// User status lists (authorized/unauthorized)
 public enum UserStatus {
+    case authorizedButNonInstalls
     case authorized
     case nonAuthorized
     case error(message: String)

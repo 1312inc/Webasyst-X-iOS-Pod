@@ -15,6 +15,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private let dispatchGroup = DispatchGroup()
     private let config = WebasystApp.config
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
+    static var installsIsEmpty = "Empty install list"
     
     func preloadUserData(completion: @escaping (String, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
@@ -27,7 +28,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         return
                     }
                     guard !installs.isEmpty else {
-                        completion("Empty install list", 30, true)
+                        completion(WebasystUserNetworking.installsIsEmpty, 30, true)
                         return
                     }
                     var clientId: [String] = []
@@ -116,8 +117,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser")
-                        if activeInstall == nil {
-                            UserDefaults.standard.setValue(installList.first?.id ?? "", forKey: "selectDomainUser")
+                        if let install = installList.first?.id, activeInstall == nil {
+                            UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                         }
                         completion(installList)
                         self.deleteNonActiveInstall(installList: installList)
