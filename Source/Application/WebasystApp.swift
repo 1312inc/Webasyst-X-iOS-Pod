@@ -21,7 +21,7 @@ public class WebasystApp {
     internal static var config: WebasystConfig?
     
     public init() {}
-
+    
     /// Webasyst library configuration method
     public func configure() {
         if  let path = Bundle.main.path(forResource: "Webasyst", ofType: "plist"), let xml = FileManager.default.contents(atPath: path), let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml) {
@@ -84,8 +84,6 @@ public class WebasystApp {
                 WebasystUserNetworking().preloadUserData { isEmpty, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(true, forKey: "firstLaunch")
-                    } else if isEmpty.contains(WebasystUserNetworking.installsIsEmpty) {
-                        
                     }
                     action(success)
                 }
@@ -138,8 +136,14 @@ public class WebasystApp {
                 WebasystNetworking().refreshAccessToken { result in
                     if result {
                         WebasystUserNetworking().preloadUserData { isEmpty, _, _ in
-                            if isEmpty.contains(WebasystUserNetworking.installsIsEmpty) {
+                            let emptyInstall = isEmpty.contains(WebasystUserNetworking.installsIsEmpty)
+                            let emptyProfile = UserDefaults.standard.bool(forKey: "isEmptyUser")
+                            if emptyProfile && emptyInstall {
+                                completion(.authorizedButNonInstallsAndProfileIsEmpty)
+                            } else if emptyInstall {
                                 completion(.authorizedButNonInstalls)
+                            } else if emptyProfile {
+                                completion(.authorizedButProfileIsEmpty)
                             } else {
                                 completion(UserStatus.authorized)
                             }
@@ -150,7 +154,7 @@ public class WebasystApp {
                 }
             } else {
                 self.logOutUser { _ in
-                    UserDefaults.standard.setValue(true, forKey: "firstLaunch")
+                    UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     completion(UserStatus.error(message: "firstLaunch"))
                 }
             }
@@ -191,6 +195,35 @@ public class WebasystApp {
             result = profile
         })
         return result
+    }
+    
+    /// Update current user image
+    /// - Parameter image: Image to update
+    /// - Parameter success: Closure performed after executing the method
+    /// - Returns: Result value which can be successfully or errorable
+    public func updateUserImage(_ image: UIImage, success: @escaping (Result) -> Void) {
+        WebasystUserNetworking().updateUserAvatar(image) { result in
+            success(result)
+        }
+    }
+    
+    /// Delete current user image
+    /// - Parameter success: Closure performed after executing the method
+    /// - Returns: Result value which can be successfully or errorable
+    public func deleteUserImage(success: @escaping (Result) -> Void) {
+        WebasystUserNetworking().deleteUserAvatar { result in
+            success(result)
+        }
+    }
+    
+    /// Change the data of the current user
+    /// - Parameter profile: pass the current data model with user information
+    /// - Parameter success: Closure performed after executing the method
+    /// - Returns: Result value which can be successfully or errorable
+    public func changeCurrentUserData(profile: ProfileData, success: @escaping (Swift.Result<ProfileData,Error>) -> Void) {
+        WebasystUserNetworking().changeUserData(profile) { result in
+            success(result)
+        }
     }
     
     /// Creating a new Webasyst account

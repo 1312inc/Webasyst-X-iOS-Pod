@@ -272,6 +272,20 @@ extension WebasystDataModel {
         
     }
     
+    func saveNewAvatar(_ image: Data) {
+        guard let context = managedObjectContext else { return }
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
+        
+        do {
+            guard let result = try context.fetch(request) as? [Profile] else { return }
+            result.first?.userPic = image
+            self.save()
+        } catch let error {
+            print(NSError(domain: "Webasyst Database error(method: saveProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
+        }
+    
+    }
+    
     /// Retrieving user data from the database
     /// - Returns: User data in ProfileData format
     func getProfile(completion: @escaping (ProfileData?) -> ()) {

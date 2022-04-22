@@ -7,6 +7,11 @@
 
 import Foundation
 
+public enum Result {
+    case success
+    case failure(Error)
+}
+
 final class WebasystUserNetworking: WebasystNetworkingManager {
     
     private let profileInstallService = WebasystDataModel()
@@ -14,9 +19,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private let networkingHelper = NetworkingHelper()
     private let dispatchGroup = DispatchGroup()
     private let config = WebasystApp.config
+    private let demoToken = "5f9db4d32d9a586c2daca4b45de23eb8"
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     static var installsIsEmpty = "Empty install list"
-    
+
     func preloadUserData(completion: @escaping (String, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
             self.queue.async {
@@ -77,12 +83,132 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 200...299:
                     if let data = data {
                         let userData = try! JSONDecoder().decode(UserData.self, from: data)
+                        if userData.firstname.isEmpty || userData.lastname.isEmpty || userData.userpic_original_crop.isEmpty {
+                            UserDefaults.standard.set(true, forKey: "isEmptyUser")
+                        }
                         WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
                             WebasystDataModel()?.saveProfileData(userData, avatar: data)
+                    }
+                }
+                default:
+                    print(NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil))
+                }
+            }
+        }.resume()
+    }
+    
+    public func changeUserData(_ profile: ProfileData,_ completion: @escaping (Swift.Result<ProfileData,Error>) -> Void) {
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let parameters: Dictionary<String,Any> = [
+            "firstname": profile.firstname,
+            "lastname": profile.lastname,
+            "middlename" : profile.middlename,
+            "email": [profile.email]
+        ]
+        
+        let headers: Parameters = [
+            "Accept" : "application/json",
+            "Authorization" : accessTokenString,
+            "Content-Type" : "application/json"
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/profile", parameters: [:]) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.httpBody = try! JSONSerialization.data(withJSONObject: parameters, options: .fragmentsAllowed)
+        
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                switch httpResponse.statusCode {
+                case 200...299:
+                    if let data = data, let userData = try? JSONDecoder().decode(UserData.self, from: data) {
+                    WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
+                        WebasystDataModel()?.saveProfileData(userData, avatar: data)
+                        completion(.success(profile))
+                    }
+                }
+                default:
+                    let error = NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil)
+                    completion(.failure(error))
+                    print(error)
+                }
+            }
+        }.resume()
+    }
+    
+    public func deleteUserAvatar(_ completion: @escaping (Result) -> Void) {
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let headers: Parameters = [
+            "Authorization": accessTokenString
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/profile/userpic/", parameters: [:]) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                switch httpResponse.statusCode {
+                case 204:
+                    completion(.success)
+                default:
+                    let error = NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil)
+                    completion(.failure(error))
+                    print(error)
+                }
+            }
+        }.resume()
+    }
+    
+    public func updateUserAvatar(_ image: UIImage, _ completion: @escaping (Result) -> Void) {
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+
+        
+        guard let url = buildWebasystUrl("/id/api/v1/profile/userpic", parameters: [:]) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        let imageData = UIImageJPEGRepresentation(image, 1)!
+        
+        let headers: Parameters = [
+            "Authorization": accessTokenString,
+            "Content-Type": "image/jpeg"
+        ]
+        
+        request.httpBody = imageData
+        
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let httpResponse = response as? HTTPURLResponse {
+                switch httpResponse.statusCode {
+                case 201:
+                    if let data = data,
+                       let json = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any],
+                       let original_image = json?["userpic_original_crop"] as? String {
+                        WebasystNetworkingManager().downloadImage(original_image) { data in
+                        WebasystDataModel()?.saveNewAvatar(data)
+                        completion(.success)
                         }
                     }
                 default:
-                    print(NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil))
+                    let error = NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil)
+                    completion(.failure(error))
+                    print(error)
                 }
             }
         }.resume()
@@ -117,8 +243,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser")
-                        if activeInstall == nil {
-                            UserDefaults.standard.setValue(installList.first?.id ?? "", forKey: "selectDomainUser")
+                        if let install = installList.first?.id, activeInstall == nil || activeInstall == self.demoToken {
+                            UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                         }
                         completion(installList)
                         self.deleteNonActiveInstall(installList: installList)

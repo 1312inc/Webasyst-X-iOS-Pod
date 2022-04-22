@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal typealias Parameters = [String: String]
+public typealias Parameters = [String: String]
 
 internal class WebasystNetworking: WebasystNetworkingManager {
     
@@ -36,7 +36,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         let paramRequest: Parameters = [
             "response_type": "code",
             "client_id": config.clientId,
-            "scope": "token:\(config.scope)",
+            "scope": "profile:write token:\(config.scope)",
             "redirect_uri": "\(config.bundleId)://oidc_callback",
             "state": config.bundleId,
             "code_challenge": "\(self.generatePasswordHash(64))",
@@ -71,7 +71,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "device_id": UIDevice.current.identifierForVendor!.uuidString,
             "code_challenge": "\(self.generatePasswordHash(64))",
             "code_challenge_method": "plain",
-            "scope": "token:\(config.scope)",
+            "scope": "profile:write token:\(config.scope)",
             "locale": "RU"
         ]
         
@@ -326,6 +326,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let authData = try! JSONDecoder().decode(UserToken.self, from: data)
                         let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                        UserDefaults.standard.set("Bearer \(authData.access_token)", forKey: "keys")
                         let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
                         if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                             completion(true)
