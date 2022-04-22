@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal class WebasystNetworkingManager {
+ public class WebasystNetworkingManager {
     
     private var config = WebasystApp.config
     
@@ -36,6 +36,8 @@ internal class WebasystNetworkingManager {
         }
         return nil
     }
+     
+     
     
     /// Image upload request
     /// - Parameters:
