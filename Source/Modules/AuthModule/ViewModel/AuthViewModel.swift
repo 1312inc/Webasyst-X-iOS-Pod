@@ -31,11 +31,16 @@ final class AuthViewModel: AuthViewModelProtocol {
         networkingService.getAccessToken(code, stateString: state) { success in
             DispatchQueue.main.async {
                 if success {
-                    self.webAsystNetworking.preloadUserData { isEmpty, _, success in
-                        if success && !isEmpty.contains(WebasystUserNetworking.installsIsEmpty) {
+                    self.webAsystNetworking.preloadUserData { status, _, success in
+                        switch status {
+                        case .authorizedButProfileIsEmpty,.authorizedButNoneInstallsAndProfileIsEmpty,.authorizedButNoneInstalls:
+                            self.delegate?.listOrProfileIsEmpty(status)
+                        case .authorized:
                             self.delegate?.successAuth()
-                        } else {
-                            self.delegate?.listIsEmpty()
+                        case .networkError, .error:
+                            self.delegate?.errorAuth()
+                        case .nonAuthorized:
+                            self.delegate?.errorAuth()
                         }
                     }
                 } else {

@@ -21,33 +21,34 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private let config = WebasystApp.config
     private let demoToken = "5f9db4d32d9a586c2daca4b45de23eb8"
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
-    static var installsIsEmpty = "Empty install list"
+    private let defaultImageUrl = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
 
-    func preloadUserData(completion: @escaping (String, Int, Bool) -> ()) {
+    func preloadUserData(completion: @escaping (UserStatus, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
-            self.queue.async {
-                self.downloadUserData()
-            }
             self.dispatchGroup.notify(queue: self.queue) {
+                
+                self.downloadUserData { condition in
                 self.getInstallList { installList in
-                    guard let installs = installList else {
-                        return
-                    }
-                    guard !installs.isEmpty else {
-                        completion(WebasystUserNetworking.installsIsEmpty, 30, true)
-                        return
-                    }
+                    guard let installs = installList else { return }
                     var clientId: [String] = []
                     for install in installs {
                         clientId.append(install.id)
                     }
                     self.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
                         if success {
-                            guard let token = accessToken else {
-                                return
-                            }
+                            guard let token = accessToken else {  return }
                             self.getAccessTokenInstall(installs, accessCodes: token) { (loadText, saveSuccess) in
-                                completion(loadText, 30, saveSuccess)
+                                if installs.isEmpty || condition {
+                                    if condition && !installs.isEmpty {
+                                        completion(.authorizedButProfileIsEmpty, 30, true)
+                                    } else if !condition && installs.isEmpty {
+                                        completion(.authorizedButNoneInstalls, 30, true)
+                                    } else if condition && installs.isEmpty {
+                                        completion(.authorizedButNoneInstallsAndProfileIsEmpty, 30, true)
+                                    }
+                                } else {
+                                    completion(.authorized, 30, saveSuccess)
+                                }
                             }
                         } else {
                             print(NSError(domain: "Webasyst error: error in obtaining installation tokens", code: 400, userInfo: nil))
@@ -55,13 +56,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                 }
             }
-        } else {
-            completion(NSLocalizedString("connectionAlertMessage", comment: ""), 0, false)
         }
+    } else {
+        completion(.networkError(NSLocalizedString("connectionAlertMessage", comment: "")), 0, false)
     }
+}
     
     //MARK: Download user data
-    internal func downloadUserData() {
+    internal func downloadUserData(_ completion: @escaping (Bool) -> Void) {
         
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -83,7 +85,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 200...299:
                     if let data = data {
                         let userData = try! JSONDecoder().decode(UserData.self, from: data)
-                        let condition = userData.firstname.isEmpty || userData.lastname.isEmpty || userData.userpic_original_crop.isEmpty
+                        let condition = userData.firstname.isEmpty || userData.lastname.isEmpty || userData.userpic_original_crop == self.defaultImageUrl
+                        completion(condition)
                         UserDefaults.standard.set(condition, forKey: "isEmptyUser")
                         WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
                             WebasystDataModel()?.saveProfileData(userData, avatar: data)
@@ -160,8 +163,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
                 case 204:
-                    let url = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
-                    WebasystNetworkingManager().downloadImage(url) { data in
+                    WebasystNetworkingManager().downloadImage(self.defaultImageUrl) { data in
                     WebasystDataModel()?.saveNewAvatar(data)
                     completion(.success)
                     }
@@ -284,21 +286,15 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             let data = try JSONSerialization.data(withJSONObject: paramReqestApi) as Data
             request.addValue("\(data.count)", forHTTPHeaderField: "Content-Length")
             request.httpBody = data
-        } catch let error {
+        } catch {
             print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
         }
         
         URLSession.shared.dataTask(with: request) { (data, response, error) in
-            guard error == nil else {
-                return
-            }
-            
-            guard let data = data else {
-                return
-            }
-            
             do {
-                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                if error == nil,
+                   let data = data,
+                   let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     completion(true, json)
                 }
             } catch let error {
