@@ -10,9 +10,10 @@ import Foundation
 /// User status lists (authorized/unauthorized)
 public enum UserStatus {
     case authorizedButProfileIsEmpty
-    case authorizedButNonInstalls
-    case authorizedButNonInstallsAndProfileIsEmpty
+    case authorizedButNoneInstalls
+    case authorizedButNoneInstallsAndProfileIsEmpty
     case authorized
+    case networkError(String)
     case nonAuthorized
     case error(message: String)
 }

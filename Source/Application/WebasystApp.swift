@@ -61,7 +61,7 @@ public class WebasystApp {
         coordinator.start()
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
-            case .success, .successButNoneInstalls:
+            case .success:
                 action(WebasystServerAnswer.success)
                 WebasystUserNetworking().preloadUserData { _, _, _ in }
             case .error(error: let error):
@@ -75,20 +75,20 @@ public class WebasystApp {
     /// - Parameters:
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
     ///   - action: Closure to perform an action after authorization
-    public func oAuthLogin(navigationController: UINavigationController, action: @escaping ((_ result: WebasystServerAnswer) -> ())) {
+    public func oAuthLogin(navigationController: UINavigationController, action: @escaping ((_ result: UserStatus) -> ())) {
         let coordinator = AuthCoordinator(navigationController)
         coordinator.start()
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
-            case .success, .successButNoneInstalls:
-                WebasystUserNetworking().preloadUserData { isEmpty, _, successPreload in
+            case .success:
+                WebasystUserNetworking().preloadUserData { status, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(true, forKey: "firstLaunch")
                     }
-                    action(success)
+                    action(status)
                 }
-            case .error(error: let error):
-                action(WebasystServerAnswer.error(error: error))
+            case .error(let error):
+                action(.error(message: error))
             }
         }
         coordinator.action = success
@@ -128,35 +128,18 @@ public class WebasystApp {
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     /// - Returns Returns user status in the application (.authorized/.nonAuthorized/.error(message: String))
     public func checkUserAuth(completion: @escaping (UserStatus) -> ()) {
-        
+
         let accessToken = KeychainManager.load(key: "accessToken")
         
-        if accessToken != nil {
-            if UserDefaults.standard.bool(forKey: "firstLaunch") {
+        if accessToken != nil && UserDefaults.standard.bool(forKey: "firstLaunch") {
                 WebasystNetworking().refreshAccessToken { result in
                     if result {
-                        WebasystUserNetworking().preloadUserData { isEmpty, _, _ in
-                            let emptyInstall = isEmpty.contains(WebasystUserNetworking.installsIsEmpty)
-                            let emptyProfile = UserDefaults.standard.bool(forKey: "isEmptyUser")
-                            if emptyProfile && emptyInstall {
-                                completion(.authorizedButNonInstallsAndProfileIsEmpty)
-                            } else if emptyInstall {
-                                completion(.authorizedButNonInstalls)
-                            } else if emptyProfile {
-                                completion(.authorizedButProfileIsEmpty)
-                            } else {
-                                completion(UserStatus.authorized)
-                            }
+                        WebasystUserNetworking().preloadUserData { status, _, _ in
+                           completion(status)
                         }
                     } else {
                         completion(UserStatus.error(message: "not success refresh token"))
                     }
-                }
-            } else {
-                self.logOutUser { _ in
-                    UserDefaults.standard.setValue(false, forKey: "firstLaunch")
-                    completion(UserStatus.error(message: "firstLaunch"))
-                }
             }
         } else {
             completion(UserStatus.nonAuthorized)

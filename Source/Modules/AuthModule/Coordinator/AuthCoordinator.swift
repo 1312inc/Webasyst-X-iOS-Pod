@@ -12,14 +12,13 @@ protocol AuthCoordinatorProtocol {
 }
 
 public enum WebasystServerAnswer {
-    case successButNoneInstalls
     case success
     case error(error: String)
 }
 
 protocol AuthCoordinatorDelegate: AnyObject {
     func successAuth()
-    func listIsEmpty()
+    func listOrProfileIsEmpty(_ status: UserStatus)
     func errorAuth()
 }
 
@@ -55,10 +54,10 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordina
         }
     }
     
-    func listIsEmpty() {
+    func listOrProfileIsEmpty(_ status: UserStatus) {
         DispatchQueue.main.async {
             self.navigationController.dismiss(animated: true, completion: nil)
-            self.action(.successButNoneInstalls)
+            self.action(.success)
         }
     }
     
