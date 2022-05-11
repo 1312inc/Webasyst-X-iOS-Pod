@@ -233,21 +233,25 @@ extension WebasystDataModel {
 //MARK: Profile data
 extension WebasystDataModel {
     
+    func creator(_installs: [UserInstall], url: URL) {
+         var dictionary = Dictionary<String?, SettingsListModel>()
+        _installs.forEach {
+             dictionary[$0.name] = SettingsListModel(countSelected: 0, isLast: false, id: $0.id)
+         }
+         let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
+         try? encodedData?.write(to: url)
+    }
+    
     /// Saving installs data
     func createNew() {
-        do {
         let url = WebasystApp.url()
-        let object = try Data(contentsOf: url)
-        let archivedInstalls = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>
-        if let installs = getInstallList(), installs.count != archivedInstalls?.count {
-        var dictionary = Dictionary<String?, SettingsListModel>()
-        installs.forEach {
-            dictionary[$0.name] = SettingsListModel(countSelected: 0, isLast: false, id: $0.id)
+        guard let installs = getInstallList() else { return }
+        if let object = try? Data(contentsOf: url),
+           let archivedInstalls = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>, archivedInstalls?.count != installs.count {
+            creator(_installs: installs, url: url)
+        } else {
+            creator(_installs: installs, url: url)
         }
-            let encodedData = try NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
-            try encodedData.write(to: url)
-        }
-        } catch { print(error) }
     }
     
     /// Saving profile data
@@ -300,7 +304,7 @@ extension WebasystDataModel {
         } catch let error {
             print(NSError(domain: "Webasyst Database error(method: saveProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
         }
-    
+        
     }
     
     /// Retrieving user data from the database
