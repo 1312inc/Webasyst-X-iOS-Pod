@@ -233,6 +233,23 @@ extension WebasystDataModel {
 //MARK: Profile data
 extension WebasystDataModel {
     
+    /// Saving installs data
+    func createNew() {
+        do {
+        let url = WebasystApp.url()
+        let object = try Data(contentsOf: url)
+        let archivedInstalls = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>
+        if let installs = getInstallList(), installs.count != archivedInstalls?.count {
+        var dictionary = Dictionary<String?, SettingsListModel>()
+        installs.forEach {
+            dictionary[$0.name] = SettingsListModel(countSelected: 0, isLast: false, id: $0.id)
+        }
+            let encodedData = try NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
+            try encodedData.write(to: url)
+        }
+        } catch { print(error) }
+    }
+    
     /// Saving profile data
     /// - Parameters:
     ///   - user: User data
