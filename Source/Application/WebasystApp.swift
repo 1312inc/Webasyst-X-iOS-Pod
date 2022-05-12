@@ -35,6 +35,10 @@ public class WebasystApp {
         }
     }
     
+    public class func url() -> URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("settings")
+    }
+    
     /// A method for getting Webasyst tokens
     /// - Parameter tokenType: Type of token (Access Token or Refresh Token)
     /// - Returns: Requested token in string format

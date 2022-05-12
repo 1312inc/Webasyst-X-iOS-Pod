@@ -384,6 +384,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     let imageData = self.createDefaultGradient()
                     let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                     self.profileInstallService?.saveInstall(newInstall)
+                    self.profileInstallService?.createNew()
                     loadSucces(true)
                     return
                 }
@@ -394,6 +395,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         self.downloadImage(imageInfo.logo?.image.thumbs.first?.value.url ?? "") { imageData in
                             let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true, logoText: "", logoTextColor: "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                             self.profileInstallService?.saveInstall(saveInstall)
+                            self.profileInstallService?.createNew()
                             loadSucces(true)
                         }
                     } catch let error {
@@ -407,6 +409,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                         
                         self.profileInstallService?.saveInstall(install)
+                        self.profileInstallService?.createNew()
                         loadSucces(true)
                     } catch let error {
                         print(NSError(domain: "Webasyst error: \(info.name) \(error.localizedDescription)", code: 401, userInfo: nil))
@@ -417,6 +420,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                     
                     self.profileInstallService?.saveInstall(newInstall)
+                    self.profileInstallService?.createNew()
                     loadSucces(true)
                 }
             } catch let error {

@@ -233,6 +233,25 @@ extension WebasystDataModel {
 //MARK: Profile data
 extension WebasystDataModel {
     
+    func creator(_installs: [UserInstall], url: URL) {
+         var dictionary = Dictionary<String?, SettingsListModel>()
+         _installs.forEach {
+             dictionary[$0.name] = SettingsListModel(countSelected: 0, isLast: false, id: $0.id)
+         }
+         let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
+         try? encodedData?.write(to: url)
+    }
+    
+    /// Saving installs data
+    func createNew() {
+        let url = WebasystApp.url()
+        guard let installs = getInstallList() else { return }
+        guard let object = try? Data(contentsOf: url) else { return creator(_installs: installs, url: url) }
+           if let archivedInstalls = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>, archivedInstalls?.count != installs.count {
+            creator(_installs: installs, url: url)
+        }
+    }
+    
     /// Saving profile data
     /// - Parameters:
     ///   - user: User data
@@ -283,7 +302,7 @@ extension WebasystDataModel {
         } catch let error {
             print(NSError(domain: "Webasyst Database error(method: saveProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
         }
-    
+        
     }
     
     /// Retrieving user data from the database
