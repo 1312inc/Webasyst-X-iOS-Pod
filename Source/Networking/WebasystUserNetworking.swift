@@ -38,6 +38,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         if success {
                             guard let token = accessToken else {  return }
                             self.getAccessTokenInstall(installs, accessCodes: token) { (loadText, saveSuccess) in
+                                UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                                 if installs.isEmpty || condition {
                                     if condition && !installs.isEmpty {
                                         completion(.authorizedButProfileIsEmpty, 30, true)
@@ -75,6 +76,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let url = buildWebasystUrl("/id/api/v1/profile/", parameters: [:]) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        
         for (key, value) in headers {
             request.addValue(value, forHTTPHeaderField: key)
         }
@@ -143,7 +145,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
         }.resume()
     }
-    
+        
     public func deleteUserAvatar(_ completion: @escaping (Result) -> Void) {
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -166,7 +168,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     WebasystNetworkingManager().downloadImage(self.defaultImageUrl) { data in
                     WebasystDataModel()?.saveNewAvatar(data)
                     completion(.success)
-                    }
+                    } 
                 default:
                     let error = NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil)
                     completion(.failure(error))
@@ -180,7 +182,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
 
-        
         guard let url = buildWebasystUrl("/id/api/v1/profile/userpic", parameters: [:]) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -203,12 +204,15 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 switch httpResponse.statusCode {
                 case 201:
                     if let data = data,
-                       let json = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any],
+                       let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any],
                        let original_image = json?["userpic_original_crop"] as? String {
                         WebasystNetworkingManager().downloadImage(original_image) { data in
                         WebasystDataModel()?.saveNewAvatar(data)
                         completion(.success)
                         }
+                    } else {
+                        let error = NSError(domain: "Webasyst error: image upload error", code: 400, userInfo: nil)
+                        completion(.failure(error))
                     }
                 default:
                     let error = NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil)

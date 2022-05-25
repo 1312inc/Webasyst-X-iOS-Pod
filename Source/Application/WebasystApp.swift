@@ -87,7 +87,7 @@ public class WebasystApp {
             case .success:
                 WebasystUserNetworking().preloadUserData { status, _, successPreload in
                     if successPreload {
-                        UserDefaults.standard.setValue(true, forKey: "firstLaunch")
+                        UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     }
                     action(status)
                 }
@@ -119,7 +119,7 @@ public class WebasystApp {
         WebasystNetworking().sendConfirmCode(code) { result in
             if result {
                 WebasystUserNetworking().preloadUserData { _, _, result in
-                    UserDefaults.standard.setValue(true, forKey: "firstLaunch")
+                    UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     success(result)
                 }
             } else {
@@ -130,24 +130,26 @@ public class WebasystApp {
     
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
-    /// - Returns Returns user status in the application (.authorized/.nonAuthorized/.error(message: String))
+    public func defaultChecking(completion: @escaping (Bool) -> ()) {
+        let condition = UserDefaults.standard.bool(forKey: "firstLaunch")
+        completion(condition)
+        WebasystNetworking().refreshAccessToken { _ in }
+    }
+    
+    /// User authentication check on Webasyst server
+    /// - Parameter completion: updating the user token, and checking authorization
+    /// - Returns Returns user status in the application (.authorized/.nonAuthorized/.authorizedButNoneInstalls/.networkError(message: String)/.authorizedButProfileIsEmpty/.error(message: String))
     public func checkUserAuth(completion: @escaping (UserStatus) -> ()) {
-
-        let accessToken = KeychainManager.load(key: "accessToken")
         
-        if accessToken != nil && UserDefaults.standard.bool(forKey: "firstLaunch") {
-                WebasystNetworking().refreshAccessToken { result in
-                    if result {
-                        WebasystUserNetworking().preloadUserData { status, _, _ in
-                           completion(status)
-                        }
-                    } else {
-                        completion(UserStatus.error(message: "not success refresh token"))
-                    }
+        WebasystNetworking().refreshAccessToken { result in
+            if result {
+                WebasystUserNetworking().preloadUserData { status, _, _ in
+                   completion(status)
+                }
+            } else {
+                completion(UserStatus.error(message: "not success refresh token"))
             }
-        } else {
-            completion(UserStatus.nonAuthorized)
-        }
+    }
     }
     
     /// Getting user install list
@@ -226,9 +228,7 @@ public class WebasystApp {
     /// - Returns: Boolean value of deauthorization success
     public func logOutUser(completion: @escaping (Bool) -> ()) {
         let webasystNetworking = WebasystUserNetworking()
-        webasystNetworking.singUpUser { success in
-            print(success)
-        }
+        webasystNetworking.singUpUser { _ in }
         let dataModel = WebasystDataModel()
         dataModel?.resetInstallList()
         dataModel?.deleteProfileData()
@@ -236,6 +236,7 @@ public class WebasystApp {
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
         UserDefaults.standard.synchronize()
+        UserDefaults.standard.set(true, forKey: "firstLaunch")
         completion(true)
     }
     
