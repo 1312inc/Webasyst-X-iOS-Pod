@@ -22,6 +22,7 @@ class AuthViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         webView.uiDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView.scrollView.bounces = false
         return webView
     }()
     
@@ -39,10 +40,6 @@ class AuthViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
             return
         }
         authWebView.load(authRequest)
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        authWebView.scrollView.backgroundColor = .black
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

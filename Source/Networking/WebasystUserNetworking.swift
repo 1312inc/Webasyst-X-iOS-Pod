@@ -526,6 +526,40 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
         }.resume()
     }
+    
+    func checkAppInstall(completion: @escaping (InstallStatus) -> Void) {
+                
+        guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
+              let install = profileInstallService?.getInstall(with: domain),
+              let accessToken = install.accessToken,
+              let url = URL(string: "https://\(install.domain)/api.php/installer.product.install/slug=tasks") else { return }
+        
+        let parameters: Parameters = [
+            "Authorization": accessToken
+        ]
+                
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        for (key, value) in parameters {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            do {
+                if let data = data {
+                    let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as! [String: Any]
+                    if let error = data["error"] as? String, let rawInstall = InstallStatus(rawValue: error) {
+                        completion(rawInstall)
+                    }
+                }
+            } catch {
+                completion(.undefinedError)
+            }
+        }).resume()
+        
+    }
+    
 }
 
 //MARK: Private methods
@@ -595,3 +629,5 @@ extension String {
         return self.replacingOccurrences(of: target, with: withString, options: NSString.CompareOptions.literal, range: nil)
     }
 }
+
+extension String: Error {}
