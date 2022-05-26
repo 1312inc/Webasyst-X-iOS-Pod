@@ -20,11 +20,14 @@ class AuthViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
         let webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView.scrollView.bounces = false
         return webView
     }()
     
     override func loadView() {
-        self.view = authWebView
+        view = authWebView
     }
     
     override func viewDidLoad() {

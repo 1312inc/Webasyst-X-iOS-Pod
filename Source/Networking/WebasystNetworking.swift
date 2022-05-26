@@ -13,7 +13,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     
     private var config = WebasystApp.config
     private static var disposablePasswordAuth: String?
-    
+    private var queue = DispatchQueue(label: "webAsyst.networking", qos: .background)
     /// Generating a temporary password for user authentication
     /// - Parameter len: Length of the required password
     /// - Returns: Returns the password in string representation
@@ -326,7 +326,6 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let authData = try! JSONDecoder().decode(UserToken.self, from: data)
                         let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                        UserDefaults.standard.set("Bearer \(authData.access_token)", forKey: "keys")
                         let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
                         if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                             completion(true)
@@ -369,7 +368,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             print(NSError(domain: "Webasyst error(method: refreshAccessToken): \(error.localizedDescription)", code: 400, userInfo: nil))
         }
         
-        
+        queue.async {
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
@@ -387,6 +386,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                 }
             }
         }.resume()
+        }
         
     }
     
