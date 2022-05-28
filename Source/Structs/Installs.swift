@@ -50,4 +50,5 @@ public struct UserInstall: Decodable {
     public var cloudPlanId: String?
     public var cloudExpireDate: String?
     public var cloudTrial: Bool?
+    public var installTasks: Bool?
 }

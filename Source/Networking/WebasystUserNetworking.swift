@@ -532,14 +532,16 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let install = profileInstallService?.getInstall(with: domain),
               let accessToken = install.accessToken,
-              let url = URL(string: "https://\(install.domain)/api.php/installer.product.install/slug=tasks") else { return }
+              let url = URL(string: "https://\(install.domain)/api.php/installer.product.install") else { return }
         
         let parameters: Parameters = [
             "Authorization": accessToken
         ]
                 
+        let data = "slug=tasks".data(using: .utf8)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.httpBody = data
         
         for (key, value) in parameters {
             request.addValue(value, forHTTPHeaderField: key)
@@ -548,9 +550,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             do {
                 if let data = data {
-                    let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as! [String: Any]
-                    if let error = data["error"] as? String, let rawInstall = InstallStatus(rawValue: error) {
-                        completion(rawInstall)
+                    let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
+                    guard let httpResponse = response as? HTTPURLResponse else { return }
+                    if let data = data as? [String: Any],
+                       let error = data["error"] as? String,
+                       let rawInstall = InstallStatus(rawValue: error) {
+                            completion(rawInstall)
+                    } else if let _ = data as? Bool {
+                        completion(.successfullyInstalled)
                     }
                 }
             } catch {

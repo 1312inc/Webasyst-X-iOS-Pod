@@ -138,7 +138,9 @@ public class WebasystApp {
         if let condition = UserDefaults.standard.value(forKey: "firstLaunch") as? Bool {
         completion(condition)
         } else { completion(true) }
+        WebasystNetworking().refreshAccessToken { _ in 
         WebasystUserNetworking().preloadUserData { _,_,_ in }
+        }
     }
     
     /// User authentication check on Webasyst server
