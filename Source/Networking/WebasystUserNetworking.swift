@@ -532,7 +532,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let install = profileInstallService?.getInstall(with: domain),
               let accessToken = install.accessToken,
-              let url = URL(string: "https://\(install.domain)/api.php/installer.product.install") else { return }
+              let url = URL(string: "\(install.url)/api.php/installer.product.install") else { return }
         
         let parameters: Parameters = [
             "Authorization": accessToken
@@ -548,10 +548,11 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            let resp = response as? HTTPURLResponse
+            print(resp?.statusCode)
             do {
                 if let data = data {
                     let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
-                    guard let httpResponse = response as? HTTPURLResponse else { return }
                     if let data = data as? [String: Any],
                        let error = data["error"] as? String,
                        let rawInstall = InstallStatus(rawValue: error) {
@@ -559,10 +560,55 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     } else if let _ = data as? Bool {
                         completion(.successfullyInstalled)
                     }
+                } else {
                 }
             } catch {
+                print(error)
                 completion(.undefinedError)
             }
+        }).resume()
+        
+    }
+    
+    func checkInstallLicense(completion: @escaping (LicenseStatus) -> Void) {
+        
+        guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
+              let install = profileInstallService?.getInstall(with: domain),
+              let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+
+        let parameters: Parameters = [
+            "Authorization": accessTokenString
+        ]
+        let json = ["client_id": domain,
+                    "slug":"tasks"]
+                
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let data = try JSONEncoder().encode(json) as Data
+            request.addValue("\(data.count)", forHTTPHeaderField: "Content-Length")
+            request.httpBody = data
+        } catch {
+            print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
+        }
+        
+        for (key, value) in parameters {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+                if let data = data,
+                   let data = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String: Any],
+                   let error = data?["error"] as? String {
+                        completion(.init(rawValue: error) ?? .product_not_found)
+                } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 {
+                    completion(.success)
+                }
         }).resume()
         
     }

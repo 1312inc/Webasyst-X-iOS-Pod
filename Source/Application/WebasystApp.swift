@@ -132,6 +132,10 @@ public class WebasystApp {
         WebasystUserNetworking().checkAppInstall(completion: completion)
     }
     
+    public func checkLicense(completion: @escaping (LicenseStatus) -> Void) {
+        WebasystUserNetworking().checkInstallLicense(completion: completion)
+    }
+    
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func defaultChecking(completion: @escaping (Bool) -> ()) {

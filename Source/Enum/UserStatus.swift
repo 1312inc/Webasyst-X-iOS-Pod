@@ -17,3 +17,11 @@ public enum UserStatus {
     case nonAuthorized
     case error(message: String)
 }
+
+public enum LicenseStatus: String {
+    case success
+    case installation_not_found
+    case product_not_found
+    case product_not_allowed
+    case invalid_token_client
+}
