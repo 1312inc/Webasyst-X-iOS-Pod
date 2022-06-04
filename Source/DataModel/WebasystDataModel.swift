@@ -104,6 +104,7 @@ extension WebasystDataModel {
                 install.cloudPlanId = userInstall.cloudPlanId
                 install.cloudExpireDate = userInstall.cloudExpireDate
                 install.cloudTrial = userInstall.cloudTrial ?? false
+                install.wasInstallTasks = userInstall.installTasks ?? true
                 save()
             } else {
                 result.first?.name = userInstall.name

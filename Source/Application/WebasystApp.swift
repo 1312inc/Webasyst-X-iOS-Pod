@@ -132,13 +132,19 @@ public class WebasystApp {
         WebasystUserNetworking().checkAppInstall(completion: completion)
     }
     
+    public func checkLicense(completion: @escaping (LicenseStatus) -> Void) {
+        WebasystUserNetworking().checkInstallLicense(completion: completion)
+    }
+    
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func defaultChecking(completion: @escaping (Bool) -> ()) {
         if let condition = UserDefaults.standard.value(forKey: "firstLaunch") as? Bool {
         completion(condition)
         } else { completion(true) }
+        WebasystNetworking().refreshAccessToken { _ in 
         WebasystUserNetworking().preloadUserData { _,_,_ in }
+        }
     }
     
     /// User authentication check on Webasyst server
