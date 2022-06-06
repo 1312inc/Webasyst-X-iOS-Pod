@@ -549,7 +549,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             let resp = response as? HTTPURLResponse
-            print(resp?.statusCode)
+            print(resp?.statusCode ?? 0)
             do {
                 if let data = data {
                     let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
@@ -573,7 +573,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     func checkInstallLicense(completion: @escaping (LicenseStatus) -> Void) {
         
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
-              let install = profileInstallService?.getInstall(with: domain),
               let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
         
         let accessToken = KeychainManager.load(key: "accessToken")
