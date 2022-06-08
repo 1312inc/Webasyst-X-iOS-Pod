@@ -11,12 +11,12 @@ struct CreateNewAccount: Codable {
     var id: String
     var domain: String
     var url: String
-    var auth_endpoint: String
-    var cloud_expire_date: String
+    var authEndpoint: String
+    var cloudExpireDate: String
     
     enum CodingKeys: String, CodingKey {
         case id, domain, url
-        case auth_endpoint = "authEndpoint"
-        case cloud_expire_date = "cloudExpireDate"
+        case authEndpoint = "auth_endpoint"
+        case cloudExpireDate = "cloud_expire_date"
     }
 }

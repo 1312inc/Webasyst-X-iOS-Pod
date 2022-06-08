@@ -52,7 +52,11 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                                 }
                             }
                         } else {
-                            print(NSError(domain: "Webasyst error: error in obtaining installation tokens", code: 400, userInfo: nil))
+                            if !condition && installs.isEmpty {
+                                 completion(.authorizedButNoneInstalls, 30, true)
+                             } else if condition && installs.isEmpty {
+                                 completion(.authorizedButNoneInstallsAndProfileIsEmpty, 30, true)
+                             }
                         }
                     }
                 }
@@ -89,7 +93,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let userData = try! JSONDecoder().decode(UserData.self, from: data)
                         let condition = userData.firstname.isEmpty || userData.lastname.isEmpty || userData.userpic_original_crop == self.defaultImageUrl
                         completion(condition)
-                        UserDefaults.standard.set(condition, forKey: "isEmptyUser")
                         WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
                             WebasystDataModel()?.saveProfileData(userData, avatar: data)
                     }
@@ -300,6 +303,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                    let data = data,
                    let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                     completion(true, json)
+                } else {
+                    completion(false,[:])
                 }
             } catch let error {
                 print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
@@ -449,7 +454,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         ]
         
         let parametersRequest: Parameters = [
-            "bundle": "allwebasyst"
+            "bundle": "teamwork",
+            "plain_id": "X-1312-TEAMWORK-1"
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
@@ -482,6 +488,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
             
             do {
+                print(try! JSONSerialization.jsonObject(with: data))
                 let json = try JSONDecoder().decode(CreateNewAccount.self, from: data)
                 var newInstall: [UserInstallCodable] = []
                 self.getAccessTokenApi(clientId: [json.id]) { success, accessCode in
@@ -494,6 +501,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 }
             } catch let error {
                 completion(false, nil)
+                print(error)
                 print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
             }
             
@@ -549,7 +557,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             let resp = response as? HTTPURLResponse
-            print(resp?.statusCode ?? 0)
+            print(resp?.statusCode)
             do {
                 if let data = data {
                     let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
@@ -563,7 +571,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 } else {
                 }
             } catch {
-                print(error)
+                print(error, #function)
                 completion(.undefinedError)
             }
         }).resume()
@@ -601,12 +609,17 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
                 if let data = data,
                    let data = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String: Any],
                    let error = data?["error"] as? String {
                         completion(.init(rawValue: error) ?? .product_not_found)
                 } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 {
                     completion(.success)
+                } else {
+                    completion(.product_not_allowed)
                 }
         }).resume()
         
