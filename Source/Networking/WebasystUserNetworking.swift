@@ -256,6 +256,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser")
                         if let install = installList.first?.id, activeInstall == nil || activeInstall == self.demoToken {
+                            print("is it he", install)
                             UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                         }
                         completion(installList)
@@ -454,8 +455,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         ]
         
         let parametersRequest: Parameters = [
-            "bundle": "teamwork",
-            "plain_id": "X-1312-TEAMWORK-1"
+            "bundle": "teamwork"
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
@@ -488,7 +488,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
             
             do {
-                print(try! JSONSerialization.jsonObject(with: data))
                 let json = try JSONDecoder().decode(CreateNewAccount.self, from: data)
                 var newInstall: [UserInstallCodable] = []
                 self.getAccessTokenApi(clientId: [json.id]) { success, accessCode in
