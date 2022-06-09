@@ -557,7 +557,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             let resp = response as? HTTPURLResponse
-            print(resp?.statusCode)
+            print(resp?.statusCode ?? 0)
             do {
                 if let data = data {
                     let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
