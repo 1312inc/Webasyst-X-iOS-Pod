@@ -455,7 +455,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         ]
         
         let parametersRequest: Parameters = [
-            "bundle": "teamwork"
+            "bundle": "teamwork",
+            "plan_id": "X-1312-TEAMWORK-1"
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
