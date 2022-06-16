@@ -128,11 +128,11 @@ public class WebasystApp {
         }
     }
     
-    public func checkInstallApp(completion: @escaping (InstallStatus) -> Void) {
+    public func checkInstallApp(completion: @escaping (Swift.Result<String?, String>) -> Void) {
         WebasystUserNetworking().checkAppInstall(completion: completion)
     }
     
-    public func checkLicense(completion: @escaping (LicenseStatus) -> Void) {
+    public func checkLicense(completion: @escaping (Swift.Result<String?, String>) -> Void) {
         WebasystUserNetworking().checkInstallLicense(completion: completion)
     }
     
