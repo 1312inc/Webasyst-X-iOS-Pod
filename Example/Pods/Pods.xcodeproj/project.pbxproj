@@ -8,42 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1C53B93B5A3DD672EA4DBC3D0C614FDC /* Pods-Webasyst_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC717303E451927E9CB35954E57FC21 /* Pods-Webasyst_Tests-dummy.m */; };
-		40519B51282CE76E00474D78 /* SettingsListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40519B50282CE76E00474D78 /* SettingsListModel.swift */; };
-		40A0572B284BF74A004AE6D8 /* InstallStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A0572A284BF74A004AE6D8 /* InstallStatus.swift */; };
-		598270878060CC205258FC4179E978F2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		5E17340591E28AC6D956CD6129AAE14B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		6269DA7DAE28E550E852EDB5DBC0FD62 /* Pods-Webasyst_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F7EA7CBD3F3FECEE0070FBD35F4E466A /* Pods-Webasyst_Example-dummy.m */; };
-		643B985FF57BA2AD664CBE87ED08EDC5 /* Webasyst-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B5B5A0F808DF1F38362CB9F4A1FD984B /* Webasyst-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6AA51983E0B441839B9655C98173D7BB /* Pods-Webasyst_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5C48B78C558682CBE99C60EF6B16F21A /* Pods-Webasyst_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8C78A365AC08E2711C2F476D048757CB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		8E05AE547C0CCFF3C4D2E6C3657A3141 /* Webasyst-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 870E223A9B39F70F31CEA27DFC421A09 /* Webasyst-dummy.m */; };
 		9BF0E652EA5D01971820B3CDED85AEBE /* Pods-Webasyst_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E8CA7EE052DE4A709D2F93657A5D116F /* Pods-Webasyst_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FD01687A265F551900BBF9EB /* AuthType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD016879265F551900BBF9EB /* AuthType.swift */; };
-		FD01687D265F799D00BBF9EB /* AuthResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD01687C265F799D00BBF9EB /* AuthResult.swift */; };
-		FD15E76F264CDEC900DFD52F /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E76E264CDEC900DFD52F /* Config.swift */; };
-		FD15E773264CF13600DFD52F /* WebasystNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E772264CF13600DFD52F /* WebasystNetworking.swift */; };
-		FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E776264D008E00DFD52F /* WebasystNetworkingManager.swift */; };
-		FD15E783264D0A9400DFD52F /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E77E264D0A9400DFD52F /* AuthViewModel.swift */; };
-		FD15E784264D0A9400DFD52F /* AuthCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E780264D0A9400DFD52F /* AuthCoordinator.swift */; };
-		FD15E785264D0A9400DFD52F /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD15E782264D0A9400DFD52F /* AuthViewController.swift */; };
-		FD1C00CF2654E09700EFB307 /* NetworkingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C00CE2654E09700EFB307 /* NetworkingHelper.swift */; };
-		FD3BBA01268599430011259A /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD3BBA00268599430011259A /* Preferences.swift */; };
-		FD46B9B9267C873A00A6597A /* CreateNewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD46B9B8267C873A00A6597A /* CreateNewAccount.swift */; };
-		FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4CCDF4264BCAF500C16027 /* WebasystApp.swift */; };
-		FD58E67C265E04EB0037CF13 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E67B265E04EB0037CF13 /* TokenType.swift */; };
-		FD58E67E265E05020037CF13 /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E67D265E05020037CF13 /* UserStatus.swift */; };
-		FD58E680265E08670037CF13 /* ProfileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E67F265E08670037CF13 /* ProfileData.swift */; };
-		FD58E682265E08850037CF13 /* Installs.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E681265E08850037CF13 /* Installs.swift */; };
-		FD58E685265E098E0037CF13 /* UserToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E684265E098E0037CF13 /* UserToken.swift */; };
-		FD58E687265E13FC0037CF13 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E686265E13FC0037CF13 /* UserData.swift */; };
-		FD58E689265E14110037CF13 /* InstallInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E688265E14110037CF13 /* InstallInfo.swift */; };
-		FD58E68B265E14360037CF13 /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E68A265E14360037CF13 /* ImageType.swift */; };
-		FD58E693265E23450037CF13 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD58E692265E23450037CF13 /* UIImage.swift */; };
-		FD8BD99126524DFB00615C5E /* WebasystUserNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99026524DFB00615C5E /* WebasystUserNetworking.swift */; };
-		FD8BD99426525E3400615C5E /* WebasystAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99226525E3400615C5E /* WebasystAppDataModel.xcdatamodeld */; };
-		FD8BD99826525EC600615C5E /* WebasystDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD99726525EC600615C5E /* WebasystDataModel.swift */; };
-		FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEB264E1EFE00A1E7F4 /* URLRequest.swift */; };
-		FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDB0CAEE264E249C00A1E7F4 /* KeychainService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,13 +21,6 @@
 			remoteGlobalIDString = D409A95C72151E6F0FC3B0CB0BEB4846;
 			remoteInfo = "Pods-Webasyst_Example";
 		};
-		D76A17C54E66BB5B10669E674023C212 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BF5B2BFC925212F2B992DE494D86E5D5;
-			remoteInfo = Webasyst;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -68,14 +28,12 @@
 		0BC0374CC70B7F767B013653A0AB1D69 /* Pods-Webasyst_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Webasyst_Tests.modulemap"; sourceTree = "<group>"; };
 		17C07062F0CCA94D5190536175B544F3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		40519B50282CE76E00474D78 /* SettingsListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsListModel.swift; sourceTree = "<group>"; };
-		40A0572A284BF74A004AE6D8 /* InstallStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InstallStatus.swift; path = ../../Source/Enum/InstallStatus.swift; sourceTree = "<group>"; };
+		40A0572A284BF74A004AE6D8 /* InstallStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallStatus.swift; sourceTree = "<group>"; };
 		427A0B5C53510E8BAE70502A28944B3B /* Webasyst.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Webasyst.release.xcconfig; sourceTree = "<group>"; };
 		5C48B78C558682CBE99C60EF6B16F21A /* Pods-Webasyst_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Webasyst_Example-umbrella.h"; sourceTree = "<group>"; };
 		5F98B03725B14DE1C02E255AABB40F46 /* Pods-Webasyst_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Webasyst_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		62A5FABEFA8B0933B8255B9E14F06F12 /* Pods-Webasyst_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Webasyst_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		6CC717303E451927E9CB35954E57FC21 /* Pods-Webasyst_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Webasyst_Tests-dummy.m"; sourceTree = "<group>"; };
-		7153CC54079404862A2482ECECCED7C4 /* Webasyst.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Webasyst.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		745224B1857025DFC45327FEED4310F2 /* Webasyst.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Webasyst.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		809FAF5DA713E9526D758157AD78C4CE /* Pods-Webasyst_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Webasyst_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		827CDCA4631023959205DF1C9EC39CC2 /* Pods-Webasyst_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Webasyst_Example-frameworks.sh"; sourceTree = "<group>"; };
@@ -131,15 +89,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				598270878060CC205258FC4179E978F2 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		00F6C46336912619FF33BA90BDC2E129 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5E17340591E28AC6D956CD6129AAE14B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,7 +96,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C78A365AC08E2711C2F476D048757CB /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,7 +107,6 @@
 			children = (
 				F1460EBF041817C0B5E555F872A3A2F3 /* Pods_Webasyst_Example.framework */,
 				B5191EC88B4804D2B80D83317D8BD11F /* Pods_Webasyst_Tests.framework */,
-				7153CC54079404862A2482ECECCED7C4 /* Webasyst.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -206,7 +153,6 @@
 		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
@@ -225,7 +171,6 @@
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
-				40A0572A284BF74A004AE6D8 /* InstallStatus.swift */,
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				4DBEBFE17476E0CF3607AF659901B44F /* Development Pods */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
@@ -354,6 +299,7 @@
 				FD58E67F265E08670037CF13 /* ProfileData.swift */,
 				FD58E681265E08850037CF13 /* Installs.swift */,
 				FD58E684265E098E0037CF13 /* UserToken.swift */,
+				40A0572A284BF74A004AE6D8 /* InstallStatus.swift */,
 				FD58E686265E13FC0037CF13 /* UserData.swift */,
 				FD58E688265E14110037CF13 /* InstallInfo.swift */,
 				FD46B9B8267C873A00A6597A /* CreateNewAccount.swift */,
@@ -435,14 +381,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F028F9B9C4A5FD30D56D9FDB5631AAF4 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				643B985FF57BA2AD664CBE87ED08EDC5 /* Webasyst-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -465,24 +403,6 @@
 			productReference = B5191EC88B4804D2B80D83317D8BD11F /* Pods_Webasyst_Tests.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		BF5B2BFC925212F2B992DE494D86E5D5 /* Webasyst */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 0144DAC569DBA430CB2F8F3C4B989CD4 /* Build configuration list for PBXNativeTarget "Webasyst" */;
-			buildPhases = (
-				F028F9B9C4A5FD30D56D9FDB5631AAF4 /* Headers */,
-				774ADAB8E676B5C1899904F635005876 /* Sources */,
-				00F6C46336912619FF33BA90BDC2E129 /* Frameworks */,
-				5180D2D6A6C8D59FF09EB71E33CA3F73 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Webasyst;
-			productName = Webasyst;
-			productReference = 7153CC54079404862A2482ECECCED7C4 /* Webasyst.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		D409A95C72151E6F0FC3B0CB0BEB4846 /* Pods-Webasyst_Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B5CEAA1B7B7A47B330EEDDCAC239E196 /* Build configuration list for PBXNativeTarget "Pods-Webasyst_Example" */;
@@ -495,7 +415,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				27EBB7E3AE6B7ACD8D55E9E8CCF207E0 /* PBXTargetDependency */,
 			);
 			name = "Pods-Webasyst_Example";
 			productName = "Pods-Webasyst_Example";
@@ -511,9 +430,6 @@
 				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 1250;
 				TargetAttributes = {
-					BF5B2BFC925212F2B992DE494D86E5D5 = {
-						LastSwiftMigration = 1250;
-					};
 					D409A95C72151E6F0FC3B0CB0BEB4846 = {
 						LastSwiftMigration = 1250;
 					};
@@ -534,20 +450,12 @@
 			targets = (
 				D409A95C72151E6F0FC3B0CB0BEB4846 /* Pods-Webasyst_Example */,
 				3164A80351C85C895F72421184D39CF5 /* Pods-Webasyst_Tests */,
-				BF5B2BFC925212F2B992DE494D86E5D5 /* Webasyst */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1090A9E594BA0BEA79985C8033877466 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5180D2D6A6C8D59FF09EB71E33CA3F73 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -564,42 +472,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		774ADAB8E676B5C1899904F635005876 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				40A0572B284BF74A004AE6D8 /* InstallStatus.swift in Sources */,
-				40519B51282CE76E00474D78 /* SettingsListModel.swift in Sources */,
-				FD46B9B9267C873A00A6597A /* CreateNewAccount.swift in Sources */,
-				8E05AE547C0CCFF3C4D2E6C3657A3141 /* Webasyst-dummy.m in Sources */,
-				FD58E67E265E05020037CF13 /* UserStatus.swift in Sources */,
-				FD8BD99426525E3400615C5E /* WebasystAppDataModel.xcdatamodeld in Sources */,
-				FD58E689265E14110037CF13 /* InstallInfo.swift in Sources */,
-				FD15E773264CF13600DFD52F /* WebasystNetworking.swift in Sources */,
-				FD15E783264D0A9400DFD52F /* AuthViewModel.swift in Sources */,
-				FD4CCDF5264BCAF500C16027 /* WebasystApp.swift in Sources */,
-				FDB0CAEF264E249C00A1E7F4 /* KeychainService.swift in Sources */,
-				FD8BD99826525EC600615C5E /* WebasystDataModel.swift in Sources */,
-				FD01687D265F799D00BBF9EB /* AuthResult.swift in Sources */,
-				FD58E68B265E14360037CF13 /* ImageType.swift in Sources */,
-				FD8BD99126524DFB00615C5E /* WebasystUserNetworking.swift in Sources */,
-				FD15E785264D0A9400DFD52F /* AuthViewController.swift in Sources */,
-				FD15E784264D0A9400DFD52F /* AuthCoordinator.swift in Sources */,
-				FD58E682265E08850037CF13 /* Installs.swift in Sources */,
-				FD58E685265E098E0037CF13 /* UserToken.swift in Sources */,
-				FD58E67C265E04EB0037CF13 /* TokenType.swift in Sources */,
-				FD15E76F264CDEC900DFD52F /* Config.swift in Sources */,
-				FD1C00CF2654E09700EFB307 /* NetworkingHelper.swift in Sources */,
-				FD15E777264D008E00DFD52F /* WebasystNetworkingManager.swift in Sources */,
-				FD58E693265E23450037CF13 /* UIImage.swift in Sources */,
-				FDB0CAEC264E1EFE00A1E7F4 /* URLRequest.swift in Sources */,
-				FD01687A265F551900BBF9EB /* AuthType.swift in Sources */,
-				FD58E687265E13FC0037CF13 /* UserData.swift in Sources */,
-				FD3BBA01268599430011259A /* Preferences.swift in Sources */,
-				FD58E680265E08670037CF13 /* ProfileData.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B1F7F4C9A7DC427D71D040F4CE9A3181 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -619,12 +491,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		27EBB7E3AE6B7ACD8D55E9E8CCF207E0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Webasyst;
-			target = BF5B2BFC925212F2B992DE494D86E5D5 /* Webasyst */;
-			targetProxy = D76A17C54E66BB5B10669E674023C212 /* PBXContainerItemProxy */;
-		};
 		BDF12FFB9B3E80D1613398F5FB0DE69A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Pods-Webasyst_Example";
@@ -863,39 +729,6 @@
 			};
 			name = Release;
 		};
-		EAA67F875D69E56F8A158750B0E1DEA0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 427A0B5C53510E8BAE70502A28944B3B /* Webasyst.release.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Webasyst/Webasyst-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Webasyst/Webasyst-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Webasyst/Webasyst.modulemap";
-				PRODUCT_MODULE_NAME = Webasyst;
-				PRODUCT_NAME = Webasyst;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		F0C638675C76B0AB76F4E58841E8E482 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D79A6C917FE03D8A880294FE6E5F5B92 /* Pods-Webasyst_Tests.release.xcconfig */;
@@ -929,51 +762,9 @@
 			};
 			name = Release;
 		};
-		FD9E8A449EE070758B58A69BA516FAEB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 977998563E3D98766DFF5B51943D493A /* Webasyst.debug.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Webasyst/Webasyst-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Webasyst/Webasyst-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Webasyst/Webasyst.modulemap";
-				PRODUCT_MODULE_NAME = Webasyst;
-				PRODUCT_NAME = Webasyst;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0144DAC569DBA430CB2F8F3C4B989CD4 /* Build configuration list for PBXNativeTarget "Webasyst" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FD9E8A449EE070758B58A69BA516FAEB /* Debug */,
-				EAA67F875D69E56F8A158750B0E1DEA0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

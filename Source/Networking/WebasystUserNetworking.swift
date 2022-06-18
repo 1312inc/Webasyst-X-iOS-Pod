@@ -380,14 +380,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         request.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: request) { data, response, error in
-            guard error == nil else {
+            guard error == nil, let data = data else {
                 return
             }
-            
-            guard let data = data else {
-                return
-            }
-            
             do {
                 let info = try JSONDecoder().decode(InstallInfo.self, from: data)
                 guard let logoMode = info.logo else {
@@ -535,7 +530,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }.resume()
     }
     
-    func checkAppInstall(completion: @escaping (InstallStatus) -> Void) {
+    func checkAppInstall(completion: @escaping (Swift.Result<String?, String>) -> Void) {
                 
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let install = profileInstallService?.getInstall(with: domain),
@@ -556,29 +551,20 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-            let resp = response as? HTTPURLResponse
-            print(resp?.statusCode ?? 0)
-            do {
-                if let data = data {
-                    let data = try JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
-                    if let data = data as? [String: Any],
-                       let error = data["error"] as? String,
-                       let rawInstall = InstallStatus(rawValue: error) {
-                            completion(rawInstall)
-                    } else if let _ = data as? Bool {
-                        completion(.successfullyInstalled)
-                    }
-                } else {
+            guard let httpResponse = response as? HTTPURLResponse else { return }
+            if let data = data,
+               let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed),
+               let _ = object as? Bool {
+                    completion(.success(nil))
+                } else if let data = data, var error = String(data: data, encoding: .utf8) {
+                    error += " \n Error code is " + httpResponse.statusCode.description
+                    completion(.failure(error))
                 }
-            } catch {
-                print(error, #function)
-                completion(.undefinedError)
-            }
         }).resume()
         
     }
     
-    func checkInstallLicense(completion: @escaping (LicenseStatus) -> Void) {
+    func checkInstallLicense(completion: @escaping (Swift.Result<String?, String>) -> Void) {
         
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
@@ -609,17 +595,12 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
         
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-            }
-                if let data = data,
-                   let data = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String: Any],
-                   let error = data?["error"] as? String {
-                        completion(.init(rawValue: error) ?? .product_not_found)
-                } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 {
-                    completion(.success)
-                } else {
-                    completion(.product_not_allowed)
+            guard let httpResponse = response as? HTTPURLResponse else { return }
+                if httpResponse.statusCode == 204 {
+                    completion(.success(nil))
+                } else if let data = data, var error = String(data: data, encoding: .utf8) {
+                    error += " \n Error code is " + httpResponse.statusCode.description
+                    completion(.failure(error))
                 }
         }).resume()
         
