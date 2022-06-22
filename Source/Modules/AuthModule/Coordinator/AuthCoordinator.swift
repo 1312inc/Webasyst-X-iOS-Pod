@@ -24,7 +24,7 @@ protocol AuthCoordinatorDelegate: AnyObject {
 
 
 protocol Coordinator: AnyObject {
-    func start()
+    func start(with code: String)
 }
 
 public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordinatorProtocol {
@@ -37,11 +37,13 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordina
         self.navigationController = navigationController
     }
         
-    public func start() {
+    public func start(with code: String = "") {
         let authViewController = AuthViewController()
         let authCoordinator = AuthCoordinator(self.navigationController)
         let networkingService = WebasystNetworking()
-        let authViewModel = AuthViewModel(networkingService: networkingService, coordinator: authCoordinator)
+        let authViewModel = AuthViewModel(networkingService: networkingService,
+                                          coordinator: authCoordinator,
+                                          with: code)
         authViewModel.delegate = self
         authViewController.viewModel = authViewModel
         self.navigationController.present(authViewController, animated: true, completion: nil)

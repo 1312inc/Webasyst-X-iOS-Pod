@@ -26,14 +26,14 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     
     /// Building a request for user authorization
     /// - Returns: Returns authorization request
-    internal func buildAuthRequest() -> URLRequest? {
+    internal func buildAuthRequest(_ code: String) -> URLRequest? {
         
         guard let config = self.config else {
             print(NSError(domain: "Webasyst error(method: buildAuthRequest): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             return nil
         }
         
-        let paramRequest: Parameters = [
+        var paramRequest: Parameters = [
             "response_type": "code",
             "client_id": config.clientId,
             "scope": "profile:write token:\(config.scope)",
@@ -44,6 +44,10 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "device_id": UIDevice.current.identifierForVendor!.uuidString,
             "auth_type": "onetime_password"
         ]
+        if !code.isEmpty {
+            paramRequest["change_user"] = "1"
+            paramRequest["mergecode"] = code
+        }
         
         guard let urlRequest = buildWebasystUrl("/id/oauth2/auth/code", parameters: paramRequest) else { return nil }
  

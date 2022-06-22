@@ -79,13 +79,13 @@ public class WebasystApp {
     /// - Parameters:
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
     ///   - action: Closure to perform an action after authorization
-    public func oAuthLogin(navigationController: UINavigationController, action: @escaping ((_ result: UserStatus) -> ())) {
+    public func oAuthLogin(with merge: Bool = false, with code: String = "", navigationController: UINavigationController, action: @escaping ((_ result: UserStatus) -> ())) {
         let coordinator = AuthCoordinator(navigationController)
-        coordinator.start()
+        coordinator.start(with: code)
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
             case .success:
-                WebasystUserNetworking().preloadUserData { status, _, successPreload in
+                WebasystUserNetworking().preloadUserData(with: merge) { status, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     }
@@ -96,6 +96,10 @@ public class WebasystApp {
             }
         }
         coordinator.action = success
+    }
+    
+    public func mergeResultCheck(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
+        WebasystUserNetworking().mergeResultCheck(completion: completion)
     }
     
     /// Method for obtaining authorisation code without a browser
@@ -160,7 +164,12 @@ public class WebasystApp {
             } else {
                 completion(UserStatus.error(message: "not success refresh token"))
             }
+        }
     }
+    /// A new free WAID contact connected to the opposite application can oppose another existing WAID contact.
+    /// - Returns Returns code for merge
+    public func mergeTwoAccs(completion: @escaping (Swift.Result<String, Error>) -> Void) {
+        WebasystUserNetworking().mergeTwoAccounts(completion: completion)
     }
     
     /// Getting user install list
