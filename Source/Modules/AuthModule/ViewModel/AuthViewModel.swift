@@ -9,7 +9,7 @@ import Foundation
 
 protocol AuthViewModelProtocol: AnyObject {
     var authRequest: URLRequest? { get }
-    init(networkingService: WebasystNetworking, coordinator: AuthCoordinatorProtocol)
+    init(networkingService: WebasystNetworking, coordinator: AuthCoordinatorProtocol, with code: String)
     func successAuth(code: String, state: String)
 }
 
@@ -21,9 +21,9 @@ final class AuthViewModel: AuthViewModelProtocol {
     var authRequest: URLRequest?
     var delegate: AuthCoordinatorDelegate?
     
-    init(networkingService: WebasystNetworking, coordinator: AuthCoordinatorProtocol) {
+    init(networkingService: WebasystNetworking, coordinator: AuthCoordinatorProtocol, with code: String) {
         self.networkingService = networkingService
-        self.authRequest = networkingService.buildAuthRequest()
+        self.authRequest = networkingService.buildAuthRequest(code)
         self.coordinator = coordinator
     }
     

@@ -23,12 +23,12 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     private let defaultImageUrl = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
 
-    func preloadUserData(completion: @escaping (UserStatus, Int, Bool) -> ()) {
+    func preloadUserData(with merge: Bool = false,completion: @escaping (UserStatus, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
             self.dispatchGroup.notify(queue: self.queue) {
                 
                 self.downloadUserData { condition in
-                self.getInstallList { installList in
+                    self.getInstallList(with: merge) { installList in
                     guard let installs = installList else { return }
                     var clientId: [String] = []
                     for install in installs {
@@ -227,7 +227,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     //MARK: Get installation's list user
-    public func getInstallList(completion: @escaping ([UserInstallCodable]?) -> ()) {
+    public func getInstallList(with merge: Bool, completion: @escaping ([UserInstallCodable]?) -> ()) {
         
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -255,7 +255,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser")
-                        if let install = installList.first?.id, activeInstall == nil || activeInstall == self.demoToken {
+                        if let install = installList.first?.id, activeInstall == nil || activeInstall == self.demoToken || merge {
                             print("is it he", install)
                             UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                         }
@@ -602,6 +602,69 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     error += " \n Error code is " + httpResponse.statusCode.description
                     completion(.failure(error))
                 }
+        }).resume()
+        
+    }
+    
+    func mergeTwoAccounts(completion: @escaping (Swift.Result<String, Error>) -> Void) {
+        
+        guard let url = buildWebasystUrl("/id/api/v1/profile/mergecode", parameters: [:]) else { return }
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let parameters: Parameters = [
+            "Authorization": accessTokenString
+        ]
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        for (key, value) in parameters {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else { return }
+            if let data = data,
+               let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any],
+               let code = object?["code"] as? String {
+                    completion(.success(code))
+                } else if httpResponse.statusCode == 409 {
+                    let error = NSError()
+                    completion(.failure(error))
+                }
+        }).resume()
+        
+    }
+    
+    func mergeResultCheck(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
+        
+        guard let url = buildWebasystUrl("/id/api/v1/profile/mergeresult", parameters: [:]) else { return }
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        
+        let parameters: Parameters = [
+            "Authorization": accessTokenString
+        ]
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        for (key, value) in parameters {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            print(try! JSONSerialization.jsonObject(with: data ?? .init()))
+            if let data = data,
+               let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any] ,
+               let status = object?["status"] as? String {
+                if status == "success" {
+                    completion(.success(true))
+                } else {
+                    completion(.failure("error"))
+                }
+            }
         }).resume()
         
     }
