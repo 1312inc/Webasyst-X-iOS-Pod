@@ -215,11 +215,7 @@ extension WebasystDataModel {
     
     /// Saving the database context
     fileprivate func save() {
-        guard let managedObjectContext = managedObjectContext else {
-            return
-        }
-        
-        if managedObjectContext.hasChanges {
+        guard let managedObjectContext = managedObjectContext else { return }
             do {
                 try managedObjectContext.save()
             } catch {
@@ -228,8 +224,6 @@ extension WebasystDataModel {
             }
         }
     }
-    
-}
 
 //MARK: Profile data
 extension WebasystDataModel {
