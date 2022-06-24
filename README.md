@@ -154,7 +154,6 @@ Error Domain=Webasyst warning: https://1312.io The data couldn’t be read becau
 ## Author
 
 **Company:** 1312 Inc. *hello@1312.io*
-**Developer:** Viktor Kobykhno *ViktkobST@gmail.com*
 
 ## License
 
