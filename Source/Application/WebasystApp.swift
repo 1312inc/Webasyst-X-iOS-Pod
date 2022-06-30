@@ -85,7 +85,7 @@ public class WebasystApp {
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
             case .success:
-                WebasystUserNetworking().preloadUserData(with: merge) { status, _, successPreload in
+                WebasystUserNetworking().preloadUserData { status, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     }

@@ -23,12 +23,12 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     private let defaultImageUrl = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
 
-    func preloadUserData(with merge: Bool = false,completion: @escaping (UserStatus, Int, Bool) -> ()) {
+    func preloadUserData(completion: @escaping (UserStatus, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
             self.dispatchGroup.notify(queue: self.queue) {
 
                 self.downloadUserData { condition in
-                    self.getInstallList(with: merge) { installList in
+                    self.getInstallList { installList in
                     guard let installs = installList else { return }
                     var clientId: [String] = []
                     for install in installs {
@@ -214,20 +214,21 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         completion(.success)
                         }
                     } else {
-                        let error = NSError(domain: "Webasyst error: image upload error", code: 400, userInfo: nil)
+                        let str = "Error code is \(httpResponse.statusCode.description)"
+                        let error = NSError(domain: str, code: httpResponse.statusCode, userInfo: nil)
                         completion(.failure(error))
                     }
                 default:
-                    let error = NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil)
+                    let str = "Error code is \(httpResponse.statusCode.description)"
+                    let error = NSError(domain: str, code: httpResponse.statusCode, userInfo: nil)
                     completion(.failure(error))
-                    print(error)
                 }
             }
         }.resume()
     }
 
     //MARK: Get installation's list user
-    public func getInstallList(with merge: Bool, completion: @escaping ([UserInstallCodable]?) -> ()) {
+    public func getInstallList(completion: @escaping ([UserInstallCodable]?) -> ()) {
 
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -255,7 +256,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser") ?? ""
-                        if let install = installList.first?.id, activeInstall.isEmpty || merge {
+                        if let install = installList.first?.id, activeInstall.isEmpty {
                             UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                         }
                         completion(installList)

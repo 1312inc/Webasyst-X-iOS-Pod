@@ -51,21 +51,18 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordina
     
     func successAuth() {
         DispatchQueue.main.async {
-            self.navigationController.dismiss(animated: true, completion: nil)
             self.action(WebasystServerAnswer.success)
         }
     }
     
     func listOrProfileIsEmpty(_ status: UserStatus) {
         DispatchQueue.main.async {
-            self.navigationController.dismiss(animated: true, completion: nil)
             self.action(.success)
         }
     }
     
     func errorAuth() {
         DispatchQueue.main.async {
-            self.navigationController.dismiss(animated: true, completion: nil)
             self.action(WebasystServerAnswer.error(error: "Undefined error"))
         }
     }
