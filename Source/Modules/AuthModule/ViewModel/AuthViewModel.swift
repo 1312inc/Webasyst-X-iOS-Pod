@@ -31,7 +31,7 @@ final class AuthViewModel: AuthViewModelProtocol {
         networkingService.getAccessToken(code, stateString: state) { success in
             DispatchQueue.main.async {
                 if success {
-                    self.webAsystNetworking.preloadUserData { status, _, success in
+                    self.webAsystNetworking.preloadUserData { status, _, _ in
                         switch status {
                         case .authorizedButProfileIsEmpty,.authorizedButNoneInstallsAndProfileIsEmpty,.authorizedButNoneInstalls:
                             self.delegate?.listOrProfileIsEmpty(status)
@@ -43,6 +43,7 @@ final class AuthViewModel: AuthViewModelProtocol {
                             self.delegate?.errorAuth()
                         }
                     }
+                        UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                 } else {
                     self.delegate?.errorAuth()
                 }
