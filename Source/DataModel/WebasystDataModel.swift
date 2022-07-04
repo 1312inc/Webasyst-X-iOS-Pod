@@ -242,8 +242,19 @@ extension WebasystDataModel {
         let url = WebasystApp.url()
         guard let installs = getInstallList() else { return }
         guard let object = try? Data(contentsOf: url) else { return creator(_installs: installs, url: url) }
-           if let archivedInstalls = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>, archivedInstalls?.count != installs.count {
-            creator(_installs: installs, url: url)
+        if let archivedInstalls = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>,
+           let unwrappedInstalls = archivedInstalls {
+            if unwrappedInstalls.count == installs.count, !unwrappedInstalls.keys.enumerated().allSatisfy({
+                if let name = installs[$0.offset].name {
+                    return $0.element == name
+                } else {
+                    return false
+                }
+                }) {
+                creator(_installs: installs, url: url)
+            } else if installs.count != unwrappedInstalls.count {
+                creator(_installs: installs, url: url)
+            }
         }
     }
     
