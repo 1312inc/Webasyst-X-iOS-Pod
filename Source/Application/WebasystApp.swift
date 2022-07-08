@@ -35,6 +35,7 @@ public class WebasystApp {
         }
     }
     
+    /// Return url for local storage
     public class func url() -> URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("settings")
     }
@@ -85,6 +86,7 @@ public class WebasystApp {
         let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
             switch success {
             case .success:
+                UserDefaults.standard.setValue("", forKey: "selectDomainUser")
                 WebasystUserNetworking().preloadUserData { status, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(false, forKey: "firstLaunch")
@@ -98,6 +100,8 @@ public class WebasystApp {
         coordinator.action = success
     }
     
+    /// Merge result check
+    /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
     public func mergeResultCheck(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
         WebasystUserNetworking().mergeResultCheck(completion: completion)
     }
@@ -132,10 +136,14 @@ public class WebasystApp {
         }
     }
     
+    /// App installation
+    /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
     public func checkInstallApp(completion: @escaping (Swift.Result<String?, String>) -> Void) {
         WebasystUserNetworking().checkAppInstall(completion: completion)
     }
     
+    /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
+    /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func checkLicense(completion: @escaping (Swift.Result<String?, String>) -> Void) {
         WebasystUserNetworking().checkInstallLicense(completion: completion)
     }
@@ -170,6 +178,12 @@ public class WebasystApp {
     /// - Returns Returns code for merge
     public func mergeTwoAccs(completion: @escaping (Swift.Result<String, Error>) -> Void) {
         WebasystUserNetworking().mergeTwoAccounts(completion: completion)
+    }
+    
+    public func deleteAccount(completion: @escaping (Swift.Result<Bool, String>) -> ()) {
+        WebasystUserNetworking().deleteAccount(completion: { result in
+            completion(result)
+        })
     }
     
     /// Getting user install list

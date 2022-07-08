@@ -48,6 +48,9 @@ class KeychainManager {
             return nil
         }
     }
+    class func update(key: String, data: Data) {
+        
+    }
     
     /// Deletes all data from Kechain
     class func deleteAllKeys() {

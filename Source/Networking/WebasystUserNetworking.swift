@@ -317,7 +317,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
         guard let config = WebasystApp.config else { return }
 
-        for index in 0 ..< installList.count {
+        for index in 0..<installList.count {
             let code = accessCodes[installList[index].id] as! String
 
             let replaceScope = config.scope
@@ -655,7 +655,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
 
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-            print(try! JSONSerialization.jsonObject(with: data ?? .init()))
             if let data = data,
                let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any] ,
                let status = object?["status"] as? String {
@@ -667,6 +666,37 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
         }).resume()
 
+    }
+    
+    func deleteAccount(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
+        guard let url = buildWebasystUrl("/id/api/v1/terminate", parameters: [:]) else { return }
+
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+
+        let parameters: Parameters = [
+            "Authorization": accessTokenString
+        ]
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+
+        for (key, value) in parameters {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+
+        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            print(try! JSONSerialization.jsonObject(with: data ?? .init()))
+            if let data = data,
+               let httpResponse = response as? HTTPURLResponse,
+               let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any] ,
+               let status = object?["deleted"] as? Bool {
+                if status {
+                    completion(.success(true))
+                } else {
+                    completion(.failure("Error code is" + " " + httpResponse.statusCode.description))
+                }
+            }
+        }).resume()
     }
 
 }
