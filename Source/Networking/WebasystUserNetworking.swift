@@ -345,20 +345,16 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
 
             URLSession.shared.dataTask(with: request) { (data, response, error) in
-                guard error == nil else {
-                    return
-                }
-
-                guard let data = data else {
+                guard error == nil, let data = data else {
                     return
                 }
 
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
-                        let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: json["access_token"]  ?? "", url: installList[index].url, cloudPlanId: installList[index].cloudPlanId, cloudExpireDate: installList[index].cloudExpireDate, cloudTrial: installList[index].cloudTrial)
-                        self.getInstallInfo(installToken) { _ in
+                        let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: json["access_token"] ?? "", url: installList[index].url, cloudPlanId: installList[index].cloudPlanId, cloudExpireDate: installList[index].cloudExpireDate, cloudTrial: installList[index].cloudTrial)
+                        self.getInstallInfo(installToken) { install in
                             if index == 0 {
-                                completion("\(NSLocalizedString("loadingInstallMessage", comment: ""))", true)
+                                completion(json["access_token"] ?? "", true)
                             }
                         }
                     }
@@ -440,7 +436,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
     }
 
-    func createWebasystAccount(completion: @escaping (Bool, String?)->()) {
+    func createWebasystAccount(completion: @escaping (Bool, String?, String?)->()) {
 
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -462,24 +458,16 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
 
-        do {
-            try request.setMultipartFormData(parametersRequest, encoding: String.Encoding.utf8)
-        } catch let error {
-            completion(false, nil)
-            print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
+        if let encodedData = try? JSONSerialization.data(withJSONObject: parametersRequest,
+                                                         options: .fragmentsAllowed) {
+        request.httpBody = encodedData
         }
 
         URLSession.shared.dataTask(with: request) { (data, response, error) in
 
-            if let error = error {
-                print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
-                completion(false, nil)
-                return
-            }
-
-            guard let data = data else {
-                print(NSError(domain: "Webasyst error: no response data", code: 401, userInfo: nil))
-                completion(false, nil)
+            guard error == nil, let data = data else {
+                print(NSError(domain: "Webasyst error: \(String(describing: error?.localizedDescription))", code: 401, userInfo: nil))
+                completion(false, nil, nil)
                 return
             }
 
@@ -489,13 +477,13 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 self.getAccessTokenApi(clientId: [json.id]) { success, accessCode in
                     if success {
                         newInstall.append(UserInstallCodable(name: nil, domain: json.domain, id: json.id, accessToken: nil, url: json.url, image: nil))
-                        self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { _, success in
-                            completion(true, json.url)
+                        self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
+                            completion(true, token, json.url)
                         }
                     }
                 }
             } catch let error {
-                completion(false, nil)
+                completion(false, nil, nil)
                 print(error)
                 print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
             }

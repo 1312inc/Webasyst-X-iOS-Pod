@@ -252,9 +252,9 @@ public class WebasystApp {
     /// Creating a new Webasyst account
     /// - Parameter success: Closure performed after executing the method
     /// - Returns: Boolean value if the account was created and url install
-    public func createWebasystAccount(success: @escaping (Bool, String?)->()) {
-        WebasystUserNetworking().createWebasystAccount { result, urlInstall in
-            success(result, urlInstall)
+    public func createWebasystAccount(success: @escaping (Bool, String?, String?)->()) {
+        WebasystUserNetworking().createWebasystAccount { result, urlInstall, url in
+            success(result, urlInstall, url)
         }
     }
     
