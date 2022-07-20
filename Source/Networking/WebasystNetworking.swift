@@ -10,7 +10,7 @@ import Foundation
 public typealias Parameters = [String: String]
 
 internal class WebasystNetworking: WebasystNetworkingManager {
-    
+
     private var config = WebasystApp.config
     private static var disposablePasswordAuth: String?
     private var queue = DispatchQueue(label: "webAsyst.networking", qos: .background)
@@ -23,16 +23,16 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         WebasystNetworking.disposablePasswordAuth = rndPswd
         return rndPswd
     }
-    
+
     /// Building a request for user authorization
     /// - Returns: Returns authorization request
     internal func buildAuthRequest(_ code: String) -> URLRequest? {
-        
+
         guard let config = self.config else {
             print(NSError(domain: "Webasyst error(method: buildAuthRequest): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             return nil
         }
-        
+
         var paramRequest: Parameters = [
             "response_type": "code",
             "client_id": config.clientId,
@@ -48,14 +48,14 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             paramRequest["change_user"] = "1"
             paramRequest["mergecode"] = code
         }
-        
+
         guard let urlRequest = buildWebasystUrl("/id/oauth2/auth/code", parameters: paramRequest) else { return nil }
- 
+
         var request = URLRequest(url: urlRequest)
         request.httpMethod = "GET"
         return request
     }
-    
+
     /// Method for obtaining authorisation code without a browser
     /// - Parameters:
     ///   - value: Phone number or email
@@ -63,13 +63,13 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     ///   - success: Closure performed after the method has been executed
     /// - Returns: Status of code sent to the user by email or text message, see AuthResult documentation for a detailed description of statuses
     internal func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
-        
+
         guard let config = self.config else {
             print(NSError(domain: "Webasyst error(method: getAuthCode): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             success(AuthResult.undefined(error: "Webasyst ID app Client Id is invalid. Please contact the app developer."))
             return
         }
-        
+
         var parametersRequest: Parameters = [
             "client_id": config.clientId,
             "device_id": UIDevice.current.identifierForVendor!.uuidString,
@@ -78,49 +78,49 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "scope": "profile:write token:\(config.scope)",
             "locale": "RU"
         ]
-        
+
         switch type {
         case .phone:
             parametersRequest["phone"] = value
         case .email:
             parametersRequest["email"] = value
         }
-        
+
         guard let url = self.buildWebasystUrl("/id/oauth2/auth/headless/code/", parameters: [:]) else {
             print(NSError(domain: "Webasyst error(method: getAuthCode): Authorisation URL generation error", code: 400, userInfo: nil))
             success(AuthResult.undefined(error: "Authorisation URL generation error"))
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
+
         do {
             try request.setMultipartFormData(parametersRequest, encoding: String.Encoding.utf8)
         } catch let error {
             print(NSError(domain: "Webasyst error(method: getAuthCode): \(error.localizedDescription)", code: 400, userInfo: nil))
             success(AuthResult.undefined(error: error.localizedDescription))
         }
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard error == nil else {
                 success(AuthResult.undefined(error: "Request error"))
                 print(NSError(domain: "Webasyst error(method: getAuthCode): Request error", code: 400, userInfo: nil))
                 return
             }
-            
+
             guard let data = data else {
                 success(AuthResult.undefined(error: "Error in receiving the server response body"))
                 print(NSError(domain: "Webasyst error(method: getAuthCode): Error in receiving the server response body", code: 400, userInfo: nil))
                 return
             }
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 success(AuthResult.undefined(error: "Request error"))
                 print(NSError(domain: "Webasyst error(method: getAuthCode): Request error", code: 400, userInfo: nil))
                 return
             }
-            
+
             switch httpResponse.statusCode {
             case 200...299:
                 success(AuthResult.success)
@@ -193,69 +193,69 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             }
         }.resume()
     }
-    
+
     /// Sending a confirmation code after calling the getAuthCode method
     /// - Parameters:
     ///   - code: Code received by user by e-mail or text message
     ///   - success: Closure performed after the method has been executed
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
     internal func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
-        
+
         guard let config = self.config else {
             print(NSError(domain: "Webasyst error(method: sendConfirmCode): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             success(false)
             return
         }
-        
+
         guard let passwordHash = WebasystNetworking.disposablePasswordAuth else {
             print(NSError(domain: "Webasyst error(method: sendConfirmCode): Failed to obtain a one-time password", code: 400, userInfo: nil))
             success(false)
             return
         }
-        
+
         let parametersRequest: Parameters = [
             "client_id": config.clientId,
             "code_verifier": passwordHash,
             "code": code,
             "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
-        
+
         guard let url = buildWebasystUrl("/id/oauth2/auth/headless/token/", parameters: [:]) else {
             print(NSError(domain: "Webasyst error(method: sendConfirmCode): Authorisation URL generation error", code: 400, userInfo: nil))
             success(false)
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
+
         do {
             try request.setMultipartFormData(parametersRequest, encoding: String.Encoding.utf8)
         } catch let error {
             print(NSError(domain: "Webasyst error(method: sendConfirmCode): \(error.localizedDescription))'", code: 400, userInfo: nil))
             success(false)
         }
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
-            
+
             guard error == nil else {
                 print(NSError(domain: "Webasyst error(method: sendConfirmCode): Request error", code: 400, userInfo: nil))
                 success(false)
                 return
             }
-            
+
             guard let data = data else {
                 success(false)
                 print(NSError(domain: "Webasyst error(method: sendConfirmCode): Error in receiving the server response body", code: 400, userInfo: nil))
                 return
             }
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 success(false)
                 print(NSError(domain: "Webasyst error(method: sendConfirmCode): Request error", code: 400, userInfo: nil))
                 return
             }
-            
+
             switch httpResponse.statusCode {
             case 200...299:
                 do {
@@ -288,20 +288,20 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     print(NSError(domain: "Webasyst error(method: sendConfirmCode): \(error.localizedDescription)", code: 400, userInfo: nil))
                 }
             }
-            
+
         }.resume()
     }
-    
+
     /// Getting a permanent Webasyst token
     /// - Parameters:
     ///   - authCode: OAuth code from the server
     ///   - stateString: state value from the server
     ///   - completion: Result of a request to the server
     func getAccessToken(_ authCode: String, stateString: String, completion: @escaping (Bool) -> Void) {
-        
+
         guard let disposablePassword = WebasystNetworking.disposablePasswordAuth else { return }
         guard let config = self.config else { return }
-        
+
         let paramRequest: Parameters = [
             "grant_type": "authorization_code",
             "code": authCode,
@@ -310,11 +310,11 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "code_verifier": disposablePassword,
             "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
-        
+
         guard let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]) else { return }
-        
+
         var request = URLRequest(url: url)
-        
+
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         do {
@@ -322,7 +322,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         } catch let error {
             print(NSError(domain: "Webasyst error(method: getAccessToken): \(error.localizedDescription)", code: 400, userInfo: nil))
         }
-        
+
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
@@ -330,6 +330,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let authData = try! JSONDecoder().decode(UserToken.self, from: data)
                         let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                        print(authData.refresh_token)
                         let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
                         if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                             completion(true)
@@ -340,38 +341,38 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                 }
             }
         }.resume()
-        
+
     }
-    
+
     /// Token update method on the WAID server
     /// - Parameter completion: Short-circuiting after work methods
     /// - Returns: Returns the boolean value of token update success
     internal func refreshAccessToken(completion: @escaping (Bool)->()) {
-        
+
         let refreshToken = KeychainManager.load(key: "refreshToken")
         let refreshTokenString = String(decoding: refreshToken ?? Data("".utf8), as: UTF8.self)
         guard let config = self.config else { return }
-        
+
         let paramsRequest: Parameters = [
             "grant_type": "refresh_token",
             "refresh_token": refreshTokenString,
             "client_id": config.clientId,
             "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
-        
+
         guard let url = buildWebasystUrl("/id/oauth2/auth/token", parameters: [:]) else { return }
-        
+
         var request = URLRequest(url: url)
-        
+
         request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
-        
+
         do {
             try request.setMultipartFormData(paramsRequest, encoding: String.Encoding.utf8)
         } catch let error {
             print(NSError(domain: "Webasyst error(method: refreshAccessToken): \(error.localizedDescription)", code: 400, userInfo: nil))
         }
-        
+
         queue.async {
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
@@ -392,7 +393,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             }
         }.resume()
         }
-        
+
     }
-    
+
 }
