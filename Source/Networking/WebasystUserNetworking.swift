@@ -539,13 +539,13 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
 
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-            guard let httpResponse = response as? HTTPURLResponse else { return }
             if let data = data,
                let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed),
                let _ = object as? Bool {
                     completion(.success(nil))
-                } else if let data = data, var error = String(data: data, encoding: .utf8) {
-                    error += " \n Error code is " + httpResponse.statusCode.description
+            } else if let data = data,
+                      let dictionary = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any],
+                      let error = dictionary?["error_description"] as? String {
                     completion(.failure(error))
                 }
         }).resume()
@@ -673,7 +673,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
 
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-            print(try! JSONSerialization.jsonObject(with: data ?? .init()))
             if let data = data,
                let httpResponse = response as? HTTPURLResponse,
                let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any] ,
