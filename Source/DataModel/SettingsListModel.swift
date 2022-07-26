@@ -12,29 +12,29 @@ public class SettingsListModel: NSObject, NSCoding {
     enum Key: String {
         case selected = "selected"
         case isLast = "isLast"
-        case id = "id"
+        case name = "name"
     }
     
     public func encode(with coder: NSCoder) {
         coder.encode(countSelected, forKey: Key.selected.rawValue)
         coder.encode(isLast, forKey: Key.isLast.rawValue)
-        coder.encode(id, forKey: Key.id.rawValue)
+        coder.encode(name, forKey: Key.name.rawValue)
     }
     
-    public init(countSelected: Int, isLast: Bool, id: String) {
+    public init(countSelected: Int, isLast: Bool, name: String) {
         self.countSelected = countSelected
         self.isLast = isLast
-        self.id = id
+        self.name = name
     }
     
     required convenience public init(coder: NSCoder) {
-        self.init(countSelected: 0, isLast: false, id: "")
+        self.init(countSelected: 0, isLast: false, name: "")
         countSelected = coder.decodeInteger(forKey: Key.selected.rawValue)
         isLast = coder.decodeBool(forKey: Key.isLast.rawValue)
-        id = coder.decodeObject(forKey: Key.id.rawValue) as! String
+        name = coder.decodeObject(forKey: Key.name.rawValue) as! String
     }
     
     public var countSelected = 0
     public var isLast = false
-    public var id = ""
+    public var name = ""
 }

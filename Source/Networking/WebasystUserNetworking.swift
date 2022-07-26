@@ -464,7 +464,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
 
         URLSession.shared.dataTask(with: request) { (data, response, error) in
-
             guard error == nil, let data = data else {
                 print(NSError(domain: "Webasyst error: \(String(describing: error?.localizedDescription))", code: 401, userInfo: nil))
                 completion(false, nil, nil)
@@ -482,10 +481,11 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         }
                     }
                 }
-            } catch let error {
-                completion(false, nil, nil)
-                print(error)
-                print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
+            } catch {
+                if let dictionary = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any],
+                   let error = dictionary?["error"] as? String {
+                    completion(false, nil, error)
+                }
             }
 
         }.resume()
