@@ -31,7 +31,7 @@ public class SettingsListModel: NSObject, NSCoding {
         self.init(countSelected: 0, isLast: false, name: "")
         countSelected = coder.decodeInteger(forKey: Key.selected.rawValue)
         isLast = coder.decodeBool(forKey: Key.isLast.rawValue)
-        name = coder.decodeObject(forKey: Key.name.rawValue) as! String
+        name = coder.decodeObject(forKey: Key.name.rawValue) as? String ?? ""
     }
     
     public var countSelected = 0
