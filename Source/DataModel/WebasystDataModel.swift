@@ -81,7 +81,6 @@ extension WebasystDataModel {
     internal func saveInstall(_ userInstall: UserInstall) {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-        request.predicate = NSPredicate(format: "clientId == %@", userInstall.id)
         
         guard let context = managedObjectContext else { return }
         
@@ -90,7 +89,7 @@ extension WebasystDataModel {
                 print(NSError(domain: "Webasyst error: InstallList request error", code: 501, userInfo: nil))
                 return
             }
-            if result.isEmpty {
+            if !result.contains(where: { $0.domain ?? "" == userInstall.domain }) {
                 let install = NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList
                 install.name = userInstall.name
                 install.clientId = userInstall.id
@@ -106,19 +105,19 @@ extension WebasystDataModel {
                 install.cloudTrial = userInstall.cloudTrial ?? false
                 install.wasInstallTasks = userInstall.installTasks ?? true
                 save()
-            } else {
-                result.first?.name = userInstall.name
-                result.first?.clientId = userInstall.id
-                result.first?.domain = userInstall.domain
-                result.first?.url = userInstall.url
-                result.first?.accessToken = userInstall.accessToken
-                result.first?.image = userInstall.image
-                result.first?.imageLogo = userInstall.imageLogo ?? false
-                result.first?.logoText = userInstall.logoText
-                result.first?.logoColorText = userInstall.logoTextColor
-                result.first?.cloudPlanId = userInstall.cloudPlanId
-                result.first?.cloudExpireDate = userInstall.cloudExpireDate
-                result.first?.cloudTrial = userInstall.cloudTrial ?? false
+            } else if let index = result.firstIndex(where: { $0.domain ?? "" == userInstall.domain }) {
+                result[index].name = userInstall.name
+                result[index].clientId = userInstall.id
+                result[index].domain = userInstall.domain
+                result[index].url = userInstall.url
+                result[index].accessToken = userInstall.accessToken
+                result[index].image = userInstall.image
+                result[index].imageLogo = userInstall.imageLogo ?? false
+                result[index].logoText = userInstall.logoText
+                result[index].logoColorText = userInstall.logoTextColor
+                result[index].cloudPlanId = userInstall.cloudPlanId
+                result[index].cloudExpireDate = userInstall.cloudExpireDate
+                result[index].cloudTrial = userInstall.cloudTrial ?? false
                 save()
             }
         } catch { }
@@ -131,7 +130,6 @@ extension WebasystDataModel {
     internal func getInstall(with clientId: String) -> UserInstall? {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-        request.predicate = NSPredicate(format: "clientId == %@", clientId)
         
         guard let context = managedObjectContext else { return nil }
         
@@ -139,8 +137,8 @@ extension WebasystDataModel {
             guard let result = try context.fetch(request) as? [InstallList] else {
                 return nil
             }
-            if !(result.isEmpty) {
-                let install = UserInstall(name: result.first?.name ?? "", domain: result.first?.domain ?? "", id: result.first?.clientId ?? "", accessToken: result.first?.accessToken ?? "", url: result.first?.url ?? "", image: result.first?.image, imageLogo: result.first?.imageLogo, logoText: result.first?.logoText ?? "", logoTextColor: result.first?.logoColorText ?? "", cloudPlanId: result.first?.cloudPlanId, cloudExpireDate: result.first?.cloudExpireDate, cloudTrial: result.first?.cloudTrial)
+            if let install = result.first(where: { $0.clientId ?? "" == clientId }) {
+                let install = UserInstall(name: install.name ?? "", domain: install.domain ?? "", id: install.clientId ?? "", accessToken: install.accessToken ?? "", url: install.url ?? "", image: install.image, imageLogo: install.imageLogo, logoText: install.logoText ?? "", logoTextColor: install.logoColorText ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                 return install
             } else {
                 return nil

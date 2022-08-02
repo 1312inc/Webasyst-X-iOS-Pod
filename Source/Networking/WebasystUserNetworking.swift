@@ -256,7 +256,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let data = data {
                         let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
                         let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser") ?? ""
-                        if let install = installList.first?.id, activeInstall.isEmpty {
+                        if let install = installList.first?.id, activeInstall.isEmpty || !installList.contains(where: { $0.id == activeInstall }) {
                             UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                         }
                         completion(installList)
@@ -477,7 +477,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if success {
                         newInstall.append(UserInstallCodable(name: nil, domain: json.domain, id: json.id, accessToken: nil, url: json.url, image: nil))
                         self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
-                            completion(true, token, json.url)
+                            completion(true, json.id, json.url)
                         }
                     }
                 }

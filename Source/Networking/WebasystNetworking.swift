@@ -261,6 +261,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                 do {
                     let authData = try JSONDecoder().decode(UserToken.self, from: data)
                     let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                    UserDefaults.standard.set(accessTokenSuccess, forKey: "accessToken")
                     let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
                     if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                         success(true)
