@@ -685,6 +685,48 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
         }).resume()
     }
+    
+    func extendLicense(date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
+
+        guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
+              let url = buildWebasystUrl("/id/api/v1/cloud/extend/", parameters: [:]) else { return }
+
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+
+        let parameters: Parameters = [
+            "Authorization": accessTokenString
+        ]
+        let json = ["client_id": domain,
+                    "expire_date": date]
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        do {
+            let data = try JSONEncoder().encode(json) as Data
+            request.addValue("\(data.count)", forHTTPHeaderField: "Content-Length")
+            request.httpBody = data
+        } catch {
+            print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
+        }
+
+        for (key, value) in parameters {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+
+        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            guard let httpResponse = response as? HTTPURLResponse else { return }
+                if httpResponse.statusCode == 204 {
+                    completion(.success(nil))
+                } else if let data = data, var error = String(data: data, encoding: .utf8) {
+                    error += " \n Error code is " + httpResponse.statusCode.description
+                    completion(.failure(error))
+                }
+        }).resume()
+
+    }
 
 }
 
