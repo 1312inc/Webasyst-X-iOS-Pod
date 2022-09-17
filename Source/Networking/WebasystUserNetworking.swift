@@ -447,7 +447,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
         let parametersRequest: Parameters = [
             "bundle": "teamwork",
-            "plan_id": "X-1312-TEAMWORK-1"
+            "plan_id": "X-1312-TEAMWORK-FREE"
         ]
 
         guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
@@ -475,7 +475,12 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 var newInstall: [UserInstallCodable] = []
                 self.getAccessTokenApi(clientId: [json.id]) { success, accessCode in
                     if success {
-                        newInstall.append(UserInstallCodable(name: nil, domain: json.domain, id: json.id, accessToken: nil, url: json.url, image: nil))
+                        newInstall.append(UserInstallCodable(name: nil,
+                                                             domain: json.domain,
+                                                             id: json.id,
+                                                             accessToken: nil,
+                                                             url: json.url,
+                                                             image: nil))
                         self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
                             completion(true, json.id, json.url)
                         }
@@ -698,7 +703,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "Authorization": accessTokenString
         ]
         let json = ["client_id": domain,
-                    "expire_date": date]
+                    "expire_date": date,
+                    "plan_id": "X-1312-TEAMWORK-1"]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
