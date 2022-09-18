@@ -10,13 +10,14 @@ import Security
 import Foundation
 
 class KeychainManager {
-    
+        
     /// Saving an entry in the Keychain
     /// - Parameters:
     ///   - key: Key to save the record
     ///   - data: Data for recording
     /// - Returns: Returns data in OSStatus format
     class func save(key: String, data: Data) -> OSStatus {
+        
         let query = [
             kSecClass as String       : kSecClassGenericPassword as String,
             kSecAttrAccount as String : key,
@@ -48,9 +49,6 @@ class KeychainManager {
             return nil
         }
     }
-    class func update(key: String, data: Data) {
-        
-    }
     
     /// Deletes all data from Kechain
     class func deleteAllKeys() {
@@ -61,3 +59,4 @@ class KeychainManager {
         }
     }
 }
+
