@@ -17,6 +17,6 @@ public struct CreateNewAccount: Codable {
     enum CodingKeys: String, CodingKey {
         case id, domain, url
         case authEndpoint = "auth_endpoint"
-        case cloudExpireDate = "cloud_expire_date"
+        case cloudExpireDate = "cloud_trial"
     }
 }
