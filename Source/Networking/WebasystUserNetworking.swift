@@ -694,7 +694,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }).resume()
     }
     
-    func extendLicense(date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
+    func extendLicense(type: String, date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
 
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/cloud/extend/", parameters: [:]) else { return }
@@ -707,7 +707,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         ]
         let json = ["client_id": domain,
                     "expire_date": date,
-                    "plan_id": "X-1312-TEAMWORK-1"]
+                    "plan_id": type]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

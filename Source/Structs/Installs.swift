@@ -52,3 +52,8 @@ public struct UserInstall: Decodable {
     public var cloudTrial: Bool?
     public var installTasks: Bool?
 }
+
+public enum Plan: String {
+    case dreamteam = "X-1312-TEAMWORK-1"
+    case dreamteamplus = "X-1312-TEAMWORK-2"
+}

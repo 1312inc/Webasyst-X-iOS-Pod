@@ -150,8 +150,8 @@ public class WebasystApp {
     
     /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
-    public func extendLicense(date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
-        WebasystUserNetworking().extendLicense(date: date, completion: completion)
+    public func extendLicense(type: String, date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
+        WebasystUserNetworking().extendLicense(type: type, date: date, completion: completion)
     }
     
     /// User authentication check on Webasyst server
