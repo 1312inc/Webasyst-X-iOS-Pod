@@ -229,7 +229,7 @@ extension WebasystDataModel {
     func creator(_installs: [UserInstall], url: URL) {
          var dictionary = Dictionary<String?, SettingsListModel>()
          _installs.forEach {
-             dictionary[$0.id] = SettingsListModel(countSelected: 0, isLast: false, name: $0.name ?? "")
+             dictionary[$0.id] = SettingsListModel(countSelected: 0, isLast: false, name: $0.name ?? "", url: $0.url)
          }
          let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
          try? encodedData?.write(to: url)

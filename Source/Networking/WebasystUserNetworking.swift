@@ -711,14 +711,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        do {
-            let data = try JSONEncoder().encode(json) as Data
-            request.addValue("\(data.count)", forHTTPHeaderField: "Content-Length")
-            request.httpBody = data
-        } catch {
-            print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
+        if let encodedData = try? JSONSerialization.data(withJSONObject: json,
+                                                         options: .fragmentsAllowed) {
+        request.httpBody = encodedData
         }
 
         for (key, value) in parameters {
