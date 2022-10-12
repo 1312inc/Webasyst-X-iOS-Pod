@@ -469,7 +469,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 completion(false, nil, nil)
                 return
             }
-            do {
+            do { 
                 if let dictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any],
                    let id = dictionary["id"] as? String,
                    let url = dictionary["url"] as? String,
@@ -663,7 +663,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }).resume()
 
     }
-
+    
     func deleteAccount(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
         guard let url = buildWebasystUrl("/id/api/v1/terminate", parameters: [:]) else { return }
 
@@ -693,7 +693,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             }
         }).resume()
     }
-
+    
     func extendLicense(type: String, date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
 
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
