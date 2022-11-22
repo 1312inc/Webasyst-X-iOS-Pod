@@ -28,7 +28,6 @@
 		0BC0374CC70B7F767B013653A0AB1D69 /* Pods-Webasyst_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Webasyst_Tests.modulemap"; sourceTree = "<group>"; };
 		17C07062F0CCA94D5190536175B544F3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		40519B50282CE76E00474D78 /* SettingsListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsListModel.swift; sourceTree = "<group>"; };
-		40A0572A284BF74A004AE6D8 /* InstallStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallStatus.swift; sourceTree = "<group>"; };
 		427A0B5C53510E8BAE70502A28944B3B /* Webasyst.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Webasyst.release.xcconfig; sourceTree = "<group>"; };
 		5C48B78C558682CBE99C60EF6B16F21A /* Pods-Webasyst_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Webasyst_Example-umbrella.h"; sourceTree = "<group>"; };
 		5F98B03725B14DE1C02E255AABB40F46 /* Pods-Webasyst_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Webasyst_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
@@ -299,7 +298,6 @@
 				FD58E67F265E08670037CF13 /* ProfileData.swift */,
 				FD58E681265E08850037CF13 /* Installs.swift */,
 				FD58E684265E098E0037CF13 /* UserToken.swift */,
-				40A0572A284BF74A004AE6D8 /* InstallStatus.swift */,
 				FD58E686265E13FC0037CF13 /* UserData.swift */,
 				FD58E688265E14110037CF13 /* InstallInfo.swift */,
 				FD46B9B8267C873A00A6597A /* CreateNewAccount.swift */,

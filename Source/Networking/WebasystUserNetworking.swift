@@ -526,7 +526,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }.resume()
     }
 
-    func checkAppInstall(completion: @escaping (Swift.Result<String?, String>) -> Void) {
+    func checkAppInstall(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
 
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let install = profileInstallService?.getInstall(with: domain),
@@ -537,7 +537,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "Authorization": accessToken
         ]
 
-        let data = "slug=tasks".data(using: .utf8)
+        let data = "slug=\(app)".data(using: .utf8)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = data
@@ -560,7 +560,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
     }
 
-    func checkInstallLicense(completion: @escaping (Swift.Result<String?, String>) -> Void) {
+    func checkInstallLicense(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
 
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
@@ -572,7 +572,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "Authorization": accessTokenString
         ]
         let json = ["client_id": domain,
-                    "slug":"tasks"]
+                    "slug":app]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

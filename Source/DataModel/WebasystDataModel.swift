@@ -103,7 +103,7 @@ extension WebasystDataModel {
                 install.cloudPlanId = userInstall.cloudPlanId
                 install.cloudExpireDate = userInstall.cloudExpireDate
                 install.cloudTrial = userInstall.cloudTrial ?? false
-                install.wasInstallTasks = userInstall.installTasks ?? true
+                install.wasInstallApp = userInstall.installApp ?? true
                 save()
             } else if let index = result.firstIndex(where: { $0.domain ?? "" == userInstall.domain }) {
                 result[index].name = userInstall.name
@@ -159,12 +159,12 @@ extension WebasystDataModel {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
         
         do {
-            guard let tasks = try context.fetch(fetchRequest) as? [InstallList] else {
+            guard let data = try context.fetch(fetchRequest) as? [InstallList] else {
                 return nil
             }
             
             var userInstall: [UserInstall] = []
-            for task in tasks {
+            for task in data {
                 userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo, logoText: task.logoText ?? "", logoTextColor: task.logoColorText ?? "", cloudPlanId: task.cloudPlanId, cloudExpireDate: task.cloudExpireDate, cloudTrial: task.cloudTrial))
             }
             return userInstall
