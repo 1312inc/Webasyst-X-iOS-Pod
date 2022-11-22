@@ -138,14 +138,14 @@ public class WebasystApp {
     
     /// App installation
     /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
-    public func checkInstallApp(completion: @escaping (Swift.Result<String?, String>) -> Void) {
-        WebasystUserNetworking().checkAppInstall(completion: completion)
+    public func checkInstallApp(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
+        WebasystUserNetworking().checkAppInstall(app: app, completion: completion)
     }
     
     /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
-    public func checkLicense(completion: @escaping (Swift.Result<String?, String>) -> Void) {
-        WebasystUserNetworking().checkInstallLicense(completion: completion)
+    public func checkLicense(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
+        WebasystUserNetworking().checkInstallLicense(app: app, completion: completion)
     }
     
     /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
