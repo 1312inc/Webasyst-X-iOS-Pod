@@ -9,6 +9,11 @@
 import Security
 import Foundation
 
+enum KeychainEnum: String {
+    case accessToken
+    case refreshToken
+}
+
 class KeychainManager {
         
     /// Saving an entry in the Keychain
@@ -27,6 +32,15 @@ class KeychainManager {
         SecItemDelete(query as CFDictionary)
         
         return SecItemAdd(query as CFDictionary, nil)
+    }
+    
+    static var token: String {
+        let data = load(key: KeychainEnum.accessToken.rawValue)
+        if let data, let token = String(data: data, encoding: .utf8) {
+            return token
+        } else {
+            return .init()
+        }
     }
     
     /// Retrieving data from the Keychain

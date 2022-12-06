@@ -157,12 +157,27 @@ public class WebasystApp {
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func defaultChecking(completion: @escaping (Bool) -> ()) {
-        if let condition = UserDefaults.standard.value(forKey: "firstLaunch") as? Bool {
-        completion(condition)
-        } else { completion(true) }
+        if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
+           let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
+            getAllUserInstall { installs in
+                if installs != nil , domain == nil {
+                    completion(true)
+                    self.logOutUser(completion: { _ in })
+                }
+                if !KeychainManager.token.isEmpty {
+                    completion(condition)
+                } else {
+                    completion(true)
+                }
+            }
+        } else {
+            completion(true)
+        }
+        
         WebasystNetworking().refreshAccessToken { _ in 
         WebasystUserNetworking().preloadUserData { _,_,_ in }
         }
+        
     }
     
     /// User authentication check on Webasyst server
