@@ -103,7 +103,6 @@ extension WebasystDataModel {
                 install.cloudPlanId = userInstall.cloudPlanId
                 install.cloudExpireDate = userInstall.cloudExpireDate
                 install.cloudTrial = userInstall.cloudTrial ?? false
-                install.wasInstallApp = userInstall.installApp ?? true
                 save()
             } else if let index = result.firstIndex(where: { $0.domain ?? "" == userInstall.domain }) {
                 result[index].name = userInstall.name
