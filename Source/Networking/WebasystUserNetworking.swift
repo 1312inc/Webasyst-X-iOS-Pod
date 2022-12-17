@@ -436,7 +436,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
     }
 
-    func createWebasystAccount(completion: @escaping (Bool, String?, String?)->()) {
+    func createWebasystAccount(bundle: String, plainId: String, completion: @escaping (Bool, String?, String?)->()) {
 
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -446,8 +446,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         ]
 
         let parametersRequest: Parameters = [
-            "bundle": "teamwork",
-            "plan_id": "X-1312-TEAMWORK-FREE"
+            "bundle": bundle,
+            "plan_id": plainId
         ]
 
         guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
