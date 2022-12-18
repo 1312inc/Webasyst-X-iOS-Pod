@@ -273,8 +273,8 @@ public class WebasystApp {
     /// Creating a new Webasyst account
     /// - Parameter success: Closure performed after executing the method
     /// - Returns: Boolean value if the account was created and url install
-    public func createWebasystAccount(success: @escaping (Bool, String?, String?)->()) {
-        WebasystUserNetworking().createWebasystAccount { result, urlInstall, url in
+    public func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", success: @escaping (Bool, String?, String?)->()) {
+        WebasystUserNetworking().createWebasystAccount(bundle: bundle, plainId: plainId) { result, urlInstall, url in
             success(result, urlInstall, url)
         }
     }
