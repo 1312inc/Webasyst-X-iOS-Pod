@@ -118,13 +118,14 @@ public class WebasystApp {
         }
     }
     
-    /// Sending a confirmation code after calling the getAuthCode method
+    /// Sending a confirmation code after calling the getAuthCode method or after reading qr-code
     /// - Parameters:
-    ///   - code: Code received by user by e-mail or text message
+    ///   - type: Type of confirmation code
+    ///   - code: Code received by user by e-mail or text message or qr content
     ///   - success: Closure performed after the method has been executed
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
-    public func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
-        WebasystNetworking().sendConfirmCode(code) { result in
+    public func sendConfirmCode(for type: AuthCodeType = .phone, _ code: String, success: @escaping (Bool) -> ()) {
+        WebasystNetworking().sendConfirmCode(for: type, code) { result in
             if result {
                 WebasystUserNetworking().preloadUserData { _, _, result in
                     UserDefaults.standard.setValue(false, forKey: "firstLaunch")
@@ -271,7 +272,11 @@ public class WebasystApp {
     }
     
     /// Creating a new Webasyst account
-    /// - Parameter success: Closure performed after executing the method
+    /// - Parameters:
+    ///    - bundle: Bundle of the account being created
+    ///    - plainId: Plain id of the account being created
+    ///    - shopName: *Only for Shop-Script* Name of shop of the account being created
+    ///    - success: Closure performed after executing the method
     /// - Returns: Boolean value if the account was created and url install
     public func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", shopName: String? = nil, success: @escaping (Bool, String?, String?)->()) {
         WebasystUserNetworking().createWebasystAccount(bundle: bundle, plainId: plainId, shopName: shopName) { result, urlInstall, url in

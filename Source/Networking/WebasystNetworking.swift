@@ -194,33 +194,42 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         }.resume()
     }
 
-    /// Sending a confirmation code after calling the getAuthCode method
+    /// Sending a confirmation code after calling the getAuthCode method or after reading qr-code
     /// - Parameters:
+    ///   - type: Type of confirmation code 
     ///   - code: Code received by user by e-mail or text message
     ///   - success: Closure performed after the method has been executed
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
-    internal func sendConfirmCode(_ code: String, success: @escaping (Bool) -> ()) {
+    internal func sendConfirmCode(for type: AuthCodeType, _ code: String, success: @escaping (Bool) -> ()) {
 
         guard let config = self.config else {
             print(NSError(domain: "Webasyst error(method: sendConfirmCode): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             success(false)
             return
         }
-
-        guard let passwordHash = WebasystNetworking.disposablePasswordAuth else {
-            print(NSError(domain: "Webasyst error(method: sendConfirmCode): Failed to obtain a one-time password", code: 400, userInfo: nil))
-            success(false)
-            return
+        
+        var parametersRequest: Parameters = [
+            "client_id": config.clientId,
+            "device_id": UIDevice.current.identifierForVendor!.uuidString,
+            "code": code
+        ]
+        
+        var urlString: String
+        switch type {
+        case .phone:
+            guard let passwordHash = WebasystNetworking.disposablePasswordAuth else {
+                print(NSError(domain: "Webasyst error(method: sendConfirmCode): Failed to obtain a one-time password", code: 400, userInfo: nil))
+                success(false)
+                return
+            }
+            urlString = "/id/oauth2/auth/headless/token/"
+            parametersRequest["code_verifier"] = passwordHash
+        case .qr:
+            urlString = "/id/oauth2/auth/qr/token/"
+            parametersRequest["scope"] = "profile:write token:\(config.scope)"
         }
 
-        let parametersRequest: Parameters = [
-            "client_id": config.clientId,
-            "code_verifier": passwordHash,
-            "code": code,
-            "device_id": UIDevice.current.identifierForVendor!.uuidString
-        ]
-
-        guard let url = buildWebasystUrl("/id/oauth2/auth/headless/token/", parameters: [:]) else {
+        guard let url = buildWebasystUrl(urlString, parameters: [:]) else {
             print(NSError(domain: "Webasyst error(method: sendConfirmCode): Authorisation URL generation error", code: 400, userInfo: nil))
             success(false)
             return
