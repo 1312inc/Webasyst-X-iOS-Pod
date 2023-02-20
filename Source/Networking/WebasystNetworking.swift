@@ -41,8 +41,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "state": config.bundleId,
             "code_challenge": "\(self.generatePasswordHash(64))",
             "code_challenge_method": "plain",
-            "device_id": UIDevice.current.identifierForVendor!.uuidString,
-            "auth_type": "onetime_password"
+            "device_id": UIDevice.current.identifierForVendor!.uuidString
         ]
         if !code.isEmpty {
             paramRequest["change_user"] = "1"
