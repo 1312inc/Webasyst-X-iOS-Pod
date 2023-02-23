@@ -192,6 +192,123 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             }
         }.resume()
     }
+    
+    /// Authorization in Webasyst using Apple ID
+    /// - Parameters:
+    ///    - authData: Authorization data sent by the Apple ID authorization controller
+    ///    - completion: success flag and optional error description
+    internal func oAuthAppleID(authData: AuthAppleIDData, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+        
+        guard let config = self.config else {
+            let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil)
+            print(e)
+            completion(false, e.domain)
+            return
+        }
+        
+        var parametersRequest: Parameters = [
+            "client_id": config.clientId,
+            "device_id": UIDevice.current.identifierForVendor!.uuidString,
+            "scope": "profile:write token:\(config.scope)",
+            "user_identifier": authData.userIdentifier,
+            "identity_token": authData.identityToken,
+            "authorization_code": authData.authorizationCode,
+            "email_verified": "\(authData.isRealUserStatus)"
+        ]
+        
+        if let firstName = authData.userFirstName {
+            parametersRequest["firstname"] = firstName
+        }
+        if let lastName = authData.userLastName {
+            parametersRequest["lastname"] = lastName
+        }
+        if let email = authData.userEmail {
+            var isPrivate: Bool
+            if email.contains("@privaterelay.appleid.com") {
+                isPrivate = true
+            } else {
+                isPrivate = false
+            }
+            parametersRequest["is_private_email"] = "\(isPrivate)"
+            parametersRequest["email"] = email
+        }
+        
+        guard let url = buildWebasystUrl("/id/oauth2/auth/apple/", parameters: [:]) else { return }
+
+        var request = URLRequest(url: url)
+
+        request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        do {
+            try request.setMultipartFormData(parametersRequest, encoding: String.Encoding.utf8)
+        } catch let error {
+            print(NSError(domain: "Webasyst error(method: oAuthAppleID): \(error.localizedDescription)", code: 400, userInfo: nil))
+        }
+
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+
+            guard error == nil else {
+                let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Request error", code: 400, userInfo: nil)
+                print(e)
+                completion(false, e.domain)
+                return
+            }
+
+            guard let data = data else {
+                let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Error in receiving the server response body", code: 400, userInfo: nil)
+                print(e)
+                completion(false, e.domain)
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Request error", code: 400, userInfo: nil)
+                print(e)
+                completion(false, e.domain)
+                return
+            }
+            
+            switch httpResponse.statusCode {
+            case 200...299:
+                do {
+                    let authData = try JSONDecoder().decode(UserToken.self, from: data)
+                    let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                    UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
+                    let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                    if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                        completion(true, nil)
+                    }
+                } catch let error {
+                    let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(error.localizedDescription)", code: 400, userInfo: nil)
+                    print(e)
+                    completion(false, e.domain)
+                }
+            default:
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if json["error"] != nil {
+                            let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(json["error"] as! String)", code: 400, userInfo: nil)
+                            print(e)
+                            completion(false, e.domain)
+                        } else {
+                            let e = NSError(domain: "Webasyst error(method: oAuthAppleID): undefined server error", code: 400, userInfo: nil)
+                            print(e)
+                            completion(false, e.domain)
+                        }
+                    } else {
+                        let e = NSError(domain: "Webasyst error(method: oAuthAppleID): undefined server error", code: 400, userInfo: nil)
+                        print(e)
+                        completion(false, e.domain)
+                    }
+                } catch let error {
+                    let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(error.localizedDescription)", code: 400, userInfo: nil)
+                    print(e)
+                    completion(false, e.domain)
+                }
+            }
+            
+        }.resume()
+    }
 
     /// Sending a confirmation code after calling the getAuthCode method or after reading qr-code
     /// - Parameters:

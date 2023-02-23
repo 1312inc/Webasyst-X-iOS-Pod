@@ -100,6 +100,29 @@ public class WebasystApp {
         coordinator.action = success
     }
     
+    /// Authorization in Webasyst using Apple ID
+    /// - Parameters:
+    ///    - authData: Authorization data sent by the Apple ID authorization controller
+    ///    - success: Closure with result of authorization
+    public func oAuthAppleID(authData: AuthAppleIDData, success: @escaping (_ result: UserStatus) -> ()) {
+        WebasystNetworking().oAuthAppleID(authData: authData) { result, error  in
+            if result {
+                WebasystUserNetworking().preloadUserData { status, _, successPreload in
+                    if successPreload {
+                        UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                    }
+                    success(status)
+                }
+            } else {
+                if let error = error {
+                    success(.error(message: error))
+                } else {
+                    success(.error(message: "Apple ID authorization failed"))
+                }
+            }
+        }
+    }
+    
     /// Merge result check
     /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
     public func mergeResultCheck(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
