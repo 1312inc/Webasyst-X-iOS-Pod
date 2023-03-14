@@ -13,7 +13,7 @@ public enum Result {
 }
 
 final class WebasystUserNetworking: WebasystNetworkingManager {
-
+    
     private let profileInstallService = WebasystDataModel()
     private let webasystNetworkingService = WebasystNetworking()
     private let networkingHelper = NetworkingHelper()
@@ -22,50 +22,136 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private let demoToken = "5f9db4d32d9a586c2daca4b45de23eb8"
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     private let defaultImageUrl = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
-
+    
     func preloadUserData(completion: @escaping (UserStatus, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
             self.dispatchGroup.notify(queue: self.queue) {
-
+                
                 self.downloadUserData { condition in
                     self.getInstallList { installList in
-                    guard let installs = installList else { return }
-                    var clientId: [String] = []
-                    for install in installs {
-                        clientId.append(install.id)
-                    }
-                    self.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
-                        if success {
-                            guard let token = accessToken else {  return }
-                            self.getAccessTokenInstall(installs, accessCodes: token) { (loadText, saveSuccess) in
-                                UserDefaults.standard.setValue(false, forKey: "firstLaunch")
-                                if installs.isEmpty || condition {
-                                    if condition && !installs.isEmpty {
-                                        completion(.authorizedButProfileIsEmpty, 30, true)
-                                    } else if !condition && installs.isEmpty {
-                                        completion(.authorizedButNoneInstalls, 30, true)
-                                    } else if condition && installs.isEmpty {
-                                        completion(.authorizedButNoneInstallsAndProfileIsEmpty, 30, true)
+                        guard let installs = installList else { return }
+                        var clientId: [String] = []
+                        for install in installs {
+                            clientId.append(install.id)
+                        }
+                        self.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
+                            if success {
+                                guard let token = accessToken else {  return }
+                                self.getAccessTokenInstall(installs, accessCodes: token) { (loadText, saveSuccess) in
+                                    UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                                    if installs.isEmpty || condition {
+                                        if condition && !installs.isEmpty {
+                                            completion(.authorizedButProfileIsEmpty, 30, true)
+                                        } else if !condition && installs.isEmpty {
+                                            completion(.authorizedButNoneInstalls, 30, true)
+                                        } else if condition && installs.isEmpty {
+                                            completion(.authorizedButNoneInstallsAndProfileIsEmpty, 30, true)
+                                        }
+                                    } else {
+                                        completion(.authorized, 30, saveSuccess)
                                     }
-                                } else {
-                                    completion(.authorized, 30, saveSuccess)
+                                }
+                            } else {
+                                if !condition && installs.isEmpty {
+                                    completion(.authorizedButNoneInstalls, 30, true)
+                                } else if condition && installs.isEmpty {
+                                    completion(.authorizedButNoneInstallsAndProfileIsEmpty, 30, true)
                                 }
                             }
-                        } else {
-                            if !condition && installs.isEmpty {
-                                 completion(.authorizedButNoneInstalls, 30, true)
-                             } else if condition && installs.isEmpty {
-                                 completion(.authorizedButNoneInstallsAndProfileIsEmpty, 30, true)
-                             }
                         }
                     }
                 }
             }
+        } else {
+            completion(.networkError(NSLocalizedString("connectionAlertMessage", comment: "")), 0, false)
         }
-    } else {
-        completion(.networkError(NSLocalizedString("connectionAlertMessage", comment: "")), 0, false)
     }
-}
+    
+    // MARK: - Send Apple ID email confirmation code
+    internal func sendAppleIDEmailConfirmationCode(_ code: String, success: @escaping (Bool) -> ()) {
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+
+        let headers: Parameters = [
+            "Authorization": accessTokenString
+        ]
+
+        let parametersRequest: Parameters = [
+            "code": code
+        ]
+
+        guard let url = buildWebasystUrl("/id/api/v1/apple/confirm/", parameters: [:]) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+
+        if let encodedData = try? JSONSerialization.data(withJSONObject: parametersRequest,
+                                                         options: .fragmentsAllowed) {
+            request.httpBody = encodedData
+        }
+
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            
+            print(String(data: data ?? Data(), encoding: .utf8))
+            
+            guard error == nil else {
+                print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): Request error", code: 400, userInfo: nil))
+                success(false)
+                return
+            }
+
+            guard let data = data else {
+                print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): Error in receiving the server response body", code: 400, userInfo: nil))
+                success(false)
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): Request error", code: 400, userInfo: nil))
+                success(false)
+                return
+            }
+
+            switch httpResponse.statusCode {
+            case 200...299:
+                do {
+                    let authData = try JSONDecoder().decode(UserToken.self, from: data)
+                    let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                    UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
+                    let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                    if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                        success(true)
+                    }
+                } catch let error {
+                    success(false)
+                    print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(error.localizedDescription)", code: 400, userInfo: nil))
+                }
+            default:
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        if json["error"] != nil {
+                            success(false)
+                            print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(json["error"] as! String)", code: 400, userInfo: nil))
+                        } else {
+                            success(false)
+                            print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): undefined server error", code: 400, userInfo: nil))
+                        }
+                    } else {
+                        success(false)
+                        print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): undefined server error", code: 400, userInfo: nil))
+                    }
+                } catch let error {
+                    success(false)
+                    print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(error.localizedDescription)", code: 400, userInfo: nil))
+                }
+            }
+
+        }.resume()
+    }
 
     //MARK: Download user data
     internal func downloadUserData(_ completion: @escaping (Bool) -> Void) {

@@ -12,4 +12,5 @@ internal struct UserToken: Codable {
     let token_type: String
     let expires_in: Int
     let refresh_token: String
+    let email_confirm: Bool?
 }

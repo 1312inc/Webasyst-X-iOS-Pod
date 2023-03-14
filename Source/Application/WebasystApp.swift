@@ -103,22 +103,71 @@ public class WebasystApp {
     /// Authorization in Webasyst using Apple ID
     /// - Parameters:
     ///    - authData: Authorization data sent by the Apple ID authorization controller
-    ///    - success: Closure with result of authorization
-    public func oAuthAppleID(authData: AuthAppleIDData, success: @escaping (_ result: UserStatus) -> ()) {
-        WebasystNetworking().oAuthAppleID(authData: authData) { result, error  in
-            if result {
+    ///    - result: Closure with result of authorization
+    public func oAuthAppleID(authData: AuthAppleIDData, result: @escaping (_ result: AuthAppleIDResult) -> ()) {
+        WebasystNetworking().oAuthAppleID(authData: authData) { status in
+
+            switch status {
+            case .success(let emailConfirm):
+
+                var userStatus: UserStatus?
+                let group = DispatchGroup()
+
+                group.enter()
                 WebasystUserNetworking().preloadUserData { status, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     }
-                    success(status)
+                    userStatus = status
+                    group.leave()
                 }
-            } else {
-                if let error = error {
-                    success(.error(message: error))
+
+                if !emailConfirm {
+                    if let userStatus = userStatus {
+                        result(.completed(userStatus))
+                    } else {
+                        group.notify(queue: .main) {
+                            if let userStatus = userStatus {
+                                result(.completed(userStatus))
+                            } else {
+                                result(.completed(.error(message: "User data cannot be loaded.")))
+                            }
+                        }
+                    }
                 } else {
-                    success(.error(message: "Apple ID authorization failed"))
+                    let confirmHandler: (AuthAppleIDResult.EmailConfirmation) -> () = { confirmation in
+                        switch confirmation.result {
+                        case .code(let code):
+                            WebasystUserNetworking().sendAppleIDEmailConfirmationCode(code, success: { success in
+                                if success {
+                                    WebasystUserNetworking().preloadUserData { status, _, successPreload in
+                                        if successPreload {
+                                            UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                                        }
+                                        confirmation.successHandler(true, userStatus)
+                                    }
+                                } else {
+                                    confirmation.successHandler(false, nil)
+                                }
+                            })
+                        case .skip:
+                            if let userStatus = userStatus {
+                                confirmation.successHandler(true, userStatus)
+                            } else {
+                                group.notify(queue: .main) {
+                                    if let userStatus = userStatus {
+                                        confirmation.successHandler(true, userStatus)
+                                    } else {
+                                        confirmation.successHandler(false, nil)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    result(.needEmailConfirm(authData.userEmail, confirmHandler))
                 }
+            case .error(let description):
+                result(.completed(.error(message: description)))
             }
         }
     }

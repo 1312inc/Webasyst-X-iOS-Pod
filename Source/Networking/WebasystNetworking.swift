@@ -197,12 +197,12 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// - Parameters:
     ///    - authData: Authorization data sent by the Apple ID authorization controller
     ///    - completion: success flag and optional error description
-    internal func oAuthAppleID(authData: AuthAppleIDData, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+    internal func oAuthAppleID(authData: AuthAppleIDData, completion: @escaping (AppleIDResponse) -> ()) {
         
         guard let config = self.config else {
             let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil)
             print(e)
-            completion(false, e.domain)
+            completion(.error(e.domain))
             return
         }
         
@@ -250,21 +250,21 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             guard error == nil else {
                 let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Request error", code: 400, userInfo: nil)
                 print(e)
-                completion(false, e.domain)
+                completion(.error(e.domain))
                 return
             }
 
             guard let data = data else {
                 let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Error in receiving the server response body", code: 400, userInfo: nil)
                 print(e)
-                completion(false, e.domain)
+                completion(.error(e.domain))
                 return
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 let e = NSError(domain: "Webasyst error(method: oAuthAppleID): Request error", code: 400, userInfo: nil)
                 print(e)
-                completion(false, e.domain)
+                completion(.error(e.domain))
                 return
             }
             
@@ -276,12 +276,13 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
                     let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
                     if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
-                        completion(true, nil)
+                        let emailConfirm = authData.email_confirm != nil ? authData.email_confirm! : false
+                        completion(.success(emailConfirm: emailConfirm))
                     }
                 } catch let error {
                     let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(error.localizedDescription)", code: 400, userInfo: nil)
                     print(e)
-                    completion(false, e.domain)
+                    completion(.error(e.domain))
                 }
             default:
                 do {
@@ -289,21 +290,21 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                         if json["error"] != nil {
                             let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(json["error"] as! String)", code: 400, userInfo: nil)
                             print(e)
-                            completion(false, e.domain)
+                            completion(.error(e.domain))
                         } else {
                             let e = NSError(domain: "Webasyst error(method: oAuthAppleID): undefined server error", code: 400, userInfo: nil)
                             print(e)
-                            completion(false, e.domain)
+                            completion(.error(e.domain))
                         }
                     } else {
                         let e = NSError(domain: "Webasyst error(method: oAuthAppleID): undefined server error", code: 400, userInfo: nil)
                         print(e)
-                        completion(false, e.domain)
+                        completion(.error(e.domain))
                     }
                 } catch let error {
                     let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(error.localizedDescription)", code: 400, userInfo: nil)
                     print(e)
-                    completion(false, e.domain)
+                    completion(.error(e.domain))
                 }
             }
             
