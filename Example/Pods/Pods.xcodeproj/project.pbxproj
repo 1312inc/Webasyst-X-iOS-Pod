@@ -50,7 +50,7 @@
 		D79A6C917FE03D8A880294FE6E5F5B92 /* Pods-Webasyst_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Webasyst_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DAE3CFF2B8AF9DC72136531515FB4F5C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E0049FB229941A3800FD6A40 /* AuthCodeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCodeType.swift; sourceTree = "<group>"; };
-		E02BCB6B29C0EF07003B1BA2 /* AuthAppleIDResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAppleIDResult.swift; sourceTree = "<group>"; };
+		E02BCB6E29C16039003B1BA2 /* AuthAppleIDResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAppleIDResult.swift; sourceTree = "<group>"; };
 		E0E88FA929A7A0F500F0B828 /* AuthAppleIDData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAppleIDData.swift; sourceTree = "<group>"; };
 		E8CA7EE052DE4A709D2F93657A5D116F /* Pods-Webasyst_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Webasyst_Tests-umbrella.h"; sourceTree = "<group>"; };
 		E953EFD42F9E4CF87F7327965ACC9BD1 /* Pods-Webasyst_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Webasyst_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -286,8 +286,8 @@
 		FD58E676265E04A60037CF13 /* Enum */ = {
 			isa = PBXGroup;
 			children = (
-				E02BCB6B29C0EF07003B1BA2 /* AuthAppleIDResult.swift */,
 				FD58E67B265E04EB0037CF13 /* TokenType.swift */,
+				E02BCB6E29C16039003B1BA2 /* AuthAppleIDResult.swift */,
 				FD58E67D265E05020037CF13 /* UserStatus.swift */,
 				FD58E68A265E14360037CF13 /* ImageType.swift */,
 				FD016879265F551900BBF9EB /* AuthType.swift */,
@@ -432,7 +432,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					D409A95C72151E6F0FC3B0CB0BEB4846 = {
 						LastSwiftMigration = 1420;
@@ -539,6 +539,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -707,6 +708,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
