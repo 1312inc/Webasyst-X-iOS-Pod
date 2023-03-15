@@ -347,11 +347,12 @@ public class WebasystApp {
     /// - Parameters:
     ///    - bundle: Bundle of the account being created
     ///    - plainId: Plain id of the account being created
-    ///    - shopName: *Only for Shop-Script* Name of shop of the account being created
+    ///    - accountDomain: Domain of the account being created
+    ///    - accountName: Name of the account being created
     ///    - success: Closure performed after executing the method
     /// - Returns: Boolean value if the account was created and url install
-    public func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", shopName: String? = nil, success: @escaping (Bool, String?, String?)->()) {
-        WebasystUserNetworking().createWebasystAccount(bundle: bundle, plainId: plainId, shopName: shopName) { result, urlInstall, url in
+    public func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", accountDomain: String? = nil, accountName: String? = nil, success: @escaping (Bool, String?, String?)->()) {
+        WebasystUserNetworking().createWebasystAccount(bundle: bundle, plainId: plainId, accountDomain: accountDomain, accountName: accountName) { result, urlInstall, url in
             success(result, urlInstall, url)
         }
     }

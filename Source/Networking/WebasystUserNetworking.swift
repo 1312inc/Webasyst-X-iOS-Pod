@@ -520,7 +520,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
     }
 
-    func createWebasystAccount(bundle: String, plainId: String, shopName: String?, completion: @escaping (Bool, String?, String?)->()) {
+    func createWebasystAccount(bundle: String, plainId: String, accountDomain: String?, accountName: String?, completion: @escaping (Bool, String?, String?)->()) {
 
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -534,8 +534,11 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "plan_id": plainId
         ]
         
-        if let shopName = shopName {
-            parametersRequest["domain"] = shopName
+        if let accountDomain = accountDomain {
+            parametersRequest["userdomain"] = accountDomain
+        }
+        if let accountName = accountName {
+            parametersRequest["account_name"] = accountName
         }
 
         guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
