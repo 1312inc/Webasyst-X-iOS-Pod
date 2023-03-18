@@ -233,7 +233,7 @@ public class WebasystApp {
         if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
            let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
             getAllUserInstall { installs in
-                if installs != nil , domain == nil {
+                if installs != nil, installs != [], domain == nil {
                     completion(true)
                     self.logOutUser(completion: { _ in })
                 }

@@ -37,7 +37,7 @@ public struct UserInstallCodable: Decodable {
 }
 
 /// Structure of the settings list
-public struct UserInstall: Decodable {
+public struct UserInstall: Decodable, Equatable {
     public var name: String?
     public var domain: String
     public var id: String
