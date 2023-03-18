@@ -175,7 +175,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 200...299:
                     if let data = data {
                         let userData = try! JSONDecoder().decode(UserData.self, from: data)
-                        let condition = userData.firstname.isEmpty || userData.lastname.isEmpty || userData.userpic_original_crop == self.defaultImageUrl
+                        let condition = userData.firstname.isEmpty || userData.lastname.isEmpty
                         completion(condition)
                         WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
                             WebasystDataModel()?.saveProfileData(userData, avatar: data)
