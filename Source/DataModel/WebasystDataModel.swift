@@ -267,6 +267,7 @@ extension WebasystDataModel {
                 profile.lastName = user.lastname
                 profile.middleName = user.middlename
                 profile.email = user.email.first?.value ?? ""
+                profile.phone = user.phone.first?.value ?? ""
                 profile.userPic = avatar
                 self.save()
             } else {
@@ -276,6 +277,7 @@ extension WebasystDataModel {
                 result.first?.middleName = user.middlename
                 result.first?.userPic = avatar
                 result.first?.email = user.email.first?.value ?? ""
+                result.first?.phone = user.phone.first?.value ?? ""
                 self.save()
             }
         } catch let error {
@@ -312,7 +314,7 @@ extension WebasystDataModel {
                 return
             }
             if !result.isEmpty {
-                let profileData = ProfileData(name: result.first?.fullName ?? "", firstname: result.first?.firstName ?? "", lastname: result.first?.lastName ?? "", middlename: result.first?.middleName ?? "", email: result.first?.email ?? "", userpic_original_crop: result.first?.userPic)
+                let profileData = ProfileData(name: result.first?.fullName ?? "", firstname: result.first?.firstName ?? "", lastname: result.first?.lastName ?? "", middlename: result.first?.middleName ?? "", email: result.first?.email ?? "", phone: result.first?.phone ?? "", userpic_original_crop: result.first?.userPic)
                 completion(profileData)
             } else {
                 completion(nil)

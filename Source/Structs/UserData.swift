@@ -12,10 +12,11 @@ public struct UserData: Codable {
     public let firstname: String
     public let lastname: String
     public let middlename: String
-    public let email: [Email]
+    public let email: [Connectivity]
+    public let phone: [Connectivity]
     public let userpic_original_crop: String
 }
 
-public struct Email: Codable {
+public struct Connectivity: Codable {
     public let value: String
 }
