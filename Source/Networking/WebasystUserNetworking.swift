@@ -192,12 +192,18 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
 
-        let parameters: Dictionary<String,Any> = [
+        var parameters: Dictionary<String,Any> = [
             "firstname": profile.firstname,
             "lastname": profile.lastname,
-            "middlename" : profile.middlename,
-            "email": [profile.email]
+            "middlename" : profile.middlename
         ]
+        
+        if !profile.email.isEmpty {
+            parameters["email"] = [profile.email]
+        }
+        if !profile.email.isEmpty {
+            parameters["phone"] = [profile.phone]
+        }
 
         let headers: Parameters = [
             "Accept" : "application/json",
@@ -225,7 +231,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                 }
                 default:
-                    let error = NSError(domain: "Webasyst error: user data upload error", code: 400, userInfo: nil)
+                    let error: Error
+                    if let data = data,
+                        let dictionary = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any],
+                        let errorDescription = dictionary?["error_description"] as? String {
+                        error = NSError(domain: "Webasyst error: \(errorDescription)", code: httpResponse.statusCode, userInfo: nil)
+                    } else {
+                        error = NSError(domain: "Webasyst error: user data upload error", code: httpResponse.statusCode, userInfo: nil)
+                    }
                     completion(.failure(error))
                     print(error)
                 }
