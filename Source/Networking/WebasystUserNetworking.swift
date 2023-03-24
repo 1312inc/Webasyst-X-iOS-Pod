@@ -201,7 +201,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         if !profile.email.isEmpty {
             parameters["email"] = [profile.email]
         }
-        if !profile.email.isEmpty {
+        if !profile.phone.isEmpty {
             parameters["phone"] = [profile.phone]
         }
 
