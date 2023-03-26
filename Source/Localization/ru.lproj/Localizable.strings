@@ -1,0 +1,182 @@
+// MARK: - Alert module
+
+// ---------------- Main alert attributes --------------------
+
+// Titles
+
+"errorTitle" = "Ошибка";
+"success" = "Готово!";
+"cantOpenNotificationOrder" = "Не удалось получить список аккаунтов";
+"spaErrorDescription" = "Произошла непредвиденная ошибка";
+"requestFailedError" = "Произошла ошибка запроса к серверу";
+"tryAgain" = "Попробуйте еще раз через минуту";
+
+// Actions
+
+"okAlert" = "Понятно";
+"delete" = "Удалить";
+"errorDescription" = "Описание ошибки";
+
+// ------------------------------------
+
+// ---------------- Types of alert --------------------
+
+// Install alert
+
+"checkInstallAppError" = "Произошла ошибка при установке %APPNAME%";
+"checkLicenseError" = "Произошла ошибка при установке лицензии";
+"successBody" = "%APPNAME% успешно установлен. Для %ACCOUNTNAME% выписана бесплатная лицензия на 30 дней.";
+
+// Add account alert
+
+"createWebasystAccountError" = "Произошла ошибка при создании аккаунта Webasyst";
+
+// Connect account alert
+
+"connectWebasystAccountError" = "Что-то пошло не так. Код приглашения недействителен. Попросите новый код и повторите попытку через минуту.";
+"qrConnectWebasystAccountError" = "Что-то пошло не так. Не удалось добавить аккаунт по qr-коду.";
+
+// Link accounts alert
+
+"mergeWelcomeError" = "Что-то пошло не так. Не удалось объединить учетные записи. Пожалуйста, свяжитесь со службой поддержки Webasyst, прикрепив к запросу скриншот этой ошибки.";
+"mergeWelcomeError2" = "Что-то пошло не так. Не удалось завершить объеденение учетных записей. Пожалуйста, свяжитесь со службой поддержки Webasyst, прикрепив к запросу скриншот этой ошибки.";
+
+// Notifications alert
+
+"notificationsAlertTitle" = "Уведомления отключены";
+"notificationsAlertDescription" = "Уведомления отключены для приложения %APPNAME%. Включите уведомления в настройках iOS, чтобы начать получать уведомления о новых заказах.";
+"openSettingsButtonTitle" = "Открыть настройки";
+
+// Onboarding failed
+
+"onboardingFailedTitle" = "Ошибка создания аккаунта";
+"onboardingFailedDescription" = "Ошибка: сервер ответил «не шмогла»";
+
+// Passcode alert button names
+
+"localizedOnTitle" = "Включить код-пароль";
+"localizedOffTitle" = "Выключить код-пароль";
+"localizedChangeTitle" = "Сменить код-пароль";
+
+// ------------------------------------
+
+// MARK: - Main module
+
+"loading" = "Загрузка...";
+"demoAccount" = "Демо";
+
+// MARK: - Screens
+
+// MARK: - Auth screen
+
+"viewDemoAccount" = "Посмотреть демо-магазин"; // You need to change it according to the context of your application
+"phoneDescription" = "Пожалуйста, уточните свой номер телефона, чтобы создать новый профиль пользователя Webasyst ID и привязать его к мобильному приложению.";
+"appDescription" = "Вход с Webasyst ID автоматически подключит приложение ко всем вашем аккаунтам и сайтам на основе Webasyst.";
+"expressPhoneLogin" = "Подтвердить номер";
+"phoneLogin" = "Войти по номеру телефона";
+"appleLogin" = "Вход с Apple";
+"appleLoginEmailConfirmationDescription" = "Email%email% уже зарегистрирован в Webasyst. Чтобы связать его с вашим Apple ID, необходимо ввести код подтверждения, который только что был отправлен вам по почте.";
+"appleLoginEmailConfirmationSkip" = "Пропустить";
+"emailLogin" = " Войти с email и паролем";
+"QRLogin" = " Войти по QR-коду";
+"QRAdd" = "Добавить по QR-коду";
+"aboutWebAsystID" = "Что такое Webasyst ID?";
+"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+
+// MARK: - Phone authorization screen
+
+// Auth
+
+"titleConfirmCode" = "Код подтверждения";
+"descriptionPhone" = "Код был отправлен по СМС на номер";
+"resendCodeLabel" = "Сообщение не пришло?";
+"resendCodeButton" = "Отправить еще раз";
+"codeSendLabel" = "Код отправлен";
+"timerText" = "Отправить еще раз можно через";
+"seconds" = "секунд";
+
+// Errors
+
+"phoneError" = "Неверный номер телефона";
+"clientIdError" = "Webasyst ID client_id указан неверно или заблокирован. Пожалуйста, обратитесь к разработчику приложения.";
+"codeChalengeError" = "Код авторизации неверен или отсутствует. Пожалуйста, обратитесь к разработчику приложения.";
+"emailError" = "Неверный адрес email";
+"requestTimeoutLimit" = "Запрос на код подтверждения нельзя отправлять слишком часто. Попробуйте через минуту, пожалуйста.";
+"sentNotificationFail" = "Что-то пошло не так. Код не отправлен.";
+"errorCode" = "Код введен неправильно";
+"errorQRCode" = "Недействительный QR-код";
+
+// MARK: - Settings screen
+
+"notSecureConnection" = "Небезопасное соединение";
+"expiresOn" = "Истекает %@";
+"expiredOn" = "Истек %@";
+"addWebasystButton" = "Добавить аккаунт";
+"manageProfileButton" = "Мой профиль";
+"setPinCodeButton" = "Код-пароль";
+"exitAccountButtonTitle" = "Выйти";
+
+// MARK: - Create new install screen
+
+"createInstallNotPresentedDescriptionOfStoreConnect" = "Код подключения:";
+"showInfoAboutEightDigitCodeTitle" = "Где найти код";
+"joinDescription" = "Или подключитесь самостоятельно, сфотографировав QR-код в своем профиле Webasyst или войдя с Webasyst ID «по старинке» — по email и паролю:";
+"joinDescriptionOnlyQR" = "Или подключите магазин самостоятельно, сфотографировав QR-код в своем профиле Webasyst:";
+"errorCreateNewInstall" = "Не удалось создать аккаунт Webasyst. Скорее всего, превышен лимит на количество бесплатных пробных облачных аккаунтов.";
+"createInstallTitleOfStoreConnect" = "Подключить магазин";
+"createInstallDescriptionOfStoreConnect" = "Если магазин, с которым вы уже работаете, еще не подключен к вашему Webasyst ID%ACCOUNTEMAIL%, попросите у администратора магазина 8-значный код подключения. Получить код администратор может внутри Webasyst в вашем профиле в приложении «Команда».";
+"createInstallButton" = "Создать магазин";
+"createNewShopTitle" = "Открыть новый магазин";
+"createNewShopDescription" = "Позже к магазину можно будет подключить свое доменное имя и пригласить коллег для совместной обработки заказов.";
+
+// MARK: - Redactor screen
+
+"deleteAccountConfirm" = "Удалить";
+"cacnelAccountDelete" = "Отменить";
+"addPhoto" = "Добавить фото";
+"aboutSameself" = "Контактная информация";
+"specifyLater" = "Указать позже";
+"save" = "Сохранить";
+"name" = "Имя";
+"surname" = "Фамилия";
+"phone" = "Номер телефона";
+"removePhoto" = "Удалить фото";
+"changePhoto" = "Изменить фото";
+"successfullyUpdated" = "Данные успешно обновлены";
+"updateError" = "Что-то пошло не так. Информация не обновилась.";
+"cameraEditScreen" = "Камера";
+"galleryEditScreen" = "Галерея";
+"cancelEditScreen" = "Закрыть";
+"deleteAccount" = "Удалить аккаунт";
+"accountDeleteFirstAlert" = "Удаление Webasyst ID приведет к удалению всех созданных вами облачных аккаунтов Webasyst и безвозвратной потере данных. Вы уверены, что хотите удалить свой Webasyst ID?";
+"accountDeleteSecondAlert" = "Опасно! После удаления данных восстановить их будет невозможно! Подтвердить удаление Webasyst ID?";
+"accountWasDeleted" = "На email/телефон, указанный в вашем профиле Webasyst ID, было отправлено письмо-подтверждение. Следуйте инструкциям в сообщении для подтверждения удаления.";
+"accountDeleteError" = "Что-то пошло не так. Аккаунт не был удален.";
+
+// MARK: - Error screen
+
+"errorAccessDenied" = "Нет доступа";
+
+// MARK: - QR screen
+
+"QRDescription" = "Перейдите в свой профиль на сайте или в бекенде Webasyst в браузере и нажмите «Войти по QR-коду» вверху справа.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "Это не тот QR-код! Вы уже авторизованы в приложении с Webasyst ID и сканируете QR-код для входа с другим Webasyst ID. А нужный вам QR-код в бекенде Webasyst на вашем сайте в вашем профиле в «Команде» — там особый типа кода, который свяжет ваш Webasyst ID с новым сайтом, к которому вы пока не подключены.";
+"QRFrameDescription" = "Да, это QR-код, но он никак не связан с Webasyst.";
+"QRTopLabel" = "Отсканируйте QR-код";
+
+// MARK: - Install screen
+
+"freeInstall" = "30 дней бесплатно!";
+"descriptionInstall" = "Приложение «%APPNAME%» еще не установлено в аккаунте «%ACCOUNTNAME%». Нажмите «Установить» — и уже через пару мгновений приложение будет установлено в вашем Webasyst с помощью Инсталлера.";
+"buttonInstall" = "Установить «%APPNAME%»";
+"titleInstall" = "Установить «%APPNAME%» на %ACCOUNTNAME%";
+
+// MARK: - PayWall screen
+
+// Paywall screen
+
+"payWallRegulations" = "Подписка производится с вашего аккаунта iTunes и обновляется автоматически. Отмена подписки производится в основных настройках iOS в параметрах учетной записи iTunes не менее чем за 24 часа до окончания текущего периода. Стоимость подписки будет списана в течение 24 часов после окончания пробного периода.";
+"termsAndPrivacy" = "Обработка данных";
+"payWallRestore" = "Восстановить";
+"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"restorePurchases" = "Покупки успешно восстановлены!";

@@ -40,6 +40,10 @@ public class WebasystApp {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("settings")
     }
     
+    public class func getDefaultLocalizedString(withKey key: String) -> String {
+        return NSLocalizedString(key, bundle: Bundle(identifier: "org.cocoapods.Webasyst") ?? Bundle.main, comment: key)
+    }
+    
     /// A method for getting Webasyst tokens
     /// - Parameter tokenType: Type of token (Access Token or Refresh Token)
     /// - Returns: Requested token in string format

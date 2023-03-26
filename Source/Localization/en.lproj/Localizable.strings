@@ -1,0 +1,182 @@
+// MARK: - Alert module
+
+// ---------------- Main alert attributes --------------------
+
+// Titles
+
+"errorTitle" = "Error";
+"success" = "Success!";
+"cantOpenNotificationOrder" = "Failed to get a list of accounts";
+"spaErrorDescription" = "An unexpected error has occurred";
+"requestFailedError" = "Server request error occurred";
+"tryAgain" = "Please try again in a minute";
+
+// Actions
+
+"okAlert" = "OK";
+"delete" = "Delete";
+"errorDescription" = "Error description";
+
+// ------------------------------------
+
+// ---------------- Types of alert --------------------
+
+// Install alert
+
+"checkInstallAppError" = "An error occurred while installing %APPNAME%";
+"checkLicenseError" = "An error occurred while installing the license";
+"successBody" = "%APPNAME% has been successfully installed. A free 30 days license has been issued for %ACCOUNTNAME%.";
+
+// Add account alert
+
+"createWebasystAccountError" = "An error occurred when creating a Webasyst account";
+
+// Connect account alert
+
+"connectWebasystAccountError" = "Something went wrong. The invitation code is invalid. Ask your teammate for a new code and try again in a minute.";
+"qrConnectWebasystAccountError" = "Something went wrong. Failed to add an account using a QR code.";
+
+// Link accounts alert
+
+"mergeWelcomeError" = "Something went wrong. Could not merge accounts due to security concerns. Please contact Webasyst support team on the issue mentioning both Webasyst ID account credentials.";
+"mergeWelcomeError2" = "Something went wrong. Failed to complete merging of accounts. Please contact Webasyst support team on the issue mentioning both Webasyst ID account credentials.";
+
+// Notifications alert
+
+"notificationsAlertTitle" = "Notifications are disabled";
+"notificationsAlertDescription" = "Notifications are disabled for the %APPNAME% app. Turn on notifications in iOS Settings to start getting notifications on tasks.";
+"openSettingsButtonTitle" = "Open Settings";
+
+// Onboarding failed
+
+"onboardingFailedTitle" = "Account creation error";
+"onboardingFailedDescription" = "Error: Server returned 'false' in the response.";
+
+// Passcode alert button names
+
+"localizedOnTitle" = "Enable passcode";
+"localizedOffTitle" = "Disable passcode";
+"localizedChangeTitle" = "Change passcode";
+
+// ------------------------------------
+
+// MARK: - Main module
+
+"loading" = "Loading...";
+"demoAccount" = "Demo";
+
+// MARK: - Screens
+
+// MARK: - Auth screen
+
+"viewDemoAccount" = "View Demo Store"; // You need to change it according to the context of your application
+"phoneDescription" = "Please specify your phone number to create a new Webasyst ID user profile and link it to the mobile application.";
+"appDescription" = "Sign in with Webasyst ID to automatically connect the app to all Webasyst accounts and sites you work with.";
+"expressPhoneLogin" = "Confirm phone number";
+"phoneLogin" = "Sign in with phone number";
+"appleLogin" = "Sign in with Apple";
+"appleLoginEmailConfirmationDescription" = "Email%email% is already registered with us, and to link it to your Apple ID, you need to enter the code that was sent to your email just now.";
+"appleLoginEmailConfirmationSkip" = "Skip";
+"emailLogin" = "Sign in with email and password";
+"QRLogin" = "Sign in using QR";
+"QRAdd" = "Add account using QR";
+"aboutWebAsystID" = "What is Webasyst ID?";
+"webasystURL" = "https://www.webasyst.com/webasyst-id-how-to/";
+
+// MARK: - Phone authorization screen
+
+// Auth
+
+"titleConfirmCode" = "Confirmation code";
+"descriptionPhone" = "A confirmation code was sent to";
+"resendCodeLabel" = "No code?";
+"resendCodeButton" = "Resend";
+"codeSendLabel" = "Code has been sent";
+"timerText" = "A new code can be requested in";
+"seconds" = "seconds";
+
+// Errors
+
+"phoneError" = "Invalid phone number";
+"clientIdError" = "Webasyst ID client_id is either invalid or blocked. Please contact the app developer on this issue.";
+"codeChalengeError" = "Code challenge is invalid or missing. Please contact the app developer on the issue.";
+"emailError" = "Invalid email";
+"requestTimeoutLimit" = "Requests for confirmation codes cannot be sent too often. Please try again in a minute.";
+"sentNotificationFail" = "Something went wrong. The code was not sent.";
+"errorCode" = "Invalid code";
+"errorQRCode" = "Invalid QR code";
+
+// MARK: - Settings screen
+
+"notSecureConnection" = "Connection is not secure";
+"expiresOn" = "Expires on %@";
+"expiredOn" = "Expired on %@";
+"addWebasystButton" = "Add Account";
+"manageProfileButton" = "My Profile";
+"setPinCodeButton" = "Passcode";
+"exitAccountButtonTitle" = "Sign Out";
+
+// MARK: - Create new install screen
+
+"createInstallNotPresentedDescriptionOfStoreConnect" = "Invitation code:";
+"showInfoAboutEightDigitCodeTitle" = "Where do I get the code?";
+"joinDescription" = "Or connect by scanning a QR code in your Webasyst backend profile or by signing in the classic way — with an email and a password:";
+"joinDescriptionOnlyQR" = "Or connect by scanning a QR code in your Webasyst backend:";
+"errorCreateNewInstall" = "Sorry, we cannot create another account for you at the moment. Most likely, a limit on the number of free Webasyst cloud accounts has been exceeded.";
+"createInstallTitleOfStoreConnect" = "Link an existing store";
+"createInstallDescriptionOfStoreConnect" = "If your online store is not connected to your Webasyst ID%ACCOUNTEMAIL% for some reason, ask the store admin for a 8-digit invitation code and enter it below. The code can be found in the Team app > your Webasyst user profile.";
+"createInstallButton" = "Create a Store";
+"createNewShopTitle" = "Create a new store";
+"createNewShopDescription" = "Once created, you will be able to link your custom domain name and to invite your teammates to manage sales together.";
+
+// MARK: - Redactor screen
+
+"deleteAccountConfirm" = "Delete";
+"cacnelAccountDelete" = "Cancel";
+"addPhoto" = "Add photo";
+"aboutSameself" = "Contact Information";
+"specifyLater" = "Specify Later";
+"save" = "Save";
+"name" = "First Name";
+"surname" = "Last Name";
+"phone" = "Phone number";
+"removePhoto" = "Remove Photo";
+"changePhoto" = "Change Photo";
+"successfullyUpdated" = "Successfully updated";
+"updateError" = "Something went wrong. The information was not updated.";
+"cameraEditScreen" = "Camera";
+"galleryEditScreen" = "Gallery";
+"cancelEditScreen" = "Cancel";
+"deleteAccount" = "Delete Account";
+"accountDeleteFirstAlert" = "Deleting your Webasyst ID account will result in deleting all Webasyst accounts you have created and permanent loss of the data. Are you positive you wish to delete your Webasyst ID?";
+"accountDeleteSecondAlert" = "DANGER! There will be no way to restore the data once deleted! Confirm your Webasyst ID termination?";
+"accountWasDeleted" = "An account termination confirmation message has been sent to the contact information provided with your Webasyst ID. Follow instruction in the message to finalize the account termination.";
+"accountDeleteError" = "Something went wrong. The account could not be deleted.";
+
+// MARK: - Error screen
+
+"errorAccessDenied" = "No Access";
+
+// MARK: - QR screen
+
+"QRDescription" = "Open your profile in the Webasyst backend in a browser and click the “Sign in using QR” button on the right.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "This is a wrong code! You are scanning a QR code to sign in with Webasyst ID while being authorized with another Webasyst ID already. But the code you need is located in your Webasyst backend profile on your custom domain in the Team app — this code will connect your current Webasyst ID to an new account which is not linked yet.";
+"QRFrameDescription" = "Yes, it’s a QR code, but it does not look like a Webasyst code at all.";
+"QRTopLabel" = "Scan the QR code";
+
+// MARK: - Install screen
+
+"freeInstall" = "30 days free!";
+"descriptionInstall" = "%APPNAME% app is not installed on %ACCOUNTNAME% at the moment. Tap the Install button above to install the app via the Webasyst Installer.";
+"buttonInstall" = "Install %APPNAME%";
+"titleInstall" = "Install %APPNAME% on %ACCOUNTNAME%";
+
+// MARK: - PayWall screen
+
+// Paywall screen
+
+"payWallRegulations" = "Payment will be charged to your iTunes Account at confirmation of purchase. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period, and identify the cost of the renewal. Any unused portion of a free trial period will be forfeited when a subscription to that publication is purchased. Subscriptions may be managed and auto-renewal may be turned off by going to the Account Settings after purchase.";
+"termsAndPrivacy" = "Terms and Privacy";
+"payWallRestore" = "Restore Purchase";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
+"restorePurchases" = "Purchases successfully restored!";
