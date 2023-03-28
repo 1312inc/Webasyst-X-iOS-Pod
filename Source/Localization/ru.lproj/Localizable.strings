@@ -17,9 +17,18 @@
 "delete" = "Удалить";
 "errorDescription" = "Описание ошибки";
 
+// Additional part to the alert error
+
+"serverSentError" = "Сервер отправил сообщение об ошибке: ";
+
 // ------------------------------------
 
 // ---------------- Types of alert --------------------
+
+// Apple ID alert
+
+"failedAppleIDMerge" = "Не удалось объединить учетные записи.";
+"failedAppleIDAuth" = "Не удалось осуществить вход с Apple.";
 
 // Install alert
 

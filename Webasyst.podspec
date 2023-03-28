@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.swift_version = '4.0'
 
   s.source_files = 'Source/**/*.swift'
-  s.resources = "Source/**/*.xcdatamodeld"
+  s.resources = ["Source/**/*.xcdatamodeld", "Source/**/**/*.xcassets", "Source/**/*.strings"]
   s.framework  = "Foundation"
   s.framework  = "CoreData"
   s.ios.framework  = "UIKit"

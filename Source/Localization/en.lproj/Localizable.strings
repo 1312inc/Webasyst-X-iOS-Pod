@@ -17,9 +17,18 @@
 "delete" = "Delete";
 "errorDescription" = "Error description";
 
+// Additional part to the alert error
+
+"serverSentError" = "The server sent an error message: ";
+
 // ------------------------------------
 
 // ---------------- Types of alert --------------------
+
+// Apple ID alert
+
+"failedAppleIDMerge" = "Failed to merge accounts.";
+"failedAppleIDAuth" = "Failed to sign in with Apple.";
 
 // Install alert
 
