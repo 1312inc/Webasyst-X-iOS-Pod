@@ -41,7 +41,11 @@ public class WebasystApp {
     }
     
     public class func getDefaultLocalizedString(withKey key: String) -> String {
-        return NSLocalizedString(key, bundle: Bundle(identifier: "org.cocoapods.Webasyst") ?? Bundle.main, comment: key)
+        return NSLocalizedString(key, bundle: Bundle(for: self), comment: key)
+    }
+    
+    public class func requestFullScreenConfetti(for viewController: UIViewController) {
+        ConfettiAnimationView.requestFullScreenAnimation(for: viewController)
     }
     
     /// A method for getting Webasyst tokens

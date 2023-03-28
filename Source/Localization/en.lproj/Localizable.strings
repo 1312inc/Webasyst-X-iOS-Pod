@@ -30,11 +30,14 @@
 // Add account alert
 
 "createWebasystAccountError" = "An error occurred when creating a Webasyst account";
+"shopNameErrorDescription" = "An error occurred when reading the name of the store.";
+"addAccountSuccessBody" = "New Webasyst cloud account has been successfully created!";
 
 // Connect account alert
 
 "connectWebasystAccountError" = "Something went wrong. The invitation code is invalid. Ask your teammate for a new code and try again in a minute.";
 "qrConnectWebasystAccountError" = "Something went wrong. Failed to add an account using a QR code.";
+"connectAccountSuccessBody" = "Your Webasyst ID has been successfully connected to %ACCOUNTNAME%.";
 
 // Link accounts alert
 

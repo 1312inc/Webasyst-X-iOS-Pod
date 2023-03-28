@@ -30,11 +30,14 @@
 // Add account alert
 
 "createWebasystAccountError" = "Произошла ошибка при создании аккаунта Webasyst";
+"shopNameErrorDescription" = "Возникла ошибка при считывании названия магазина.";
+"addAccountSuccessBody" = "Новый облачный аккаунт Webasyst успешно создан!";
 
 // Connect account alert
 
 "connectWebasystAccountError" = "Что-то пошло не так. Код приглашения недействителен. Попросите новый код и повторите попытку через минуту.";
 "qrConnectWebasystAccountError" = "Что-то пошло не так. Не удалось добавить аккаунт по qr-коду.";
+"connectAccountSuccessBody" = "Ваш Webasyst ID был успешно подключен к %ACCOUNTNAME%.";
 
 // Link accounts alert
 
