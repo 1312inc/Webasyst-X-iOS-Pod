@@ -88,7 +88,7 @@
 "phoneLogin" = "Sign in with phone number";
 "appleLogin" = "Sign in with Apple";
 "appleLoginEmailConfirmationDescription" = "Email%email% is already registered with us, and to link it to your Apple ID, you need to enter the code that was sent to your email just now.";
-"appleLoginEmailConfirmationSkip" = "Skip";
+"appleLoginEmailConfirmationSkip" = "Sign Out";
 "emailLogin" = "Sign in with email and password";
 "QRLogin" = "Sign in using QR";
 "QRAdd" = "Add account using QR";
