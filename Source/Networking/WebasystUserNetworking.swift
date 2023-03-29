@@ -68,10 +68,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     // MARK: - Send Apple ID email confirmation code
-    internal func sendAppleIDEmailConfirmationCode(_ code: String, success: @escaping (Bool) -> ()) {
+    internal func sendAppleIDEmailConfirmationCode(_ code: String, accessToken: Data, success: @escaping (Bool) -> ()) {
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessTokenString = String(decoding: accessToken, as: UTF8.self)
 
         let headers: Parameters = [
             "Authorization": accessTokenString

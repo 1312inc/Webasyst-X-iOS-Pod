@@ -272,12 +272,16 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             case 200...299:
                 do {
                     let authData = try JSONDecoder().decode(UserToken.self, from: data)
-                    let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                    UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
-                    let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
-                    if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
-                        let emailConfirm = authData.email_confirm != nil ? authData.email_confirm! : false
-                        completion(.success(emailConfirm: emailConfirm))
+                    let accessToken = Data("Bearer \(authData.access_token)".utf8)
+                    if let emailConfirm = authData.email_confirm, emailConfirm == true {
+                        completion(.success(.needEmailConfirmation(accessToken: accessToken)))
+                    } else {
+                        let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: accessToken)
+                        UserDefaults.standard.set(accessToken, forKey: "accessToken")
+                        let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                        if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                            completion(.success(.succeess))
+                        }
                     }
                 } catch let error {
                     let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(error.localizedDescription)", code: 400, userInfo: nil)

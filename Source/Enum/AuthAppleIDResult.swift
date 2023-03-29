@@ -15,27 +15,32 @@ import Foundation
 public enum AuthAppleIDResult {
     
     case completed(_ status: UserStatus)
-    case needEmailConfirm(_ email: String?, _ confirmHandler: (EmailConfirmation) -> ())
+    case needEmailConfirmation(_ email: String?, _ confirmHandler: (EmailConfirmation) -> ())
     
     public struct EmailConfirmation {
         
-        public init(_ result: Result, _ successHandler: @escaping (_ success: Bool, _ status: UserStatus?) -> ()) {
+        public init(_ result: Result, _ successHandler: @escaping (_ success: Bool) -> ()) {
             self.result = result
             self.successHandler = successHandler
         }
         
         let result: Result
-        let successHandler: (_ success: Bool, _ status: UserStatus?) -> ()
+        let successHandler: (_ success: Bool) -> ()
         
         public enum Result {
             case code(String)
-            case skip
+            case logout
         }
     }
 }
 
 enum AppleIDResponse {
     
-    case success(emailConfirm: Bool)
+    case success(_ type: SuccessType)
     case error(_ description: String)
+    
+    enum SuccessType {
+        case needEmailConfirmation(accessToken: Data)
+        case succeess
+    }
 }

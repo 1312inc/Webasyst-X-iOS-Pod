@@ -88,7 +88,7 @@
 "phoneLogin" = "Войти по номеру телефона";
 "appleLogin" = "Вход с Apple";
 "appleLoginEmailConfirmationDescription" = "Email%email% уже зарегистрирован в Webasyst. Чтобы связать его с вашим Apple ID, необходимо ввести код подтверждения, который только что был отправлен вам по почте.";
-"appleLoginEmailConfirmationSkip" = "Выйти";
+"appleLoginEmailConfirmationLogout" = "Выйти";
 "emailLogin" = " Войти с email и паролем";
 "QRLogin" = " Войти по QR-коду";
 "QRAdd" = "Добавить по QR-коду";
