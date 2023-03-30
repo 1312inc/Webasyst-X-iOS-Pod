@@ -19,13 +19,13 @@ public enum AuthAppleIDResult {
     
     public struct EmailConfirmation {
         
-        public init(_ result: Result, _ successHandler: @escaping (_ success: Bool) -> ()) {
+        public init(_ result: Result, _ successHandler: @escaping (_ success: Bool, _ errorDescription: String?) -> ()) {
             self.result = result
             self.successHandler = successHandler
         }
         
         let result: Result
-        let successHandler: (_ success: Bool) -> ()
+        let successHandler: (_ success: Bool, _ errorDescription: String?) -> ()
         
         public enum Result {
             case code(String)

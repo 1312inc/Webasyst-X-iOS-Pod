@@ -63,6 +63,7 @@
 
 "onboardingFailedTitle" = "Account creation error";
 "onboardingFailedDescription" = "Error: Server returned 'false' in the response.";
+"onboardingFailedNameMissingDescription" = "Error: Account name could not be read.";
 
 // Passcode alert button names
 

@@ -63,6 +63,7 @@
 
 "onboardingFailedTitle" = "Ошибка создания аккаунта";
 "onboardingFailedDescription" = "Ошибка: сервер ответил «не шмогла»";
+"onboardingFailedNameMissingDescription" = "Ошибка: не удалось считать имя аккаунта.";
 
 // Passcode alert button names
 

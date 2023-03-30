@@ -129,21 +129,21 @@ public class WebasystApp {
                     let confirmHandler: (AuthAppleIDResult.EmailConfirmation) -> () = { confirmation in
                         switch confirmation.result {
                         case .code(let code):
-                            WebasystUserNetworking().sendAppleIDEmailConfirmationCode(code, accessToken: accessToken, success: { success in
+                            WebasystUserNetworking().sendAppleIDEmailConfirmationCode(code, accessToken: accessToken, success: { success, errorDescription in
                                 if success {
                                     WebasystUserNetworking().preloadUserData { status, _, successPreload in
                                         if successPreload {
                                             UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                                         }
-                                        confirmation.successHandler(true)
+                                        confirmation.successHandler(true, nil)
                                     }
                                 } else {
-                                    confirmation.successHandler(false)
+                                    confirmation.successHandler(false, errorDescription)
                                 }
                             })
                         case .logout:
                             self.logOutUser { success in
-                                confirmation.successHandler(success)
+                                confirmation.successHandler(success, nil)
                             }
                         }
                     }

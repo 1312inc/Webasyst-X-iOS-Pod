@@ -68,7 +68,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     // MARK: - Send Apple ID email confirmation code
-    internal func sendAppleIDEmailConfirmationCode(_ code: String, accessToken: Data, success: @escaping (Bool) -> ()) {
+    internal func sendAppleIDEmailConfirmationCode(_ code: String, accessToken: Data, success: @escaping (Bool, String?) -> ()) {
         
         let accessTokenString = String(decoding: accessToken, as: UTF8.self)
 
@@ -95,21 +95,26 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             
+            print(String(data: data ?? Data(), encoding: .utf8))
+            
             guard error == nil else {
-                print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): Request error", code: 400, userInfo: nil))
-                success(false)
+                let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): Request error. \(error!.localizedDescription)"
+                print(NSError(domain: e, code: 400, userInfo: nil))
+                success(false, e)
                 return
             }
 
             guard let data = data else {
-                print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): Error in receiving the server response body", code: 400, userInfo: nil))
-                success(false)
+                let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): Error in receiving the server response body"
+                print(NSError(domain: e, code: 400, userInfo: nil))
+                success(false, e)
                 return
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): Request error", code: 400, userInfo: nil))
-                success(false)
+                let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): Request error"
+                print(NSError(domain: e, code: 400, userInfo: nil))
+                success(false, e)
                 return
             }
 
@@ -121,28 +126,37 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
                     let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
                     if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
-                        success(true)
+                        success(true, nil)
                     }
                 } catch let error {
-                    success(false)
-                    print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(error.localizedDescription)", code: 400, userInfo: nil))
+                    let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(error.localizedDescription)"
+                    success(false, e)
+                    print(NSError(domain: e, code: 400, userInfo: nil))
                 }
             default:
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        if json["error"] != nil {
-                            success(false)
-                            print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(json["error"] as! String)", code: 400, userInfo: nil))
+                        if json["error_description"] != nil {
+                            let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(json["error_description"] as! String)"
+                            success(false, e)
+                            print(NSError(domain: e, code: 400, userInfo: nil))
+                        } else if json["error"] != nil {
+                            let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(json["error"] as! String)"
+                            success(false, e)
+                            print(NSError(domain: e, code: 400, userInfo: nil))
                         } else {
-                            success(false)
+                            let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): undefined server error"
+                            success(false, e)
                             print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): undefined server error", code: 400, userInfo: nil))
                         }
                     } else {
-                        success(false)
+                        let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): undefined server error"
+                        success(false, e)
                         print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): undefined server error", code: 400, userInfo: nil))
                     }
                 } catch let error {
-                    success(false)
+                    let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(error.localizedDescription)"
+                    success(false, e)
                     print(NSError(domain: "Webasyst error(method: sendAppleIDEmailConfirmationCode): \(error.localizedDescription)", code: 400, userInfo: nil))
                 }
             }

@@ -291,7 +291,11 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             default:
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        if json["error"] != nil {
+                        if json["error_description"] != nil {
+                            let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(json["error_description"] as! String)", code: 400, userInfo: nil)
+                            print(e)
+                            completion(.error(e.domain))
+                        } else if json["error"] != nil {
                             let e = NSError(domain: "Webasyst error(method: oAuthAppleID): \(json["error"] as! String)", code: 400, userInfo: nil)
                             print(e)
                             completion(.error(e.domain))
