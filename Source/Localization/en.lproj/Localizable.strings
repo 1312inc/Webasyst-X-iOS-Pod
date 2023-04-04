@@ -156,6 +156,7 @@
 "removePhoto" = "Remove Photo";
 "changePhoto" = "Change Photo";
 "successfullyUpdated" = "Successfully updated";
+"connectionAlertMessage" = "No Internet connection. Check your connection and try again.";
 "updateError" = "Something went wrong. The information was not updated.";
 "cameraEditScreen" = "Camera";
 "galleryEditScreen" = "Gallery";

@@ -156,6 +156,7 @@
 "removePhoto" = "Удалить фото";
 "changePhoto" = "Изменить фото";
 "successfullyUpdated" = "Данные успешно обновлены";
+"connectionAlertMessage" = "Нет соединения с интернетом. Проверьте соединение и попробуйте еще раз.";
 "updateError" = "Что-то пошло не так. Информация не обновилась.";
 "cameraEditScreen" = "Камера";
 "galleryEditScreen" = "Галерея";
