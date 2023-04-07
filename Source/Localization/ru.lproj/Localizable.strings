@@ -16,6 +16,7 @@
 "okAlert" = "Понятно";
 "delete" = "Удалить";
 "errorDescription" = "Описание ошибки";
+"cancel" = "Отмена";
 
 // Additional part to the alert error
 
@@ -27,8 +28,11 @@
 
 // Apple ID alert
 
+"faileAppeIDRequest" = "Apple вернула сообщение об ошибке на запрос авторизации с помощью Apple ID. Более подробную информацию смотрите в описании.";
 "failedAppleIDMerge" = "Не удалось объединить учетные записи.";
 "failedAppleIDAuth" = "Не удалось осуществить вход с Apple.";
+"failedGetAppleIDAuthorizationCode" = "Не удается получить код авторизации с сервера Apple. Пожалуйста, попробуйте еще раз позже.";
+"failedGetAppleIDIdentityToken" = "Не удается получить идентификационный токен с сервера Apple. Пожалуйста, попробуйте еще раз позже.";
 
 // Install alert
 

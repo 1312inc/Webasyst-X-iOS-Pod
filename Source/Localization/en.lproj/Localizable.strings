@@ -16,6 +16,7 @@
 "okAlert" = "OK";
 "delete" = "Delete";
 "errorDescription" = "Error description";
+"cancel" = "Cancel";
 
 // Additional part to the alert error
 
@@ -27,8 +28,11 @@
 
 // Apple ID alert
 
+"faileAppeIDRequest" = "Apple has return an error on request to authorize with Apple ID. See more info in the description.";
 "failedAppleIDMerge" = "Failed to merge accounts.";
 "failedAppleIDAuth" = "Failed to sign in with Apple.";
+"failedGetAppleIDAuthorizationCode" = "Cannot get authorization code from Apple server. Please try again later.";
+"failedGetAppleIDIdentityToken" = "Cannot get identity token from Apple server. Please try again later.";
 
 // Install alert
 

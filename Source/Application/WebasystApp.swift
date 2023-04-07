@@ -40,8 +40,8 @@ public class WebasystApp {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("settings")
     }
     
-    public class func getDefaultLocalizedString(withKey key: String) -> String {
-        return NSLocalizedString(key, bundle: Bundle(for: self), comment: key)
+    public class func getDefaultLocalizedString(withKey key: String, comment: String? = nil) -> String {
+        return NSLocalizedString(key, bundle: Bundle(for: self), comment: comment ?? key)
     }
     
     public class func requestFullScreenConfetti(for viewController: UIViewController) {
