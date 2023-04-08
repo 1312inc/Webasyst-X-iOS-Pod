@@ -644,57 +644,59 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
 
     func checkAppInstall(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
-
+        
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let install = profileInstallService?.getInstall(with: domain),
               let accessToken = install.accessToken,
               let url = URL(string: "\(install.url)/api.php/installer.product.install") else { return }
-
+        
         let parameters: Parameters = [
             "Authorization": accessToken
         ]
-
+        
         let data = "slug=\(app)".data(using: .utf8)
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = data
-
+        
         for (key, value) in parameters {
             request.addValue(value, forHTTPHeaderField: key)
         }
-
+        
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             if let data = data,
                let object = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed),
                let _ = object as? Bool {
-                    completion(.success(nil))
-            } else if let data = data,
-                      let dictionary = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any],
-                      let error = dictionary?["error_description"] as? String {
+                completion(.success(nil))
+            } else if let data = data, let dictionary = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String:Any] {
+                if let error = dictionary?["error_description"] as? String {
+                    completion(.failure(error))
+                } else if let error = dictionary?["error"] as? String {
                     completion(.failure(error))
                 }
+            }
         }).resume()
-
+        
     }
-
+    
     func checkInstallLicense(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
-
+        
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
-
+        
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
-
+        
         let parameters: Parameters = [
             "Authorization": accessTokenString
         ]
         let json = ["client_id": domain,
                     "slug":app]
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
+        
         do {
             let data = try JSONEncoder().encode(json) as Data
             request.addValue("\(data.count)", forHTTPHeaderField: "Content-Length")
@@ -702,21 +704,21 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         } catch {
             print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 400, userInfo: nil))
         }
-
+        
         for (key, value) in parameters {
             request.addValue(value, forHTTPHeaderField: key)
         }
-
+        
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             guard let httpResponse = response as? HTTPURLResponse else { return }
-                if httpResponse.statusCode == 204 {
-                    completion(.success(nil))
-                } else if let data = data, var error = String(data: data, encoding: .utf8) {
-                    error += " \n Error code is " + httpResponse.statusCode.description
-                    completion(.failure(error))
-                }
+            if httpResponse.statusCode == 204 {
+                completion(.success(nil))
+            } else if let data = data, var error = String(data: data, encoding: .utf8) {
+                error += " \n Error code is " + httpResponse.statusCode.description
+                completion(.failure(error))
+            }
         }).resume()
-
+        
     }
 
     func mergeTwoAccounts(completion: @escaping (Swift.Result<String, Error>) -> Void) {
