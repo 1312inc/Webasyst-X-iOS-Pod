@@ -95,8 +95,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             
-            print(String(data: data ?? Data(), encoding: .utf8))
-            
             guard error == nil else {
                 let e = "Webasyst error(method: sendAppleIDEmailConfirmationCode): Request error. \(error!.localizedDescription)"
                 print(NSError(domain: e, code: 400, userInfo: nil))
