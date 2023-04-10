@@ -270,6 +270,14 @@ public class WebasystApp {
         result(installList)
     }
     
+    /// Getting user install list from server
+    /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
+    public func updateUserInstalls(_ result: @escaping ([UserInstallCodable]?) -> ()) {
+        WebasystUserNetworking().getInstallList { updatedInstalls in
+            result(updatedInstalls)
+        }
+    }
+    
     /// Obtaining user installation
     /// - Parameter clientId: clientId setting
     /// - Returns: Installation in User Install format

@@ -872,16 +872,27 @@ extension WebasystUserNetworking {
         guard let saveInstalls = WebasystDataModel()?.getInstallList() else {
             return
         }
-
+        
         var deleteInstall: [UserInstallCodable] = []
 
-        for _ in installList {
-            for isntall in saveInstalls {
-                if !installList.contains(where: { $0.id == isntall.id }) {
-                    let install = UserInstallCodable(name: isntall.name ?? "", domain: isntall.domain, id: isntall.id, accessToken: nil, url: isntall.url, image: nil)
-                    deleteInstall.append(install)
+        if !installList.isEmpty {
+            
+            for _ in installList {
+                for isntall in saveInstalls {
+                    if !installList.contains(where: { $0.id == isntall.id }) {
+                        let install = UserInstallCodable(name: isntall.name ?? "", domain: isntall.domain, id: isntall.id, accessToken: nil, url: isntall.url, image: nil)
+                        deleteInstall.append(install)
+                    }
                 }
             }
+            
+        } else {
+            
+            for install in saveInstalls {
+                let install = UserInstallCodable(name: install.name ?? "", domain: install.domain, id: install.id, accessToken: nil, url: install.url, image: nil)
+                deleteInstall.append(install)
+            }
+            
         }
 
         for delete in deleteInstall {
