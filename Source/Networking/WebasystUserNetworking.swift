@@ -584,30 +584,46 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 completion(false, nil, nil)
                 return
             }
-            do { 
-                if let dictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any],
-                   let id = dictionary["id"] as? String,
-                   let url = dictionary["url"] as? String,
-                   let domain = dictionary["domain"] as? String {
-                    var newInstall: [UserInstallCodable] = []
-                    self.getAccessTokenApi(clientId: [id]) { success, accessCode in
-                        if success {
-                            newInstall.append(UserInstallCodable(name: nil,
-                                                                 domain: domain,
-                                                                 id: id,
-                                                                 accessToken: nil,
-                                                                 url: url,
-                                                                 image: nil))
-                            self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
-                                completion(true, id, url)
+            do {
+                if let dictionary = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] {
+                    if let id = dictionary["id"] as? String,
+                       let url = dictionary["url"] as? String,
+                       let domain = dictionary["domain"] as? String {
+                        var newInstall: [UserInstallCodable] = []
+                        self.getAccessTokenApi(clientId: [id]) { success, accessCode in
+                            if success {
+                                newInstall.append(UserInstallCodable(name: nil,
+                                                                     domain: domain,
+                                                                     id: id,
+                                                                     accessToken: nil,
+                                                                     url: url,
+                                                                     image: nil))
+                                self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
+                                    completion(true, id, url)
+                                }
                             }
+                        }
+                    } else  {
+                        if let error = dictionary["error_description"] as? String {
+                            completion(false, nil, error)
+                        } else if let error = dictionary["error"] as? String {
+                            completion(false, nil, error)
+                        } else {
+                            completion(false, nil, nil)
                         }
                     }
                 }
             } catch {
-                if let dictionary = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any],
-                   let error = dictionary?["error"] as? String {
-                    completion(false, nil, error)
+                if let dictionary = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] {
+                    if let error = dictionary?["error_description"] as? String {
+                        completion(false, nil, error)
+                    } else if let error = dictionary?["error"] as? String {
+                        completion(false, nil, error)
+                    } else {
+                        completion(false, nil, nil)
+                    }
+                } else {
+                    completion(false, nil, nil)
                 }
             }
 
