@@ -604,9 +604,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                             }
                         }
                     } else  {
-                        if let error = dictionary["error_description"] as? String {
+                        if let error = dictionary["error_description"] as? String, !error.isEmpty {
                             completion(false, nil, error)
-                        } else if let error = dictionary["error"] as? String {
+                        } else if let error = dictionary["error"] as? String, !error.isEmpty {
                             completion(false, nil, error)
                         } else {
                             completion(false, nil, nil)
@@ -615,9 +615,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 }
             } catch {
                 if let dictionary = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] {
-                    if let error = dictionary?["error_description"] as? String {
+                    if let error = dictionary?["error_description"] as? String, !error.isEmpty {
                         completion(false, nil, error)
-                    } else if let error = dictionary?["error"] as? String {
+                    } else if let error = dictionary?["error"] as? String, !error.isEmpty {
                         completion(false, nil, error)
                     } else {
                         completion(false, nil, nil)

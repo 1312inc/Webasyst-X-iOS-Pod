@@ -89,7 +89,7 @@ extension WebasystDataModel {
                 print(NSError(domain: "Webasyst error: InstallList request error", code: 501, userInfo: nil))
                 return
             }
-            if !result.contains(where: { $0.domain ?? "" == userInstall.domain }) {
+            if !result.contains(where: { $0.clientId ?? "" == userInstall.id }) {
                 let install = NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList
                 install.name = userInstall.name
                 install.clientId = userInstall.id
@@ -104,7 +104,7 @@ extension WebasystDataModel {
                 install.cloudExpireDate = userInstall.cloudExpireDate
                 install.cloudTrial = userInstall.cloudTrial ?? false
                 save()
-            } else if let index = result.firstIndex(where: { $0.domain ?? "" == userInstall.domain }) {
+            } else if let index = result.firstIndex(where: { $0.clientId ?? "" == userInstall.id }) {
                 result[index].name = userInstall.name
                 result[index].clientId = userInstall.id
                 result[index].domain = userInstall.domain

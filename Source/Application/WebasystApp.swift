@@ -273,8 +273,29 @@ public class WebasystApp {
     /// Getting user install list from server
     /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
     public func updateUserInstalls(_ result: @escaping ([UserInstallCodable]?) -> ()) {
-        WebasystUserNetworking().getInstallList { updatedInstalls in
-            result(updatedInstalls)
+        let networking = WebasystUserNetworking()
+        networking.getInstallList { updatedInstalls in
+            if let installs = updatedInstalls {
+                if installs.count == 0 {
+                    result(updatedInstalls)
+                } else {
+                    var clientId: [String] = []
+                    for install in installs {
+                        clientId.append(install.id)
+                    }
+                    networking.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
+                        if success, let token = accessToken {
+                            networking.getAccessTokenInstall(installs, accessCodes: token) { (_, saveSuccess) in
+                                result(updatedInstalls)
+                            }
+                        } else {
+                            result(updatedInstalls)
+                        }
+                    }
+                }
+            } else {
+                result(updatedInstalls)
+            }
         }
     }
     
