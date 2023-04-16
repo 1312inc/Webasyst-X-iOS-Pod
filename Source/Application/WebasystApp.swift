@@ -361,11 +361,26 @@ public class WebasystApp {
     ///    - plainId: Plain id of the account being created
     ///    - accountDomain: Domain of the account being created
     ///    - accountName: Name of the account being created
-    ///    - success: Closure performed after executing the method
-    /// - Returns: Boolean value if the account was created and url install
-    public func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", accountDomain: String? = nil, accountName: String? = nil, success: @escaping (Bool, String?, String?)->()) {
-        WebasystUserNetworking().createWebasystAccount(bundle: bundle, plainId: plainId, accountDomain: accountDomain, accountName: accountName) { result, urlInstall, url in
-            success(result, urlInstall, url)
+    ///    - completion: Contains a result of creating and renaming of new account. Reutrns client id and url of new account if successed
+    public func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", accountDomain: String? = nil, accountName: String? = nil, completion: @escaping (AccountCreatingResult) -> ()) {
+        let networking = WebasystUserNetworking()
+        networking.createWebasystAccount(bundle: bundle, plainId: plainId, accountName: accountName) { success, clientId, url in
+            if success, let clientId = clientId, let url = url {
+                if let accountDomain = accountDomain {
+                    networking.renameWebasystAccount(clientId: clientId, domain: accountDomain) { result in
+                        switch result {
+                        case .success:
+                            completion(.successfullyCreated(clientId: clientId, url: url))
+                        case .failure(let error):
+                            completion(.successfullyCreatedButNotRenamed(clientId: clientId, url: url, renameError: error.localizedDescription))
+                        }
+                    }
+                } else {
+                    completion(.successfullyCreated(clientId: clientId, url: url))
+                }
+            } else {
+                completion(.notCreated(error: url))
+            }
         }
     }
     

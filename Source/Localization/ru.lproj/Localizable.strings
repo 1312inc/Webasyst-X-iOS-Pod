@@ -45,6 +45,7 @@
 "createWebasystAccountError" = "Произошла ошибка при создании аккаунта Webasyst";
 "shopNameErrorDescription" = "Возникла ошибка при считывании названия магазина.";
 "addAccountSuccessBody" = "Новый облачный аккаунт Webasyst успешно создан!";
+"addAccountSuccessButNotRenamedBody" = "Новый облачный аккаунт Webasyst успешно создан! Однако, не удалось сменить домен созданного аккаунта.";
 
 // Connect account alert
 

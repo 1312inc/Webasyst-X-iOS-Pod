@@ -50,6 +50,7 @@
 		D79A6C917FE03D8A880294FE6E5F5B92 /* Pods-Webasyst_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Webasyst_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DAE3CFF2B8AF9DC72136531515FB4F5C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E0049FB229941A3800FD6A40 /* AuthCodeType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCodeType.swift; sourceTree = "<group>"; };
+		E024A0E729EBC20500A1A73E /* AccountCreatingResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCreatingResult.swift; sourceTree = "<group>"; };
 		E02BCB6B29C0EF07003B1BA2 /* AuthAppleIDResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAppleIDResult.swift; sourceTree = "<group>"; };
 		E060B99829D2B67D00C9A68B /* ConfettiAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiAnimationView.swift; sourceTree = "<group>"; };
 		E060B99C29D2B9E800C9A68B /* ConfettiAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ConfettiAsset.xcassets; sourceTree = "<group>"; };
@@ -317,6 +318,7 @@
 		FD58E676265E04A60037CF13 /* Enum */ = {
 			isa = PBXGroup;
 			children = (
+				E024A0E729EBC20500A1A73E /* AccountCreatingResult.swift */,
 				E02BCB6B29C0EF07003B1BA2 /* AuthAppleIDResult.swift */,
 				FD58E67B265E04EB0037CF13 /* TokenType.swift */,
 				FD58E67D265E05020037CF13 /* UserStatus.swift */,

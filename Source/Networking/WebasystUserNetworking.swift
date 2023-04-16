@@ -544,7 +544,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
     }
 
-    func createWebasystAccount(bundle: String, plainId: String, accountDomain: String?, accountName: String?, completion: @escaping (Bool, String?, String?)->()) {
+    func createWebasystAccount(bundle: String, plainId: String, accountName: String?, completion: @escaping (Bool, String?, String?)->()) {
 
         let accessToken = KeychainManager.load(key: "accessToken")
         let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
@@ -558,24 +558,21 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "plan_id": plainId
         ]
         
-        if let accountDomain = accountDomain {
-            parametersRequest["userdomain"] = accountDomain
-        }
         if let accountName = accountName {
             parametersRequest["account_name"] = accountName
         }
-
+        
         guard let url = buildWebasystUrl("/id/api/v1/cloud/signup/", parameters: [:]) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-
+        
         for (key, value) in headers {
             request.addValue(value, forHTTPHeaderField: key)
         }
-
+        
         if let encodedData = try? JSONSerialization.data(withJSONObject: parametersRequest,
                                                          options: .fragmentsAllowed) {
-        request.httpBody = encodedData
+            request.httpBody = encodedData
         }
 
         URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -601,6 +598,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                                 self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
                                     completion(true, id, url)
                                 }
+                            } else {
+                                let e = "Webasyst error: The account was successfully created, but it was not possible to get an access token for it."
+                                print(e)
+                                completion(false, nil, e)
                             }
                         }
                     } else  {
@@ -627,6 +628,69 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 }
             }
 
+        }.resume()
+    }
+    
+    func renameWebasystAccount(clientId: String, domain: String, completion: @escaping (Result) -> ()) {
+        
+        let accessToken = KeychainManager.load(key: "accessToken")
+        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+
+        let headers: Parameters = [
+            "Authorization": accessTokenString
+        ]
+
+        let parametersRequest: Parameters = [
+            "client_id": clientId,
+            "domain": domain
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/cloud/rename/", parameters: [:]) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        if let encodedData = try? JSONSerialization.data(withJSONObject: parametersRequest,
+                                                         options: .fragmentsAllowed) {
+            request.httpBody = encodedData
+        }
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            guard error == nil, let data = data else {
+                let e = NSError(domain: "Webasyst error: \(String(describing: error?.localizedDescription))", code: 401, userInfo: nil)
+                print(e)
+                completion(.failure(e))
+                return
+            }
+            if let httpResponse = response as? HTTPURLResponse {
+                switch httpResponse.statusCode {
+                case 204:
+                    completion(.success)
+                default:
+                    var errorDescription: String
+                    if let dictionary = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] {
+                        if let error = dictionary?["error_description"] as? String, !error.isEmpty {
+                            errorDescription = error
+                        } else if let error = dictionary?["error"] as? String, !error.isEmpty {
+                            errorDescription = error
+                        } else {
+                            errorDescription = "Webasyst warning: renameWebasystAccount status code request \(httpResponse.statusCode)"
+                        }
+                    } else {
+                        errorDescription = "Webasyst warning: renameWebasystAccount status code request \(httpResponse.statusCode)"
+                    }
+                    let e = NSError(domain: errorDescription, code: httpResponse.statusCode, userInfo: nil)
+                    print(e)
+                    completion(.failure(e))
+                }
+            } else {
+                let e = NSError(domain: "Webasyst error: invalid response from the server", code: 401, userInfo: nil)
+                print(e)
+                completion(.failure(e))
+            }
         }.resume()
     }
 

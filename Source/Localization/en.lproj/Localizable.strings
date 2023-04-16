@@ -45,6 +45,7 @@
 "createWebasystAccountError" = "An error occurred when creating a Webasyst account";
 "shopNameErrorDescription" = "An error occurred when reading the name of the store.";
 "addAccountSuccessBody" = "New Webasyst cloud account has been successfully created!";
+"addAccountSuccessButNotRenamedBody" = "New Webasyst cloud account has been successfully created! However, it was not possible to change the domain of the created account.";
 
 // Connect account alert
 
