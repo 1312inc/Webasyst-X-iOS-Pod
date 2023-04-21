@@ -226,7 +226,8 @@ extension WebasystDataModel {
     func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
         persistentContainerQueue.addOperation() { [weak self] in
             guard let self = self, let context = self.managedObjectContext else { return }
-            context.performAndWait{
+            context.performAndWait{ [weak self] in
+                guard let self = self else { return }
                 block(context)
                 do {
                     try context.save()
