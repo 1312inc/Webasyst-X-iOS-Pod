@@ -224,8 +224,8 @@ extension WebasystDataModel {
     
     /// Adding block to queue to saving the database context
     func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
-        persistentContainerQueue.addOperation() {
-            guard let context = self.managedObjectContext else { return }
+        persistentContainerQueue.addOperation() { [weak self] in
+            guard let self = self, let context = self.managedObjectContext else { return }
             context.performAndWait{
                 block(context)
                 do {
