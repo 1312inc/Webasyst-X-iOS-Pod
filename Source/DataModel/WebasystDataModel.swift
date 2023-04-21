@@ -10,6 +10,14 @@ import CoreData
 
 public class WebasystDataModel {
     
+    private lazy var installEntityName: String = {
+        return String(describing: InstallList.self)
+    }()
+    
+    private lazy var profileEntityName: String = {
+        return String(describing: Profile.self)
+    }()
+    
     /// Obtaining a library database
     class WebasystPersistentContainer: NSPersistentContainer {
         override open class func defaultDirectoryURL() -> URL {
@@ -52,13 +60,11 @@ public class WebasystDataModel {
         return container
     }()
     
-    private lazy var installEntityName: String = {
-        return String(describing: InstallList.self)
-    } ()
-    
-    private lazy var profileEntityName: String = {
-        return String(describing: Profile.self)
-    } ()
+    private let persistentContainerQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
     
     private var managedObjectContext: NSManagedObjectContext?
     
@@ -80,47 +86,48 @@ extension WebasystDataModel {
     ///   - userInstall: Installation information in UserInstall format (Warning! If the installation already exists in the database its data will be updated)
     internal func saveInstall(_ userInstall: UserInstall) {
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-        
-        guard let context = managedObjectContext else { return }
-        
-        do {
-            guard let result = try context.fetch(request) as? [InstallList] else {
-                print(NSError(domain: "Webasyst error: InstallList request error", code: 501, userInfo: nil))
-                return
+        enqueue { [weak self] context in
+            guard let self = self else { return }
+            
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
+            
+            do {
+                guard let result = try context.fetch(request) as? [InstallList] else {
+                    print(NSError(domain: "Webasyst error: InstallList request error", code: 501, userInfo: nil))
+                    return
+                }
+                if !result.contains(where: { $0.clientId ?? "" == userInstall.id }) {
+                    let install = NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList
+                    install.name = userInstall.name
+                    install.clientId = userInstall.id
+                    install.domain = userInstall.domain
+                    install.url = userInstall.url
+                    install.accessToken = userInstall.accessToken
+                    install.image = userInstall.image
+                    install.imageLogo = userInstall.imageLogo ?? false
+                    install.logoText = userInstall.logoText
+                    install.logoColorText = userInstall.logoTextColor
+                    install.cloudPlanId = userInstall.cloudPlanId
+                    install.cloudExpireDate = userInstall.cloudExpireDate
+                    install.cloudTrial = userInstall.cloudTrial ?? false
+                } else if let index = result.firstIndex(where: { $0.clientId ?? "" == userInstall.id }) {
+                    result[index].name = userInstall.name
+                    result[index].clientId = userInstall.id
+                    result[index].domain = userInstall.domain
+                    result[index].url = userInstall.url
+                    result[index].accessToken = userInstall.accessToken
+                    result[index].image = userInstall.image
+                    result[index].imageLogo = userInstall.imageLogo ?? false
+                    result[index].logoText = userInstall.logoText
+                    result[index].logoColorText = userInstall.logoTextColor
+                    result[index].cloudPlanId = userInstall.cloudPlanId
+                    result[index].cloudExpireDate = userInstall.cloudExpireDate
+                    result[index].cloudTrial = userInstall.cloudTrial ?? false
+                }
+            } catch {
+                print(NSError(domain: "Webasyst Database error(method: saveInstall): \(error.localizedDescription)", code: 502, userInfo: nil))
             }
-            if !result.contains(where: { $0.clientId ?? "" == userInstall.id }) {
-                let install = NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList
-                install.name = userInstall.name
-                install.clientId = userInstall.id
-                install.domain = userInstall.domain
-                install.url = userInstall.url
-                install.accessToken = userInstall.accessToken
-                install.image = userInstall.image
-                install.imageLogo = userInstall.imageLogo ?? false
-                install.logoText = userInstall.logoText
-                install.logoColorText = userInstall.logoTextColor
-                install.cloudPlanId = userInstall.cloudPlanId
-                install.cloudExpireDate = userInstall.cloudExpireDate
-                install.cloudTrial = userInstall.cloudTrial ?? false
-                save()
-            } else if let index = result.firstIndex(where: { $0.clientId ?? "" == userInstall.id }) {
-                result[index].name = userInstall.name
-                result[index].clientId = userInstall.id
-                result[index].domain = userInstall.domain
-                result[index].url = userInstall.url
-                result[index].accessToken = userInstall.accessToken
-                result[index].image = userInstall.image
-                result[index].imageLogo = userInstall.imageLogo ?? false
-                result[index].logoText = userInstall.logoText
-                result[index].logoColorText = userInstall.logoTextColor
-                result[index].cloudPlanId = userInstall.cloudPlanId
-                result[index].cloudExpireDate = userInstall.cloudExpireDate
-                result[index].cloudTrial = userInstall.cloudTrial ?? false
-                save()
-            }
-        } catch { }
-        
+        }
     }
     
     /// Obtaining user installation information
@@ -151,6 +158,7 @@ extension WebasystDataModel {
     /// Getting a list of all user install
     /// - Returns: Returns the list of user installations in UserInstall format
     internal func getInstallList() -> [UserInstall]? {
+        
         guard let context = managedObjectContext else {
             return nil
         }
@@ -176,32 +184,36 @@ extension WebasystDataModel {
     /// Deleting a user installation
     /// - Parameter clientId: clientId setting
     func deleteInstall(clientId: String) {
-        guard let context = self.managedObjectContext else { return }
         
-        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-        deleteFetch.predicate = NSPredicate(format: "clientId == %@", clientId)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-        
-        do {
-            try context.execute(deleteRequest)
-            self.save()
-        } catch let error {
-            print(NSError(domain: "Webasyst database error (method: deleteInstall): \(error.localizedDescription)", code: 501, userInfo: nil))
+        enqueue { [weak self] context in
+            guard let self = self else { return }
+            
+            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
+            deleteFetch.predicate = NSPredicate(format: "clientId == %@", clientId)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+            
+            do {
+                try context.execute(deleteRequest)
+            } catch let error {
+                print(NSError(domain: "Webasyst database error (method: deleteInstall): \(error.localizedDescription)", code: 501, userInfo: nil))
+            }
         }
     }
     
     /// Deleting all user install list
     func resetInstallList() {
         
-        guard let context = managedObjectContext else { return }
-        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-        
-        do {
-            try context.execute(deleteRequest)
-            self.save()
-        } catch let error {
-            print(NSError(domain: "Webasyst database error(method: resetInstallList): \(error.localizedDescription)", code: 501, userInfo: nil))
+        enqueue { [weak self] context in
+            guard let self = self else { return }
+            
+            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+            
+            do {
+                try context.execute(deleteRequest)
+            } catch {
+                print(NSError(domain: "Webasyst database error(method: resetInstallList): \(error.localizedDescription)", code: 501, userInfo: nil))
+            }
         }
     }
     
@@ -210,28 +222,33 @@ extension WebasystDataModel {
 //MARK: Private method
 extension WebasystDataModel {
     
-    /// Saving the database context
-    fileprivate func save() {
-        guard let managedObjectContext = managedObjectContext else { return }
-            do {
-                try managedObjectContext.save()
-            } catch {
-                let nserror = error as NSError
-                print(NSError(domain: "Webasyst Database error(method: save): Unresolved error \(nserror), \(nserror.userInfo)", code: 500, userInfo: nil))
+    /// Adding block to queue to saving the database context
+    func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
+        persistentContainerQueue.addOperation() {
+            guard let context = self.managedObjectContext else { return }
+            context.performAndWait{
+                block(context)
+                do {
+                    try context.save()
+                } catch {
+                    let nserror = error as NSError
+                    print(NSError(domain: "Webasyst Database error(method: save): Unresolved error \(nserror), \(nserror.userInfo)", code: 500, userInfo: nil))
+                }
             }
         }
     }
+}
 
 //MARK: Profile data
 extension WebasystDataModel {
     
     func creator(_installs: [UserInstall], url: URL) {
-         var dictionary = Dictionary<String?, SettingsListModel>()
-         _installs.forEach {
-             dictionary[$0.id] = SettingsListModel(countSelected: 0, isLast: false, name: $0.name ?? "", url: $0.url)
-         }
-         let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
-         try? encodedData?.write(to: url)
+        var dictionary = Dictionary<String?, SettingsListModel>()
+        _installs.forEach {
+            dictionary[$0.id] = SettingsListModel(countSelected: 0, isLast: false, name: $0.name ?? "", url: $0.url)
+        }
+        let encodedData = try? NSKeyedArchiver.archivedData(withRootObject: dictionary, requiringSecureCoding: false)
+        try? encodedData?.write(to: url)
     }
     
     /// Saving installs data
@@ -241,7 +258,7 @@ extension WebasystDataModel {
         guard let object = try? Data(contentsOf: url) else { return
             creator(_installs: installs, url: url)
         }
-           if let archivedInstalls = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>, archivedInstalls?.count != installs.count {
+        if let archivedInstalls = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(object) as? Dictionary<String,SettingsListModel>, archivedInstalls?.count != installs.count {
             creator(_installs: installs, url: url)
         }
     }
@@ -252,52 +269,54 @@ extension WebasystDataModel {
     ///   - avatar: user avatar image
     func saveProfileData(_ user: UserData, avatar: Data) {
         
-        guard let context = managedObjectContext else { return }
-        
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
-        
-        do {
-            guard let result = try context.fetch(request) as? [Profile] else {
-                return
+        enqueue { [weak self] context in
+            guard let self = self else { return }
+            
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
+            
+            do {
+                guard let result = try context.fetch(request) as? [Profile] else {
+                    print(NSError(domain: "Webasyst error: ProfileData request error", code: 501, userInfo: nil))
+                    return
+                }
+                if result.isEmpty {
+                    let profile = NSEntityDescription.insertNewObject(forEntityName: self.profileEntityName, into: context) as! Profile
+                    profile.fullName = user.name
+                    profile.firstName = user.firstname
+                    profile.lastName = user.lastname
+                    profile.middleName = user.middlename
+                    profile.email = user.email.first?.value ?? ""
+                    profile.phone = user.phone.first?.value ?? ""
+                    profile.userPic = avatar
+                } else {
+                    result.first?.fullName = user.name
+                    result.first?.firstName = user.firstname
+                    result.first?.lastName = user.lastname
+                    result.first?.middleName = user.middlename
+                    result.first?.userPic = avatar
+                    result.first?.email = user.email.first?.value ?? ""
+                    result.first?.phone = user.phone.first?.value ?? ""
+                }
+            } catch let error {
+                print(NSError(domain: "Webasyst Database error(method: saveProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
             }
-            if result.isEmpty {
-                let profile = NSEntityDescription.insertNewObject(forEntityName: self.profileEntityName, into: context) as! Profile
-                profile.fullName = user.name
-                profile.firstName = user.firstname
-                profile.lastName = user.lastname
-                profile.middleName = user.middlename
-                profile.email = user.email.first?.value ?? ""
-                profile.phone = user.phone.first?.value ?? ""
-                profile.userPic = avatar
-                self.save()
-            } else {
-                result.first?.fullName = user.name
-                result.first?.firstName = user.firstname
-                result.first?.lastName = user.lastname
-                result.first?.middleName = user.middlename
-                result.first?.userPic = avatar
-                result.first?.email = user.email.first?.value ?? ""
-                result.first?.phone = user.phone.first?.value ?? ""
-                self.save()
-            }
-        } catch let error {
-            print(NSError(domain: "Webasyst Database error(method: saveProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
         }
-        
     }
     
     func saveNewAvatar(_ image: Data) {
-        guard let context = managedObjectContext else { return }
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
         
-        do {
-            guard let result = try context.fetch(request) as? [Profile] else { return }
-            result.first?.userPic = image
-            self.save()
-        } catch let error {
-            print(NSError(domain: "Webasyst Database error(method: saveProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
+        enqueue { [weak self] context in
+            guard let self = self else { return }
+            
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
+            
+            do {
+                guard let result = try context.fetch(request) as? [Profile] else { return }
+                result.first?.userPic = image
+            } catch let error {
+                print(NSError(domain: "Webasyst Database error(method: saveProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
+            }
         }
-        
     }
     
     /// Retrieving user data from the database
@@ -326,15 +345,15 @@ extension WebasystDataModel {
     
     /// Deleting user data
     func deleteProfileData() {
-        guard let context = managedObjectContext else { return }
-        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-        do {
-            try context.execute(deleteRequest)
-            self.save()
-        } catch let error {
-            print(NSError(domain: "Webasyst Database error(method: deleteProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
+        enqueue { [weak self] context in
+            guard let self = self else { return }
+            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+            do {
+                try context.execute(deleteRequest)
+            } catch let error {
+                print(NSError(domain: "Webasyst Database error(method: deleteProfileData): \(error.localizedDescription)", code: 502, userInfo: nil))
+            }
         }
     }
-    
 }
