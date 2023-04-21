@@ -19,6 +19,7 @@ import UIKit
 public class WebasystApp {
     
     internal static var config: WebasystConfig?
+    private let profileInstallService = WebasystDataModel()
     
     public init() {}
     
@@ -266,7 +267,7 @@ public class WebasystApp {
     /// Getting user install list
     /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
     public func getAllUserInstall(_ result: @escaping ([UserInstall]?) -> ()) {
-        let installList = WebasystDataModel()?.getInstallList()
+        let installList = profileInstallService?.getInstallList()
         result(installList)
     }
     
@@ -303,7 +304,7 @@ public class WebasystApp {
     /// - Parameter clientId: clientId setting
     /// - Returns: Installation in User Install format
     public func getUserInstall(_ clientId: String) -> UserInstall? {
-        let installRequest = WebasystDataModel()?.getInstall(with: clientId)
+        let installRequest = profileInstallService?.getInstall(with: clientId)
         guard let install = installRequest else {
             return nil
         }
@@ -313,14 +314,14 @@ public class WebasystApp {
     /// Deletes the installation from the database
     /// - Parameter clientId: clientId install
     public func deleteInstall(_ clientId: String) {
-        WebasystDataModel()?.deleteInstall(clientId: clientId)
+        profileInstallService?.deleteInstall(clientId: clientId)
     }
     
     /// Returns user profile data
     /// - Returns: User profile data in ProfileData format
     public func getProfileData() -> ProfileData? {
         var result: ProfileData?
-        WebasystDataModel()?.getProfile(completion: { profile in
+        profileInstallService?.getProfile(completion: { profile in
             result = profile
         })
         return result
@@ -389,9 +390,8 @@ public class WebasystApp {
     public func logOutUser(completion: @escaping (Bool) -> ()) {
         let webasystNetworking = WebasystUserNetworking()
         webasystNetworking.singUpUser { _ in }
-        let dataModel = WebasystDataModel()
-        dataModel?.resetInstallList()
-        dataModel?.deleteProfileData()
+        profileInstallService?.resetInstallList()
+        profileInstallService?.deleteProfileData()
         KeychainManager.deleteAllKeys()
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
