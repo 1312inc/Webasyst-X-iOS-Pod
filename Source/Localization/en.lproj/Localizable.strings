@@ -39,6 +39,7 @@
 "checkInstallAppError" = "An error occurred while installing %APPNAME%";
 "checkLicenseError" = "An error occurred while installing the license";
 "successBody" = "%APPNAME% has been successfully installed. A free 30 days license has been issued for %ACCOUNTNAME%.";
+"installTimeLimit" = "Something went wrong. Please try again in a minute.";
 
 // Add account alert
 
@@ -189,6 +190,7 @@
 "descriptionInstall" = "%APPNAME% app is not installed on %ACCOUNTNAME% at the moment. Tap the Install button above to install the app via the Webasyst Installer.";
 "buttonInstall" = "Install %APPNAME%";
 "titleInstall" = "Install %APPNAME% on %ACCOUNTNAME%";
+"installProgressDescription" = "Generating a license and communicating with Webasyst Installer to install the app on...";
 
 // MARK: - PayWall screen
 

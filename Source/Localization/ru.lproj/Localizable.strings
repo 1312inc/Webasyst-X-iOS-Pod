@@ -39,6 +39,7 @@
 "checkInstallAppError" = "Произошла ошибка при установке %APPNAME%";
 "checkLicenseError" = "Произошла ошибка при установке лицензии";
 "successBody" = "%APPNAME% успешно установлен. Для %ACCOUNTNAME% выписана бесплатная лицензия на 30 дней.";
+"installTimeLimit" = "Что-то пошло не так. Попробуйте еще раз через минуту.";
 
 // Add account alert
 
@@ -189,6 +190,7 @@
 "descriptionInstall" = "Приложение «%APPNAME%» еще не установлено в аккаунте «%ACCOUNTNAME%». Нажмите «Установить» — и уже через пару мгновений приложение будет установлено в вашем Webasyst с помощью Инсталлера.";
 "buttonInstall" = "Установить «%APPNAME%»";
 "titleInstall" = "Установить «%APPNAME%» на %ACCOUNTNAME%";
+"installProgressDescription" = "Создаем лицензию на приложение и отправляем запрос в Инсталлер на установку...";
 
 // MARK: - PayWall screen
 
