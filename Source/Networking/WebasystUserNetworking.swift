@@ -188,8 +188,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let userData = try! JSONDecoder().decode(UserData.self, from: data)
                         let condition = userData.firstname.isEmpty || userData.lastname.isEmpty
                         completion(condition)
-                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
-                            guard let self = self else { return }
+                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
                             self.profileInstallService?.saveProfileData(userData, avatar: data)
                         }
                     }
@@ -237,8 +236,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 switch httpResponse.statusCode {
                 case 200...299:
                     if let data = data, let userData = try? JSONDecoder().decode(UserData.self, from: data) {
-                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
-                            guard let self = self else { return }
+                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
                             self.profileInstallService?.saveProfileData(userData, avatar: data)
                             completion(.success(profile))
                         }
@@ -278,8 +276,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
                 case 204:
-                    WebasystNetworkingManager().downloadImage(self.defaultImageUrl) { [weak self] data in
-                        guard let self = self else { return }
+                    WebasystNetworkingManager().downloadImage(self.defaultImageUrl) { data in
                         self.profileInstallService?.saveNewAvatar(data)
                         completion(.success)
                     }
@@ -320,8 +317,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let data = data,
                        let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any],
                        let original_image = json?["userpic_original_crop"] as? String {
-                        WebasystNetworkingManager().downloadImage(original_image) { [weak self] data in
-                            guard let self = self else { return }
+                        WebasystNetworkingManager().downloadImage(original_image) { data in
                             self.profileInstallService?.saveNewAvatar(data)
                             completion(.success)
                         }
