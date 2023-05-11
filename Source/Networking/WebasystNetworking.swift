@@ -75,7 +75,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "code_challenge": "\(self.generatePasswordHash(64))",
             "code_challenge_method": "plain",
             "scope": "profile:write token:\(config.scope)",
-            "locale": "ru_RU"
+            "locale": "\(NSLocale.current.identifier)"
         ]
 
         switch type {
