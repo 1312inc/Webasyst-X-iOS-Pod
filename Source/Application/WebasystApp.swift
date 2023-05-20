@@ -222,10 +222,10 @@ public class WebasystApp {
     public func defaultChecking(completion: @escaping (Bool) -> ()) {
         if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
             let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
-            getAllUserInstall { installs in
+            getAllUserInstall { [weak self] installs in
                 if installs != nil, installs != [], domain == nil {
                     completion(true)
-                    self.logOutUser(completion: { _ in })
+                    self?.logOutUser(completion: { _ in })
                 }
                 if !KeychainManager.token.isEmpty {
                     completion(condition)
