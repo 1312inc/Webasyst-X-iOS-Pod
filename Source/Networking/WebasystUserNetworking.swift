@@ -17,7 +17,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private let profileInstallService = WebasystDataModel()
     private let webasystNetworkingService = WebasystNetworking()
     private let networkingHelper = NetworkingHelper()
-    private let dispatchGroup = DispatchGroup()
     private let config = WebasystApp.config
     private let demoToken = "5f9db4d32d9a586c2daca4b45de23eb8"
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
@@ -25,19 +24,18 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     func preloadUserData(completion: @escaping (UserStatus, Int, Bool) -> ()) {
         if self.networkingHelper.isConnectedToNetwork() {
-            self.dispatchGroup.notify(queue: self.queue) {
-                
-                self.downloadUserData { condition in
-                    self.getInstallList { installList in
+            queue.async { [weak self] in
+                self?.downloadUserData { condition in
+                    self?.getInstallList { installList in
                         guard let installs = installList else { return }
                         var clientId: [String] = []
                         for install in installs {
                             clientId.append(install.id)
                         }
-                        self.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
+                        self?.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
                             if success {
-                                guard let token = accessToken else {  return }
-                                self.getAccessTokenInstall(installs, accessCodes: token) { (loadText, saveSuccess) in
+                                guard let token = accessToken else { return }
+                                self?.getAccessTokenInstall(installs, accessCodes: token) { (loadText, saveSuccess) in
                                     UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                                     if installs.isEmpty || condition {
                                         if condition && !installs.isEmpty {
@@ -188,8 +186,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         let userData = try! JSONDecoder().decode(UserData.self, from: data)
                         let condition = userData.firstname.isEmpty || userData.lastname.isEmpty
                         completion(condition)
-                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
-                            self.profileInstallService?.saveProfileData(userData, avatar: data)
+                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
+                            self?.profileInstallService?.saveProfileData(userData, avatar: data)
                         }
                     }
                 default:
@@ -236,8 +234,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 switch httpResponse.statusCode {
                 case 200...299:
                     if let data = data, let userData = try? JSONDecoder().decode(UserData.self, from: data) {
-                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { data in
-                            self.profileInstallService?.saveProfileData(userData, avatar: data)
+                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
+                            self?.profileInstallService?.saveProfileData(userData, avatar: data)
                             completion(.success(profile))
                         }
                     }
@@ -276,8 +274,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
                 case 204:
-                    WebasystNetworkingManager().downloadImage(self.defaultImageUrl) { data in
-                        self.profileInstallService?.saveNewAvatar(data)
+                    WebasystNetworkingManager().downloadImage(self.defaultImageUrl) { [weak self] data in
+                        self?.profileInstallService?.saveNewAvatar(data)
                         completion(.success)
                     }
                 default:
@@ -317,8 +315,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let data = data,
                        let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String:Any],
                        let original_image = json?["userpic_original_crop"] as? String {
-                        WebasystNetworkingManager().downloadImage(original_image) { data in
-                            self.profileInstallService?.saveNewAvatar(data)
+                        WebasystNetworkingManager().downloadImage(original_image) { [weak self] data in
+                            self?.profileInstallService?.saveNewAvatar(data)
                             completion(.success)
                         }
                     } else {
@@ -357,7 +355,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
                 case 200...299:
@@ -368,7 +366,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                             UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                         }
                         completion(installList)
-                        self.deleteNonActiveInstall(installList: installList)
+                        self?.deleteNonActiveInstall(installList: installList)
                     }
                 default:
                     completion(nil)
@@ -424,6 +422,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     func getAccessTokenInstall(_ installList: [UserInstallCodable], accessCodes: [String: Any], completion: @escaping (String, Bool) -> ()) {
         
         guard let config = WebasystApp.config else { return }
+        if let error = accessCodes["error_description"] as? String {
+            print(NSError(domain: "Webasyst error: Access codes not founded (\(error)", code: 401))
+            return
+        }
         
         for index in 0..<installList.count {
             let code = accessCodes[installList[index].id] as! String
@@ -452,7 +454,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 print(NSError(domain: "Webasyst error: \(error.localizedDescription)", code: 401, userInfo: nil))
             }
             
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
+            URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
                 guard error == nil, let data = data else {
                     return
                 }
@@ -460,7 +462,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
                         let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: json["access_token"] ?? "", url: installList[index].url, cloudPlanId: installList[index].cloudPlanId, cloudExpireDate: installList[index].cloudExpireDate, cloudTrial: installList[index].cloudTrial)
-                        self.getInstallInfo(installToken) { install in
+                        self?.getInstallInfo(installToken) { install in
                             if index == 0 {
                                 completion(json["access_token"] ?? "", true)
                             }
@@ -483,7 +485,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
             guard error == nil, let data = data else {
                 return
             }
@@ -575,7 +578,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.httpBody = encodedData
         }
         
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
+        URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
             guard error == nil, let data = data else {
                 print(NSError(domain: "Webasyst error: \(String(describing: error?.localizedDescription))", code: 401, userInfo: nil))
                 completion(false, nil, nil)
@@ -587,7 +590,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                        let url = dictionary["url"] as? String,
                        let domain = dictionary["domain"] as? String {
                         var newInstall: [UserInstallCodable] = []
-                        self.getAccessTokenApi(clientId: [id]) { success, accessCode in
+                        self?.getAccessTokenApi(clientId: [id]) { success, accessCode in
                             if success {
                                 newInstall.append(UserInstallCodable(name: nil,
                                                                      domain: domain,
@@ -595,7 +598,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                                                                      accessToken: nil,
                                                                      url: url,
                                                                      image: nil))
-                                self.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
+                                self?.getAccessTokenInstall(newInstall, accessCodes: accessCode ?? [:]) { token, success in
                                     completion(true, id, url)
                                 }
                             } else {

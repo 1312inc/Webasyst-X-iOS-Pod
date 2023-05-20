@@ -16,10 +16,15 @@ import UIKit
  let accessToken = webasyst.getToken(_ tokenType: .access);
  print(token);
  */
+
 public class WebasystApp {
     
     internal static var config: WebasystConfig?
+    
     private let profileInstallService = WebasystDataModel()
+    private let userNetworking = WebasystUserNetworking()
+    private let networking = WebasystNetworking()
+    private var authCoordinator: AuthCoordinator?
     
     public init() {}
     
@@ -73,11 +78,11 @@ public class WebasystApp {
     public func authWebasyst(navigationController: UINavigationController, action: @escaping ((_ result: WebasystServerAnswer) -> ())) {
         let coordinator = AuthCoordinator(navigationController)
         coordinator.start()
-        let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
+        let success: ((_ action: WebasystServerAnswer) -> Void) = { [weak self] success in
             switch success {
             case .success:
                 action(WebasystServerAnswer.success)
-                WebasystUserNetworking().preloadUserData { _, _, _ in }
+                self?.userNetworking.preloadUserData { _, _, _ in }
             case .error(error: let error):
                 action(WebasystServerAnswer.error(error: error))
             }
@@ -90,13 +95,14 @@ public class WebasystApp {
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
     ///   - action: Closure to perform an action after authorization
     public func oAuthLogin(with merge: Bool = false, with code: String = "", navigationController: UINavigationController, action: @escaping ((_ result: UserStatus) -> ())) {
-        let coordinator = AuthCoordinator(navigationController)
+        authCoordinator = AuthCoordinator(navigationController)
+        guard let coordinator = authCoordinator else { return }
         coordinator.start(with: code)
-        let success: ((_ action: WebasystServerAnswer) -> Void) = { success in
+        let success: ((_ action: WebasystServerAnswer) -> Void) = { [weak self] success in
             switch success {
             case .success:
                 UserDefaults.standard.setValue("", forKey: "selectDomainUser")
-                WebasystUserNetworking().preloadUserData { status, _, successPreload in
+                self?.userNetworking.preloadUserData { status, _, successPreload in
                     if successPreload {
                         UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     }
@@ -114,25 +120,25 @@ public class WebasystApp {
     ///    - authData: Authorization data sent by the Apple ID authorization controller
     ///    - result: Closure with result of authorization
     public func oAuthAppleID(authData: AuthAppleIDData, result: @escaping (_ result: AuthAppleIDResult) -> ()) {
-        WebasystNetworking().oAuthAppleID(authData: authData) { status in
-
+        networking.oAuthAppleID(authData: authData) { [weak self] status in
             switch status {
             case .success(let type):
                 switch type {
                 case .succeess:
-                    WebasystUserNetworking().preloadUserData { status, _, successPreload in
+                    self?.userNetworking.preloadUserData { status, _, successPreload in
                         if successPreload {
                             UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                         }
                         result(.completed(status))
                     }
                 case .needEmailConfirmation(accessToken: let accessToken):
-                    let confirmHandler: (AuthAppleIDResult.EmailConfirmation) -> () = { confirmation in
+                    let confirmHandler: (AuthAppleIDResult.EmailConfirmation) -> () = { [weak self] confirmation in
+                        guard let self = self else { return }
                         switch confirmation.result {
                         case .code(let code):
-                            WebasystUserNetworking().sendAppleIDEmailConfirmationCode(code, accessToken: accessToken, success: { success, errorDescription in
+                            userNetworking.sendAppleIDEmailConfirmationCode(code, accessToken: accessToken, success: { [weak self] success, errorDescription in
                                 if success {
-                                    WebasystUserNetworking().preloadUserData { status, _, successPreload in
+                                    self?.userNetworking.preloadUserData { status, _, successPreload in
                                         if successPreload {
                                             UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                                         }
@@ -143,7 +149,7 @@ public class WebasystApp {
                                 }
                             })
                         case .logout:
-                            self.logOutUser { success in
+                            logOutUser { success in
                                 confirmation.successHandler(success, nil)
                             }
                         }
@@ -159,7 +165,7 @@ public class WebasystApp {
     /// Merge result check
     /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
     public func mergeResultCheck(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
-        WebasystUserNetworking().mergeResultCheck(completion: completion)
+        userNetworking.mergeResultCheck(completion: completion)
     }
     
     /// Method for obtaining authorisation code without a browser
@@ -169,7 +175,7 @@ public class WebasystApp {
     ///   - success: Closure performed after the method has been executed
     /// - Returns: Status of code sent to the user by email or text message, see AuthResult documentation for a detailed description of statuses
     public func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
-        WebasystNetworking().getAuthCode(value, type: type) { result in
+        networking.getAuthCode(value, type: type) { result in
             success(result)
         }
     }
@@ -181,9 +187,9 @@ public class WebasystApp {
     ///   - success: Closure performed after the method has been executed
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
     public func sendConfirmCode(for type: AuthCodeType = .phone, _ code: String, success: @escaping (Bool) -> ()) {
-        WebasystNetworking().sendConfirmCode(for: type, code) { result in
+        networking.sendConfirmCode(for: type, code) { [weak self] result in
             if result {
-                WebasystUserNetworking().preloadUserData { _, _, result in
+                self?.userNetworking.preloadUserData { _, _, result in
                     UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                     success(result)
                 }
@@ -196,26 +202,26 @@ public class WebasystApp {
     /// App installation
     /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
     public func checkInstallApp(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
-        WebasystUserNetworking().checkAppInstall(app: app, completion: completion)
+        userNetworking.checkAppInstall(app: app, completion: completion)
     }
     
     /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func checkLicense(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
-        WebasystUserNetworking().checkInstallLicense(app: app, completion: completion)
+        userNetworking.checkInstallLicense(app: app, completion: completion)
     }
     
     /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func extendLicense(type: String, date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
-        WebasystUserNetworking().extendLicense(type: type, date: date, completion: completion)
+        userNetworking.extendLicense(type: type, date: date, completion: completion)
     }
     
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func defaultChecking(completion: @escaping (Bool) -> ()) {
         if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
-           let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
+            let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
             getAllUserInstall { installs in
                 if installs != nil, installs != [], domain == nil {
                     completion(true)
@@ -231,21 +237,19 @@ public class WebasystApp {
             completion(true)
         }
         
-        WebasystNetworking().refreshAccessToken { _ in 
-        WebasystUserNetworking().preloadUserData { _,_,_ in }
+        networking.refreshAccessToken { [weak self] _ in
+            self?.userNetworking.preloadUserData { _,_,_ in }
         }
-        
     }
     
     /// User authentication check on Webasyst server
     /// - Parameter completion: updating the user token, and checking authorization
     /// - Returns Returns user status in the application (.authorized/.nonAuthorized/.authorizedButNoneInstalls/.networkError(message: String)/.authorizedButProfileIsEmpty/.error(message: String))
     public func checkUserAuth(completion: @escaping (UserStatus) -> ()) {
-        
-        WebasystNetworking().refreshAccessToken { result in
+        networking.refreshAccessToken { [weak self] result in
             if result {
-                WebasystUserNetworking().preloadUserData { status, _, _ in
-                   completion(status)
+                self?.userNetworking.preloadUserData { status, _, _ in
+                    completion(status)
                 }
             } else {
                 completion(UserStatus.error(message: "not success refresh token"))
@@ -255,11 +259,11 @@ public class WebasystApp {
     /// A new free WAID contact connected to the opposite application can oppose another existing WAID contact.
     /// - Returns Returns code for merge
     public func mergeTwoAccs(completion: @escaping (Swift.Result<String, Error>) -> Void) {
-        WebasystUserNetworking().mergeTwoAccounts(completion: completion)
+        userNetworking.mergeTwoAccounts(completion: completion)
     }
     
     public func deleteAccount(completion: @escaping (Swift.Result<Bool, String>) -> ()) {
-        WebasystUserNetworking().deleteAccount(completion: { result in
+        userNetworking.deleteAccount(completion: { result in
             completion(result)
         })
     }
@@ -274,8 +278,7 @@ public class WebasystApp {
     /// Getting user install list from server
     /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
     public func updateUserInstalls(_ result: @escaping ([UserInstallCodable]?) -> ()) {
-        let networking = WebasystUserNetworking()
-        networking.getInstallList { updatedInstalls in
+        userNetworking.getInstallList { [weak self] updatedInstalls in
             if let installs = updatedInstalls {
                 if installs.count == 0 {
                     result(updatedInstalls)
@@ -284,9 +287,9 @@ public class WebasystApp {
                     for install in installs {
                         clientId.append(install.id)
                     }
-                    networking.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
+                    self?.userNetworking.getAccessTokenApi(clientId: clientId) { (success, accessToken) in
                         if success, let token = accessToken {
-                            networking.getAccessTokenInstall(installs, accessCodes: token) { (_, saveSuccess) in
+                            self?.userNetworking.getAccessTokenInstall(installs, accessCodes: token) { (_, saveSuccess) in
                                 result(updatedInstalls)
                             }
                         } else {
@@ -332,7 +335,7 @@ public class WebasystApp {
     /// - Parameter success: Closure performed after executing the method
     /// - Returns: Result value which can be successfully or errorable
     public func updateUserImage(_ image: UIImage, success: @escaping (Result) -> Void) {
-        WebasystUserNetworking().updateUserAvatar(image) { result in
+        userNetworking.updateUserAvatar(image) { result in
             success(result)
         }
     }
@@ -341,7 +344,7 @@ public class WebasystApp {
     /// - Parameter success: Closure performed after executing the method
     /// - Returns: Result value which can be successfully or errorable
     public func deleteUserImage(success: @escaping (Result) -> Void) {
-        WebasystUserNetworking().deleteUserAvatar { result in
+        userNetworking.deleteUserAvatar { result in
             success(result)
         }
     }
@@ -351,7 +354,7 @@ public class WebasystApp {
     /// - Parameter success: Closure performed after executing the method
     /// - Returns: Result value which can be successfully or errorable
     public func changeCurrentUserData(profile: ProfileData, success: @escaping (Swift.Result<ProfileData,Error>) -> Void) {
-        WebasystUserNetworking().changeUserData(profile) { result in
+        userNetworking.changeUserData(profile) { result in
             success(result)
         }
     }
@@ -364,11 +367,10 @@ public class WebasystApp {
     ///    - accountName: Name of the account being created
     ///    - completion: Contains a result of creating and renaming of new account. Reutrns client id and url of new account if successed
     public func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", accountDomain: String? = nil, accountName: String? = nil, completion: @escaping (AccountCreatingResult) -> ()) {
-        let networking = WebasystUserNetworking()
-        networking.createWebasystAccount(bundle: bundle, plainId: plainId, accountName: accountName) { success, clientId, url in
+        userNetworking.createWebasystAccount(bundle: bundle, plainId: plainId, accountName: accountName) { [weak self] success, clientId, url in
             if success, let clientId = clientId, let url = url {
                 if let accountDomain = accountDomain {
-                    networking.renameWebasystAccount(clientId: clientId, domain: accountDomain) { result in
+                    self?.userNetworking.renameWebasystAccount(clientId: clientId, domain: accountDomain) { result in
                         switch result {
                         case .success:
                             completion(.successfullyCreated(clientId: clientId, url: url))
@@ -388,8 +390,7 @@ public class WebasystApp {
     /// Exit a user from the account and delete all records in the database
     /// - Returns: Boolean value of deauthorization success
     public func logOutUser(completion: @escaping (Bool) -> ()) {
-        let webasystNetworking = WebasystUserNetworking()
-        webasystNetworking.singUpUser { _ in }
+        userNetworking.singUpUser { _ in }
         profileInstallService?.resetInstallList()
         profileInstallService?.deleteProfileData()
         KeychainManager.deleteAllKeys()
