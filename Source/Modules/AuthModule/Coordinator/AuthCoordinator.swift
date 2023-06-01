@@ -7,13 +7,12 @@
 
 import UIKit
 
-protocol AuthCoordinatorProtocol {
-    init(_ navigationController: UINavigationController)
+protocol Coordinator: AnyObject {
+    func start(with code: String)
 }
 
-public enum WebasystServerAnswer {
-    case success
-    case error(error: String)
+protocol AuthCoordinatorProtocol {
+    init(_ navigationController: UINavigationController, action: @escaping (WebasystServerAnswer) -> ())
 }
 
 protocol AuthCoordinatorDelegate: AnyObject {
@@ -22,32 +21,33 @@ protocol AuthCoordinatorDelegate: AnyObject {
     func errorAuth()
 }
 
-
-protocol Coordinator: AnyObject {
-    func start(with code: String)
+public enum WebasystServerAnswer {
+    case success
+    case error(error: String)
 }
 
-public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordinatorProtocol {
+public class AuthCoordinator: Coordinator, AuthCoordinatorProtocol {
     
-    private var navigationController: UINavigationController
-    
+    private unowned var navigationController: UINavigationController
     var action: ((_ result: WebasystServerAnswer) -> Void)!
     
-    public required init(_ navigationController: UINavigationController) {
+    required init(_ navigationController: UINavigationController, action: @escaping (WebasystServerAnswer) -> ()) {
         self.navigationController = navigationController
+        self.action = action
     }
-        
+    
     public func start(with code: String = "") {
         let authViewController = AuthViewController()
-        let authCoordinator = AuthCoordinator(self.navigationController)
         let networkingService = WebasystNetworking()
         let authViewModel = AuthViewModel(networkingService: networkingService,
-                                          coordinator: authCoordinator,
+                                          delegate: self,
                                           with: code)
-        authViewModel.delegate = self
         authViewController.viewModel = authViewModel
         self.navigationController.present(authViewController, animated: true, completion: nil)
     }
+}
+
+extension AuthCoordinator: AuthCoordinatorDelegate {
     
     func successAuth() {
         DispatchQueue.main.async {
@@ -66,5 +66,4 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorDelegate, AuthCoordina
             self.action(WebasystServerAnswer.error(error: "Undefined error"))
         }
     }
-    
 }

@@ -76,9 +76,7 @@ public class WebasystApp {
     ///   - action: Closure to perform an action after authorization
     @available(*, deprecated, message: "This method is obsolete, use oAuthLogin")
     public func authWebasyst(navigationController: UINavigationController, action: @escaping ((_ result: WebasystServerAnswer) -> ())) {
-        let coordinator = AuthCoordinator(navigationController)
-        coordinator.start()
-        let success: ((_ action: WebasystServerAnswer) -> Void) = { [weak self] success in
+        let coordinator = AuthCoordinator(navigationController) { [weak self] success in
             switch success {
             case .success:
                 action(WebasystServerAnswer.success)
@@ -87,7 +85,7 @@ public class WebasystApp {
                 action(WebasystServerAnswer.error(error: error))
             }
         }
-        coordinator.action = success
+        coordinator.start()
     }
     
     /// Webasyst server authorization method
@@ -95,10 +93,7 @@ public class WebasystApp {
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
     ///   - action: Closure to perform an action after authorization
     public func oAuthLogin(with merge: Bool = false, with code: String = "", navigationController: UINavigationController, action: @escaping ((_ result: UserStatus) -> ())) {
-        authCoordinator = AuthCoordinator(navigationController)
-        guard let coordinator = authCoordinator else { return }
-        coordinator.start(with: code)
-        let success: ((_ action: WebasystServerAnswer) -> Void) = { [weak self] success in
+        authCoordinator = AuthCoordinator(navigationController) { [weak self] success in
             switch success {
             case .success:
                 UserDefaults.standard.setValue("", forKey: "selectDomainUser")
@@ -112,7 +107,8 @@ public class WebasystApp {
                 action(.error(message: error))
             }
         }
-        coordinator.action = success
+        guard let coordinator = authCoordinator else { return }
+        coordinator.start(with: code)
     }
     
     /// Authorization in Webasyst using Apple ID
