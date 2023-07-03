@@ -46,10 +46,18 @@ public class WebasystApp {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("settings")
     }
     
+    /// Returns the NSLocalizedString contained in the Webasyst localisation files
+    /// - Parameters:
+    ///   - key: Parameter for NSLocalizedString method
+    ///   - comment: Parameter for NSLocalizedString method
+    /// - Returns: String returned by NSLocalizedString
     public class func getDefaultLocalizedString(withKey key: String, comment: String? = nil) -> String {
         return NSLocalizedString(key, bundle: Bundle(for: self), comment: comment ?? key)
     }
     
+    /// Start a confetti animation for selected viewController
+    /// - Parameters:
+    ///   - viewController: UIViewController for which the confetti animation will be called
     public class func requestFullScreenConfetti(for viewController: UIViewController) {
         ConfettiAnimationView.requestFullScreenAnimation(for: viewController)
     }
@@ -88,10 +96,12 @@ public class WebasystApp {
         coordinator.start()
     }
     
-    /// Webasyst server authorization method
+    /// The method presents a webView with a Webasyst authorisation form. After successful completion of the form, the user is authenticated and the user status is returned
     /// - Parameters:
+    ///   - merge: Parameter that is responsible for merging accounts
+    ///   - code: Parameter responsible for merging accounts, which is obtained from the 'mergeTwoAccs' method
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
-    ///   - action: Closure to perform an action after authorization
+    ///   - action: Closure to perform an action after authorization with status of user
     public func oAuthLogin(with merge: Bool = false, with code: String = "", navigationController: UINavigationController, action: @escaping ((_ result: UserStatus) -> ())) {
         authCoordinator = AuthCoordinator(navigationController) { [weak self] success in
             switch success {
@@ -111,7 +121,7 @@ public class WebasystApp {
         coordinator.start(with: code)
     }
     
-    /// Authorization in Webasyst using Apple ID
+    /// Authorization in Webasyst with an Apple ID
     /// - Parameters:
     ///    - authData: Authorization data sent by the Apple ID authorization controller
     ///    - result: Closure with result of authorization
@@ -159,7 +169,7 @@ public class WebasystApp {
     }
     
     /// Merge result check
-    /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
+    /// - Parameter completion: The closure performed after the check returns a Bool value about whether the result was successful or not and a description of the error, if there was one
     public func mergeResultCheck(completion: @escaping (Swift.Result<Bool, String>) -> Void) {
         userNetworking.mergeResultCheck(completion: completion)
     }
@@ -168,8 +178,7 @@ public class WebasystApp {
     /// - Parameters:
     ///   - value: Phone number or email
     ///   - type: Value type(.email/.phone)
-    ///   - success: Closure performed after the method has been executed
-    /// - Returns: Status of code sent to the user by email or text message, see AuthResult documentation for a detailed description of statuses
+    ///   - success: Closure performed after the method has been executed. Contains the status of code sent to the user by email or text message, see the AuthResult documentation for a detailed description of the statuses
     public func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
         networking.getAuthCode(value, type: type) { result in
             success(result)
@@ -180,8 +189,7 @@ public class WebasystApp {
     /// - Parameters:
     ///   - type: Type of confirmation code
     ///   - code: Code received by user by e-mail or text message or qr content
-    ///   - success: Closure performed after the method has been executed
-    /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
+    ///   - success: Closure performed after the method has been executed. Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
     public func sendConfirmCode(for type: AuthCodeType = .phone, _ code: String, success: @escaping (Bool) -> ()) {
         networking.sendConfirmCode(for: type, code) { [weak self] result in
             if result {
@@ -196,19 +204,26 @@ public class WebasystApp {
     }
     
     /// App installation
-    /// - Parameter completion: The closure performed after the check returns a Bool value of the result was successful or not and error description if she is
+    /// - Parameters:
+    ///   - app:Application name
+    ///   - completion: The closure performed after the check returns a Bool value about whether the result was successful or not and a description of the error, if there was one
     public func checkInstallApp(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
         userNetworking.checkAppInstall(app: app, completion: completion)
     }
     
     /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
-    /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
+    /// - Parameters:
+    ///   - app: Application name
+    ///   - completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func checkLicense(app: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
         userNetworking.checkInstallLicense(app: app, completion: completion)
     }
     
     /// Tries to find a free (not tied to the installation) license from the user whose token is accessed by the mobile application. If there is one, then binds it to the installation. Otherwise, it creates a trial product license tied to the installation.
-    /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
+    /// - Parameters:
+    ///   - type: Type of subscription plan
+    ///   - date: Subscription cut-off date
+    ///   - completion: The closure performed after the check returns a Bool value of whether the user is authorized or not
     public func extendLicense(type: String, date: String, completion: @escaping (Swift.Result<String?, String>) -> Void) {
         userNetworking.extendLicense(type: type, date: date, completion: completion)
     }
@@ -239,8 +254,7 @@ public class WebasystApp {
     }
     
     /// User authentication check on Webasyst server
-    /// - Parameter completion: updating the user token, and checking authorization
-    /// - Returns Returns user status in the application (.authorized/.nonAuthorized/.authorizedButNoneInstalls/.networkError(message: String)/.authorizedButProfileIsEmpty/.error(message: String))
+    /// - Parameter completion: Updating the user token, and checking authorization. Returns user status in the application (.authorized/.nonAuthorized/.authorizedButNoneInstalls/.networkError(message: String)/.authorizedButProfileIsEmpty/.error(message: String))
     public func checkUserAuth(completion: @escaping (UserStatus) -> ()) {
         networking.refreshAccessToken { [weak self] result in
             if result {
@@ -252,12 +266,15 @@ public class WebasystApp {
             }
         }
     }
-    /// A new free WAID contact connected to the opposite application can oppose another existing WAID contact.
-    /// - Returns Returns code for merge
+    
+    /// A new free WAID contact connected to the opposite application can oppose another existing WAID contact
+    /// - Parameter completion: Result with code to merge or error
     public func mergeTwoAccs(completion: @escaping (Swift.Result<String, Error>) -> Void) {
         userNetworking.mergeTwoAccounts(completion: completion)
     }
     
+    /// The method sends a request to delete the current account and returns the result
+    /// - Parameter completion: Account deletion result or error
     public func deleteAccount(completion: @escaping (Swift.Result<Bool, String>) -> ()) {
         userNetworking.deleteAccount(completion: { result in
             completion(result)
@@ -265,14 +282,14 @@ public class WebasystApp {
     }
     
     /// Getting user install list
-    /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
+    /// - Parameter completion: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
     public func getAllUserInstall(_ result: @escaping ([UserInstall]?) -> ()) {
         let installList = profileInstallService?.getInstallList()
         result(installList)
     }
     
-    /// Getting user install list from server
-    /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
+    /// Updating and Getting user install list from server
+    /// - Parameter completion: List of all user installations in UserInstallCodable format (name, clientId, domain, accessToken, url)
     public func updateUserInstalls(_ result: @escaping ([UserInstallCodable]?) -> ()) {
         userNetworking.getInstallList { [weak self] updatedInstalls in
             if let installs = updatedInstalls {
@@ -327,9 +344,9 @@ public class WebasystApp {
     }
     
     /// Update current user image
-    /// - Parameter image: Image to update
-    /// - Parameter success: Closure performed after executing the method
-    /// - Returns: Result value which can be successfully or errorable
+    /// - Parameters:
+    ///   - image: Image to update
+    ///   - success: Closure performed after executing the method. Result value which can be successfully or errorable
     public func updateUserImage(_ image: UIImage, success: @escaping (Result) -> Void) {
         userNetworking.updateUserAvatar(image) { result in
             success(result)
@@ -337,8 +354,7 @@ public class WebasystApp {
     }
     
     /// Delete current user image
-    /// - Parameter success: Closure performed after executing the method
-    /// - Returns: Result value which can be successfully or errorable
+    /// - Parameter success: Closure performed after executing the method. Result value which can be successfully or errorable
     public func deleteUserImage(success: @escaping (Result) -> Void) {
         userNetworking.deleteUserAvatar { result in
             success(result)
@@ -346,9 +362,9 @@ public class WebasystApp {
     }
     
     /// Change the data of the current user
-    /// - Parameter profile: pass the current data model with user information
-    /// - Parameter success: Closure performed after executing the method
-    /// - Returns: Result value which can be successfully or errorable
+    /// - Parameters:
+    ///   - profile: Pass the current data model with user information
+    ///   - success: Closure performed after executing the method. Result value which can be successfully or errorable
     public func changeCurrentUserData(profile: ProfileData, success: @escaping (Swift.Result<ProfileData,Error>) -> Void) {
         userNetworking.changeUserData(profile) { result in
             success(result)
@@ -383,8 +399,8 @@ public class WebasystApp {
         }
     }
     
-    /// Exit a user from the account and delete all records in the database
-    /// - Returns: Boolean value of deauthorization success
+    /// Logs out a user from the account and delete all records in the database
+    /// - Parameter completion: Boolean value of deauthorization success
     public func logOutUser(completion: @escaping (Bool) -> ()) {
         userNetworking.singUpUser { _ in }
         profileInstallService?.resetInstallList()
