@@ -11,6 +11,10 @@
 - Xcode 11+
 - Swift 5.1+
 
+## Demo app
+
+TLDR: Boilerplate app using the Webasyst library is available here: **https://github.com/1312inc/Webasyst-X-iOS**
+
 ## Installation
 
 Webasyst is available through [CocoaPods](https://cocoapods.org). To install
@@ -31,15 +35,17 @@ The library requires an initial setup. The following steps are needed:
 ```
 import Webasyst
 ```
-2) In the root of your project, create a configuration file Webasyst.plist, which has the following fields
+2) In the root of your project, create a configuration file ``Webasyst.plist``, which has the following fields (use the demo  app's [Webasyst.plist.example.plist](https://github.com/1312inc/Webasyst-X-iOS/blob/master/Webasyst%20X/Webasyst.plist.example.plist) file as a reference):
 
 ```
-"clientId": String //  *clientId of your application. Example: "72at75391ea785412a24f4568528ed49"*
-"host": String //  *host of your server, or the host of the Webasyst central serve. Example: "www.webasyst.com"r*
-"scope": String // *the scope required by your application (separated by dot). Example: "site.blog.shop"*
+"clientId": String //  clientId of your application. Example: "72at75391ea785412a24f4568528ed49"
+"host": String //  Webasyst ID auth domain: "www.webasyst.com"
+"scope": String // the scope required by your application (separated by dot). Example: "site.blog.shop"
 ```
 
-***You can see an example file in the project repository, the file Webasyst.sample.plist***
+Get your Webasyst ID auth client id here: https://www.webasyst.com/my/waid/apps/
+
+Webasyst ID API documentation: https://developers.webasyst.com/docs/features/webasyst-id-auth/resources-server-api/
 
 After creating this file, in the didFinishLaunchingWithOptions method of the AppDelegate file, call the WebasystApp configuration method 
 ```
@@ -248,10 +254,6 @@ Error Domain=Webasyst warning: https://1312.io The data couldn’t be read becau
 * **500:** General library database error
 * **501:** Database error while working with the list of user settings
 * **502:** Database error while working with a user profile
-
-## Demo application
-
-You can see an example of how to use the Webasyst library in a [demo application](https://cocoapods.org).
 
 ## Author
 
