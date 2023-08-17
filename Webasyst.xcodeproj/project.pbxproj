@@ -1,0 +1,956 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E0BCCB172A8ADBDB00673287 /* Webasyst.h in Headers */ = {isa = PBXBuildFile; fileRef = E0BCCB162A8ADBDB00673287 /* Webasyst.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0BCCB2E2A8ADC7C00673287 /* Webasyst.h in Headers */ = {isa = PBXBuildFile; fileRef = E0BCCB162A8ADBDB00673287 /* Webasyst.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0BCCB392A8ADD5E00673287 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0BCCB382A8ADD5E00673287 /* WebKit.framework */; };
+		E0BCCB652A8ADD7600673287 /* WebasystDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB3B2A8ADD7600673287 /* WebasystDataModel.swift */; };
+		E0BCCB662A8ADD7600673287 /* WebasystDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB3B2A8ADD7600673287 /* WebasystDataModel.swift */; };
+		E0BCCB672A8ADD7600673287 /* SettingsListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB3C2A8ADD7600673287 /* SettingsListModel.swift */; };
+		E0BCCB682A8ADD7600673287 /* SettingsListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB3C2A8ADD7600673287 /* SettingsListModel.swift */; };
+		E0BCCB692A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB3D2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld */; };
+		E0BCCB6A2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB3D2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld */; };
+		E0BCCB6B2A8ADD7600673287 /* AuthAppleIDResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB412A8ADD7600673287 /* AuthAppleIDResult.swift */; };
+		E0BCCB6C2A8ADD7600673287 /* AuthAppleIDResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB412A8ADD7600673287 /* AuthAppleIDResult.swift */; };
+		E0BCCB6D2A8ADD7600673287 /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB422A8ADD7600673287 /* UserStatus.swift */; };
+		E0BCCB6E2A8ADD7600673287 /* UserStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB422A8ADD7600673287 /* UserStatus.swift */; };
+		E0BCCB6F2A8ADD7600673287 /* AuthResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB432A8ADD7600673287 /* AuthResult.swift */; };
+		E0BCCB702A8ADD7600673287 /* AuthResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB432A8ADD7600673287 /* AuthResult.swift */; };
+		E0BCCB712A8ADD7600673287 /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB442A8ADD7600673287 /* ImageType.swift */; };
+		E0BCCB722A8ADD7600673287 /* ImageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB442A8ADD7600673287 /* ImageType.swift */; };
+		E0BCCB732A8ADD7600673287 /* AuthCodeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB452A8ADD7600673287 /* AuthCodeType.swift */; };
+		E0BCCB742A8ADD7600673287 /* AuthCodeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB452A8ADD7600673287 /* AuthCodeType.swift */; };
+		E0BCCB752A8ADD7600673287 /* AccountCreatingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB462A8ADD7600673287 /* AccountCreatingResult.swift */; };
+		E0BCCB762A8ADD7600673287 /* AccountCreatingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB462A8ADD7600673287 /* AccountCreatingResult.swift */; };
+		E0BCCB772A8ADD7600673287 /* AuthType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB472A8ADD7600673287 /* AuthType.swift */; };
+		E0BCCB782A8ADD7600673287 /* AuthType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB472A8ADD7600673287 /* AuthType.swift */; };
+		E0BCCB792A8ADD7600673287 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB482A8ADD7600673287 /* TokenType.swift */; };
+		E0BCCB7A2A8ADD7600673287 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB482A8ADD7600673287 /* TokenType.swift */; };
+		E0BCCB7B2A8ADD7600673287 /* ProfileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4A2A8ADD7600673287 /* ProfileData.swift */; };
+		E0BCCB7C2A8ADD7600673287 /* ProfileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4A2A8ADD7600673287 /* ProfileData.swift */; };
+		E0BCCB7D2A8ADD7600673287 /* InstallInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4B2A8ADD7600673287 /* InstallInfo.swift */; };
+		E0BCCB7E2A8ADD7600673287 /* InstallInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4B2A8ADD7600673287 /* InstallInfo.swift */; };
+		E0BCCB7F2A8ADD7600673287 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4C2A8ADD7600673287 /* Preferences.swift */; };
+		E0BCCB802A8ADD7600673287 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4C2A8ADD7600673287 /* Preferences.swift */; };
+		E0BCCB812A8ADD7600673287 /* UserToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4D2A8ADD7600673287 /* UserToken.swift */; };
+		E0BCCB822A8ADD7600673287 /* UserToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4D2A8ADD7600673287 /* UserToken.swift */; };
+		E0BCCB832A8ADD7600673287 /* AuthAppleIDData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4E2A8ADD7600673287 /* AuthAppleIDData.swift */; };
+		E0BCCB842A8ADD7600673287 /* AuthAppleIDData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4E2A8ADD7600673287 /* AuthAppleIDData.swift */; };
+		E0BCCB852A8ADD7600673287 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4F2A8ADD7600673287 /* UserData.swift */; };
+		E0BCCB862A8ADD7600673287 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB4F2A8ADD7600673287 /* UserData.swift */; };
+		E0BCCB872A8ADD7600673287 /* CreateNewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB502A8ADD7600673287 /* CreateNewAccount.swift */; };
+		E0BCCB882A8ADD7600673287 /* CreateNewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB502A8ADD7600673287 /* CreateNewAccount.swift */; };
+		E0BCCB892A8ADD7600673287 /* Installs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB512A8ADD7600673287 /* Installs.swift */; };
+		E0BCCB8A2A8ADD7600673287 /* Installs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB512A8ADD7600673287 /* Installs.swift */; };
+		E0BCCB8B2A8ADD7600673287 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E0BCCB532A8ADD7600673287 /* Localizable.strings */; };
+		E0BCCB8C2A8ADD7600673287 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E0BCCB532A8ADD7600673287 /* Localizable.strings */; };
+		E0BCCB8D2A8ADD7600673287 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB572A8ADD7600673287 /* Config.swift */; };
+		E0BCCB8E2A8ADD7600673287 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB572A8ADD7600673287 /* Config.swift */; };
+		E0BCCB8F2A8ADD7600673287 /* WebasystApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB592A8ADD7600673287 /* WebasystApp.swift */; };
+		E0BCCB902A8ADD7600673287 /* WebasystApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB592A8ADD7600673287 /* WebasystApp.swift */; };
+		E0BCCB912A8ADD7600673287 /* WebasystNetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5B2A8ADD7600673287 /* WebasystNetworkingManager.swift */; };
+		E0BCCB922A8ADD7600673287 /* WebasystNetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5B2A8ADD7600673287 /* WebasystNetworkingManager.swift */; };
+		E0BCCB932A8ADD7600673287 /* WebasystNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5C2A8ADD7600673287 /* WebasystNetworking.swift */; };
+		E0BCCB942A8ADD7600673287 /* WebasystNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5C2A8ADD7600673287 /* WebasystNetworking.swift */; };
+		E0BCCB952A8ADD7600673287 /* NetworkingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5D2A8ADD7600673287 /* NetworkingHelper.swift */; };
+		E0BCCB962A8ADD7600673287 /* NetworkingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5D2A8ADD7600673287 /* NetworkingHelper.swift */; };
+		E0BCCB972A8ADD7600673287 /* WebasystUserNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5E2A8ADD7600673287 /* WebasystUserNetworking.swift */; };
+		E0BCCB982A8ADD7600673287 /* WebasystUserNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB5E2A8ADD7600673287 /* WebasystUserNetworking.swift */; };
+		E0BCCB992A8ADD7600673287 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB602A8ADD7600673287 /* URLRequest.swift */; };
+		E0BCCB9A2A8ADD7600673287 /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB602A8ADD7600673287 /* URLRequest.swift */; };
+		E0BCCB9B2A8ADD7600673287 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB612A8ADD7600673287 /* UIImage.swift */; };
+		E0BCCB9C2A8ADD7600673287 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB612A8ADD7600673287 /* UIImage.swift */; };
+		E0BCCB9D2A8ADD7600673287 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB632A8ADD7600673287 /* UserDefaultsKeys.swift */; };
+		E0BCCB9E2A8ADD7600673287 /* UserDefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB632A8ADD7600673287 /* UserDefaultsKeys.swift */; };
+		E0BCCB9F2A8ADD7600673287 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB642A8ADD7600673287 /* KeychainService.swift */; };
+		E0BCCBA02A8ADD7600673287 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCB642A8ADD7600673287 /* KeychainService.swift */; };
+		E0BCCBB22A8ADD8100673287 /* ConfettiAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBA32A8ADD8100673287 /* ConfettiAnimationView.swift */; };
+		E0BCCBB32A8ADD8100673287 /* WebasystApp iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBA52A8ADD8100673287 /* WebasystApp iOS.swift */; };
+		E0BCCBB42A8ADD8100673287 /* WebasystNetworking iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBA72A8ADD8100673287 /* WebasystNetworking iOS.swift */; };
+		E0BCCBB52A8ADD8100673287 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBAB2A8ADD8100673287 /* AuthViewModel.swift */; };
+		E0BCCBB62A8ADD8100673287 /* AuthCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBAD2A8ADD8100673287 /* AuthCoordinator.swift */; };
+		E0BCCBB72A8ADD8100673287 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBAF2A8ADD8100673287 /* AuthViewController.swift */; };
+		E0BCCBB82A8ADD8100673287 /* ConfettiAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E0BCCBB12A8ADD8100673287 /* ConfettiAsset.xcassets */; };
+		E0BCCBBB2A8ADD8F00673287 /* WebasystNetworking watchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBBA2A8ADD8F00673287 /* WebasystNetworking watchOS.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		E0BCCB132A8ADBDB00673287 /* Webasyst.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Webasyst.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0BCCB162A8ADBDB00673287 /* Webasyst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Webasyst.h; sourceTree = "<group>"; };
+		E0BCCB222A8ADBFA00673287 /* Webasyst_watchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Webasyst_watchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0BCCB322A8ADCFC00673287 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		E0BCCB342A8ADD3700673287 /* Webasyst.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Webasyst.podspec; sourceTree = "<group>"; };
+		E0BCCB352A8ADD3700673287 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		E0BCCB362A8ADD3700673287 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E0BCCB382A8ADD5E00673287 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/System/iOSSupport/System/Library/PrivateFrameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
+		E0BCCB3B2A8ADD7600673287 /* WebasystDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebasystDataModel.swift; sourceTree = "<group>"; };
+		E0BCCB3C2A8ADD7600673287 /* SettingsListModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsListModel.swift; sourceTree = "<group>"; };
+		E0BCCB3E2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WebasystAppDataModel.xcdatamodel; sourceTree = "<group>"; };
+		E0BCCB412A8ADD7600673287 /* AuthAppleIDResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthAppleIDResult.swift; sourceTree = "<group>"; };
+		E0BCCB422A8ADD7600673287 /* UserStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStatus.swift; sourceTree = "<group>"; };
+		E0BCCB432A8ADD7600673287 /* AuthResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthResult.swift; sourceTree = "<group>"; };
+		E0BCCB442A8ADD7600673287 /* ImageType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageType.swift; sourceTree = "<group>"; };
+		E0BCCB452A8ADD7600673287 /* AuthCodeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthCodeType.swift; sourceTree = "<group>"; };
+		E0BCCB462A8ADD7600673287 /* AccountCreatingResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountCreatingResult.swift; sourceTree = "<group>"; };
+		E0BCCB472A8ADD7600673287 /* AuthType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthType.swift; sourceTree = "<group>"; };
+		E0BCCB482A8ADD7600673287 /* TokenType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenType.swift; sourceTree = "<group>"; };
+		E0BCCB4A2A8ADD7600673287 /* ProfileData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileData.swift; sourceTree = "<group>"; };
+		E0BCCB4B2A8ADD7600673287 /* InstallInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstallInfo.swift; sourceTree = "<group>"; };
+		E0BCCB4C2A8ADD7600673287 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		E0BCCB4D2A8ADD7600673287 /* UserToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserToken.swift; sourceTree = "<group>"; };
+		E0BCCB4E2A8ADD7600673287 /* AuthAppleIDData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthAppleIDData.swift; sourceTree = "<group>"; };
+		E0BCCB4F2A8ADD7600673287 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		E0BCCB502A8ADD7600673287 /* CreateNewAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewAccount.swift; sourceTree = "<group>"; };
+		E0BCCB512A8ADD7600673287 /* Installs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Installs.swift; sourceTree = "<group>"; };
+		E0BCCB542A8ADD7600673287 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E0BCCB552A8ADD7600673287 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E0BCCB572A8ADD7600673287 /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		E0BCCB592A8ADD7600673287 /* WebasystApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebasystApp.swift; sourceTree = "<group>"; };
+		E0BCCB5B2A8ADD7600673287 /* WebasystNetworkingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebasystNetworkingManager.swift; sourceTree = "<group>"; };
+		E0BCCB5C2A8ADD7600673287 /* WebasystNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebasystNetworking.swift; sourceTree = "<group>"; };
+		E0BCCB5D2A8ADD7600673287 /* NetworkingHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkingHelper.swift; sourceTree = "<group>"; };
+		E0BCCB5E2A8ADD7600673287 /* WebasystUserNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebasystUserNetworking.swift; sourceTree = "<group>"; };
+		E0BCCB602A8ADD7600673287 /* URLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
+		E0BCCB612A8ADD7600673287 /* UIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		E0BCCB632A8ADD7600673287 /* UserDefaultsKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsKeys.swift; sourceTree = "<group>"; };
+		E0BCCB642A8ADD7600673287 /* KeychainService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		E0BCCBA32A8ADD8100673287 /* ConfettiAnimationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfettiAnimationView.swift; sourceTree = "<group>"; };
+		E0BCCBA52A8ADD8100673287 /* WebasystApp iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WebasystApp iOS.swift"; sourceTree = "<group>"; };
+		E0BCCBA72A8ADD8100673287 /* WebasystNetworking iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WebasystNetworking iOS.swift"; sourceTree = "<group>"; };
+		E0BCCBAB2A8ADD8100673287 /* AuthViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		E0BCCBAD2A8ADD8100673287 /* AuthCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthCoordinator.swift; sourceTree = "<group>"; };
+		E0BCCBAF2A8ADD8100673287 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		E0BCCBB12A8ADD8100673287 /* ConfettiAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ConfettiAsset.xcassets; sourceTree = "<group>"; };
+		E0BCCBBA2A8ADD8F00673287 /* WebasystNetworking watchOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WebasystNetworking watchOS.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E0BCCB102A8ADBDB00673287 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0BCCB392A8ADD5E00673287 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0BCCB1F2A8ADBFA00673287 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E0BCCB092A8ADBDB00673287 = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB152A8ADBDB00673287 /* Webasyst */,
+				E0BCCB332A8ADD2200673287 /* Pod */,
+				E0BCCB2D2A8ADC7100673287 /* Supporting files */,
+				E0BCCB142A8ADBDB00673287 /* Products */,
+				E0BCCB372A8ADD5D00673287 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E0BCCB142A8ADBDB00673287 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB132A8ADBDB00673287 /* Webasyst.framework */,
+				E0BCCB222A8ADBFA00673287 /* Webasyst_watchOS.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E0BCCB152A8ADBDB00673287 /* Webasyst */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB292A8ADC4600673287 /* Source */,
+				E0BCCB2A2A8ADC4C00673287 /* iOS */,
+				E0BCCB2B2A8ADC5100673287 /* WatchOS */,
+			);
+			path = Webasyst;
+			sourceTree = "<group>";
+		};
+		E0BCCB292A8ADC4600673287 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB582A8ADD7600673287 /* Application */,
+				E0BCCB562A8ADD7600673287 /* Configuration */,
+				E0BCCB3A2A8ADD7600673287 /* DataModel */,
+				E0BCCB5F2A8ADD7600673287 /* Extensions */,
+				E0BCCB622A8ADD7600673287 /* KeychainManager */,
+				E0BCCB522A8ADD7600673287 /* Localization */,
+				E0BCCB402A8ADD7600673287 /* Enum */,
+				E0BCCB492A8ADD7600673287 /* Structs */,
+				E0BCCB5A2A8ADD7600673287 /* Networking */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		E0BCCB2A2A8ADC4C00673287 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBA12A8ADD8100673287 /* Animations */,
+				E0BCCBA42A8ADD8100673287 /* Application */,
+				E0BCCBA82A8ADD8100673287 /* Modules */,
+				E0BCCBA62A8ADD8100673287 /* Networking */,
+				E0BCCBB02A8ADD8100673287 /* Resources */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		E0BCCB2B2A8ADC5100673287 /* WatchOS */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBB92A8ADD8F00673287 /* Networking */,
+			);
+			path = WatchOS;
+			sourceTree = "<group>";
+		};
+		E0BCCB2D2A8ADC7100673287 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB162A8ADBDB00673287 /* Webasyst.h */,
+				E0BCCB322A8ADCFC00673287 /* Package.swift */,
+			);
+			path = "Supporting files";
+			sourceTree = "<group>";
+		};
+		E0BCCB332A8ADD2200673287 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB342A8ADD3700673287 /* Webasyst.podspec */,
+				E0BCCB352A8ADD3700673287 /* LICENSE */,
+				E0BCCB362A8ADD3700673287 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		E0BCCB372A8ADD5D00673287 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB382A8ADD5E00673287 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E0BCCB3A2A8ADD7600673287 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB3B2A8ADD7600673287 /* WebasystDataModel.swift */,
+				E0BCCB3C2A8ADD7600673287 /* SettingsListModel.swift */,
+				E0BCCB3D2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
+		E0BCCB402A8ADD7600673287 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB412A8ADD7600673287 /* AuthAppleIDResult.swift */,
+				E0BCCB422A8ADD7600673287 /* UserStatus.swift */,
+				E0BCCB432A8ADD7600673287 /* AuthResult.swift */,
+				E0BCCB442A8ADD7600673287 /* ImageType.swift */,
+				E0BCCB452A8ADD7600673287 /* AuthCodeType.swift */,
+				E0BCCB462A8ADD7600673287 /* AccountCreatingResult.swift */,
+				E0BCCB472A8ADD7600673287 /* AuthType.swift */,
+				E0BCCB482A8ADD7600673287 /* TokenType.swift */,
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
+		E0BCCB492A8ADD7600673287 /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB4A2A8ADD7600673287 /* ProfileData.swift */,
+				E0BCCB4B2A8ADD7600673287 /* InstallInfo.swift */,
+				E0BCCB4C2A8ADD7600673287 /* Preferences.swift */,
+				E0BCCB4D2A8ADD7600673287 /* UserToken.swift */,
+				E0BCCB4E2A8ADD7600673287 /* AuthAppleIDData.swift */,
+				E0BCCB4F2A8ADD7600673287 /* UserData.swift */,
+				E0BCCB502A8ADD7600673287 /* CreateNewAccount.swift */,
+				E0BCCB512A8ADD7600673287 /* Installs.swift */,
+			);
+			path = Structs;
+			sourceTree = "<group>";
+		};
+		E0BCCB522A8ADD7600673287 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB532A8ADD7600673287 /* Localizable.strings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		E0BCCB562A8ADD7600673287 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB572A8ADD7600673287 /* Config.swift */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		E0BCCB582A8ADD7600673287 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB592A8ADD7600673287 /* WebasystApp.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		E0BCCB5A2A8ADD7600673287 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB5B2A8ADD7600673287 /* WebasystNetworkingManager.swift */,
+				E0BCCB5C2A8ADD7600673287 /* WebasystNetworking.swift */,
+				E0BCCB5D2A8ADD7600673287 /* NetworkingHelper.swift */,
+				E0BCCB5E2A8ADD7600673287 /* WebasystUserNetworking.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		E0BCCB5F2A8ADD7600673287 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB602A8ADD7600673287 /* URLRequest.swift */,
+				E0BCCB612A8ADD7600673287 /* UIImage.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		E0BCCB622A8ADD7600673287 /* KeychainManager */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCB632A8ADD7600673287 /* UserDefaultsKeys.swift */,
+				E0BCCB642A8ADD7600673287 /* KeychainService.swift */,
+			);
+			path = KeychainManager;
+			sourceTree = "<group>";
+		};
+		E0BCCBA12A8ADD8100673287 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBA22A8ADD8100673287 /* Confetti */,
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
+		E0BCCBA22A8ADD8100673287 /* Confetti */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBA32A8ADD8100673287 /* ConfettiAnimationView.swift */,
+			);
+			path = Confetti;
+			sourceTree = "<group>";
+		};
+		E0BCCBA42A8ADD8100673287 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBA52A8ADD8100673287 /* WebasystApp iOS.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		E0BCCBA62A8ADD8100673287 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBA72A8ADD8100673287 /* WebasystNetworking iOS.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		E0BCCBA82A8ADD8100673287 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBA92A8ADD8100673287 /* AuthModule */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		E0BCCBA92A8ADD8100673287 /* AuthModule */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBAA2A8ADD8100673287 /* ViewModel */,
+				E0BCCBAC2A8ADD8100673287 /* Coordinator */,
+				E0BCCBAE2A8ADD8100673287 /* View */,
+			);
+			path = AuthModule;
+			sourceTree = "<group>";
+		};
+		E0BCCBAA2A8ADD8100673287 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBAB2A8ADD8100673287 /* AuthViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E0BCCBAC2A8ADD8100673287 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBAD2A8ADD8100673287 /* AuthCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		E0BCCBAE2A8ADD8100673287 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBAF2A8ADD8100673287 /* AuthViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E0BCCBB02A8ADD8100673287 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBB12A8ADD8100673287 /* ConfettiAsset.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E0BCCBB92A8ADD8F00673287 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				E0BCCBBA2A8ADD8F00673287 /* WebasystNetworking watchOS.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E0BCCB0E2A8ADBDB00673287 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0BCCB172A8ADBDB00673287 /* Webasyst.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0BCCB1D2A8ADBFA00673287 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0BCCB2E2A8ADC7C00673287 /* Webasyst.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E0BCCB122A8ADBDB00673287 /* Webasyst */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E0BCCB1A2A8ADBDB00673287 /* Build configuration list for PBXNativeTarget "Webasyst" */;
+			buildPhases = (
+				E0BCCB0E2A8ADBDB00673287 /* Headers */,
+				E0BCCB0F2A8ADBDB00673287 /* Sources */,
+				E0BCCB102A8ADBDB00673287 /* Frameworks */,
+				E0BCCB112A8ADBDB00673287 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Webasyst;
+			productName = Webasyst;
+			productReference = E0BCCB132A8ADBDB00673287 /* Webasyst.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E0BCCB212A8ADBFA00673287 /* Webasyst-watchOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E0BCCB262A8ADBFA00673287 /* Build configuration list for PBXNativeTarget "Webasyst-watchOS" */;
+			buildPhases = (
+				E0BCCB1D2A8ADBFA00673287 /* Headers */,
+				E0BCCB1E2A8ADBFA00673287 /* Sources */,
+				E0BCCB1F2A8ADBFA00673287 /* Frameworks */,
+				E0BCCB202A8ADBFA00673287 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Webasyst-watchOS";
+			productName = "Webasyst watchOS";
+			productReference = E0BCCB222A8ADBFA00673287 /* Webasyst_watchOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E0BCCB0A2A8ADBDB00673287 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					E0BCCB122A8ADBDB00673287 = {
+						CreatedOnToolsVersion = 14.3.1;
+						LastSwiftMigration = 1430;
+					};
+					E0BCCB212A8ADBFA00673287 = {
+						CreatedOnToolsVersion = 14.3.1;
+						LastSwiftMigration = 1430;
+					};
+				};
+			};
+			buildConfigurationList = E0BCCB0D2A8ADBDB00673287 /* Build configuration list for PBXProject "Webasyst" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				ru,
+			);
+			mainGroup = E0BCCB092A8ADBDB00673287;
+			productRefGroup = E0BCCB142A8ADBDB00673287 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E0BCCB122A8ADBDB00673287 /* Webasyst */,
+				E0BCCB212A8ADBFA00673287 /* Webasyst-watchOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E0BCCB112A8ADBDB00673287 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0BCCBB82A8ADD8100673287 /* ConfettiAsset.xcassets in Resources */,
+				E0BCCB8B2A8ADD7600673287 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0BCCB202A8ADBFA00673287 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0BCCB8C2A8ADD7600673287 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E0BCCB0F2A8ADBDB00673287 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0BCCB872A8ADD7600673287 /* CreateNewAccount.swift in Sources */,
+				E0BCCB672A8ADD7600673287 /* SettingsListModel.swift in Sources */,
+				E0BCCB6D2A8ADD7600673287 /* UserStatus.swift in Sources */,
+				E0BCCB792A8ADD7600673287 /* TokenType.swift in Sources */,
+				E0BCCBB62A8ADD8100673287 /* AuthCoordinator.swift in Sources */,
+				E0BCCB6F2A8ADD7600673287 /* AuthResult.swift in Sources */,
+				E0BCCB692A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld in Sources */,
+				E0BCCB9B2A8ADD7600673287 /* UIImage.swift in Sources */,
+				E0BCCB732A8ADD7600673287 /* AuthCodeType.swift in Sources */,
+				E0BCCB9F2A8ADD7600673287 /* KeychainService.swift in Sources */,
+				E0BCCB9D2A8ADD7600673287 /* UserDefaultsKeys.swift in Sources */,
+				E0BCCB892A8ADD7600673287 /* Installs.swift in Sources */,
+				E0BCCB772A8ADD7600673287 /* AuthType.swift in Sources */,
+				E0BCCB952A8ADD7600673287 /* NetworkingHelper.swift in Sources */,
+				E0BCCB812A8ADD7600673287 /* UserToken.swift in Sources */,
+				E0BCCB8F2A8ADD7600673287 /* WebasystApp.swift in Sources */,
+				E0BCCB7D2A8ADD7600673287 /* InstallInfo.swift in Sources */,
+				E0BCCBB72A8ADD8100673287 /* AuthViewController.swift in Sources */,
+				E0BCCB7F2A8ADD7600673287 /* Preferences.swift in Sources */,
+				E0BCCB932A8ADD7600673287 /* WebasystNetworking.swift in Sources */,
+				E0BCCB712A8ADD7600673287 /* ImageType.swift in Sources */,
+				E0BCCBB22A8ADD8100673287 /* ConfettiAnimationView.swift in Sources */,
+				E0BCCB832A8ADD7600673287 /* AuthAppleIDData.swift in Sources */,
+				E0BCCB6B2A8ADD7600673287 /* AuthAppleIDResult.swift in Sources */,
+				E0BCCB852A8ADD7600673287 /* UserData.swift in Sources */,
+				E0BCCB912A8ADD7600673287 /* WebasystNetworkingManager.swift in Sources */,
+				E0BCCB752A8ADD7600673287 /* AccountCreatingResult.swift in Sources */,
+				E0BCCB992A8ADD7600673287 /* URLRequest.swift in Sources */,
+				E0BCCBB32A8ADD8100673287 /* WebasystApp iOS.swift in Sources */,
+				E0BCCB8D2A8ADD7600673287 /* Config.swift in Sources */,
+				E0BCCBB42A8ADD8100673287 /* WebasystNetworking iOS.swift in Sources */,
+				E0BCCBB52A8ADD8100673287 /* AuthViewModel.swift in Sources */,
+				E0BCCB652A8ADD7600673287 /* WebasystDataModel.swift in Sources */,
+				E0BCCB7B2A8ADD7600673287 /* ProfileData.swift in Sources */,
+				E0BCCB972A8ADD7600673287 /* WebasystUserNetworking.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0BCCB1E2A8ADBFA00673287 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0BCCBBB2A8ADD8F00673287 /* WebasystNetworking watchOS.swift in Sources */,
+				E0BCCB882A8ADD7600673287 /* CreateNewAccount.swift in Sources */,
+				E0BCCB682A8ADD7600673287 /* SettingsListModel.swift in Sources */,
+				E0BCCB6E2A8ADD7600673287 /* UserStatus.swift in Sources */,
+				E0BCCB7A2A8ADD7600673287 /* TokenType.swift in Sources */,
+				E0BCCB702A8ADD7600673287 /* AuthResult.swift in Sources */,
+				E0BCCB6A2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld in Sources */,
+				E0BCCB9C2A8ADD7600673287 /* UIImage.swift in Sources */,
+				E0BCCB742A8ADD7600673287 /* AuthCodeType.swift in Sources */,
+				E0BCCBA02A8ADD7600673287 /* KeychainService.swift in Sources */,
+				E0BCCB9E2A8ADD7600673287 /* UserDefaultsKeys.swift in Sources */,
+				E0BCCB8A2A8ADD7600673287 /* Installs.swift in Sources */,
+				E0BCCB782A8ADD7600673287 /* AuthType.swift in Sources */,
+				E0BCCB962A8ADD7600673287 /* NetworkingHelper.swift in Sources */,
+				E0BCCB822A8ADD7600673287 /* UserToken.swift in Sources */,
+				E0BCCB902A8ADD7600673287 /* WebasystApp.swift in Sources */,
+				E0BCCB7E2A8ADD7600673287 /* InstallInfo.swift in Sources */,
+				E0BCCB802A8ADD7600673287 /* Preferences.swift in Sources */,
+				E0BCCB942A8ADD7600673287 /* WebasystNetworking.swift in Sources */,
+				E0BCCB722A8ADD7600673287 /* ImageType.swift in Sources */,
+				E0BCCB842A8ADD7600673287 /* AuthAppleIDData.swift in Sources */,
+				E0BCCB6C2A8ADD7600673287 /* AuthAppleIDResult.swift in Sources */,
+				E0BCCB862A8ADD7600673287 /* UserData.swift in Sources */,
+				E0BCCB922A8ADD7600673287 /* WebasystNetworkingManager.swift in Sources */,
+				E0BCCB762A8ADD7600673287 /* AccountCreatingResult.swift in Sources */,
+				E0BCCB9A2A8ADD7600673287 /* URLRequest.swift in Sources */,
+				E0BCCB8E2A8ADD7600673287 /* Config.swift in Sources */,
+				E0BCCB662A8ADD7600673287 /* WebasystDataModel.swift in Sources */,
+				E0BCCB7C2A8ADD7600673287 /* ProfileData.swift in Sources */,
+				E0BCCB982A8ADD7600673287 /* WebasystUserNetworking.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E0BCCB532A8ADD7600673287 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E0BCCB542A8ADD7600673287 /* en */,
+				E0BCCB552A8ADD7600673287 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E0BCCB182A8ADBDB00673287 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Debug;
+		};
+		E0BCCB192A8ADBDB00673287 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Release;
+		};
+		E0BCCB1B2A8ADBDB00673287 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.Webasyst;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E0BCCB1C2A8ADBDB00673287 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.Webasyst;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E0BCCB272A8ADBFA00673287 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.Webasyst-watchOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Debug;
+		};
+		E0BCCB282A8ADBFA00673287 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.Webasyst-watchOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E0BCCB0D2A8ADBDB00673287 /* Build configuration list for PBXProject "Webasyst" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0BCCB182A8ADBDB00673287 /* Debug */,
+				E0BCCB192A8ADBDB00673287 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E0BCCB1A2A8ADBDB00673287 /* Build configuration list for PBXNativeTarget "Webasyst" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0BCCB1B2A8ADBDB00673287 /* Debug */,
+				E0BCCB1C2A8ADBDB00673287 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E0BCCB262A8ADBFA00673287 /* Build configuration list for PBXNativeTarget "Webasyst-watchOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0BCCB272A8ADBFA00673287 /* Debug */,
+				E0BCCB282A8ADBFA00673287 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E0BCCB3D2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E0BCCB3E2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodel */,
+			);
+			currentVersion = E0BCCB3E2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodel */;
+			path = WebasystAppDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = E0BCCB0A2A8ADBDB00673287 /* Project object */;
+}
