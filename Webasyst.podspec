@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     s.authors          = { '1312 Inc.' => 'hello@1312.io' }
     s.source           = { :git => 'https://github.com/1312inc/Webasyst-X-iOS-Pod.git', :tag => "v1.8.0" }
     
-    s.swift_version = '4.0'
+    s.swift_version = '5.0'
     
     s.platform = :ios
     s.platform = :watchos
