@@ -30,10 +30,11 @@ Pod::Spec.new do |s|
     s.ios.source_files = 'Webasyst/iOS/**/*.swift'
     s.watchos.source_files = 'Webasyst/WatchOS/**/*.swift'
     
-    s.resources = '**/**/*.{xcdatamodeld, xcassets, strings}'
+    s.resources = 'Webasyst/**/**/*.{xcdatamodeld, xcassets, strings}'
     
     s.frameworks = 'Foundation', 'CoreData'
     s.ios.frameworks = 'UIKit', 'WebKit'
+    s.watchos.frameworks = 'WatchKit'
     
 #    s.subspec 'Webasyst' do |w|
 #        w.source_files = 'iOS/**/*.{swift, h, m}'
