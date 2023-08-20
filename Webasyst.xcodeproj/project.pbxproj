@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E05B1BAA2A91F20F0051081B /* WebasystApp watchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B1BA92A91F20F0051081B /* WebasystApp watchOS.swift */; };
 		E0BCCB172A8ADBDB00673287 /* Webasyst.h in Headers */ = {isa = PBXBuildFile; fileRef = E0BCCB162A8ADBDB00673287 /* Webasyst.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E0BCCB2E2A8ADC7C00673287 /* Webasyst.h in Headers */ = {isa = PBXBuildFile; fileRef = E0BCCB162A8ADBDB00673287 /* Webasyst.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E0BCCB392A8ADD5E00673287 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0BCCB382A8ADD5E00673287 /* WebKit.framework */; };
@@ -81,6 +82,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E05B1BA92A91F20F0051081B /* WebasystApp watchOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebasystApp watchOS.swift"; sourceTree = "<group>"; };
 		E0BCCB132A8ADBDB00673287 /* Webasyst.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Webasyst.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0BCCB162A8ADBDB00673287 /* Webasyst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Webasyst.h; sourceTree = "<group>"; };
 		E0BCCB222A8ADBFA00673287 /* Webasyst_watchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Webasyst_watchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,6 +151,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E05B1BA82A91F1FA0051081B /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				E05B1BA92A91F20F0051081B /* WebasystApp watchOS.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
 		E0BCCB092A8ADBDB00673287 = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +220,7 @@
 		E0BCCB2B2A8ADC5100673287 /* WatchOS */ = {
 			isa = PBXGroup;
 			children = (
+				E05B1BA82A91F1FA0051081B /* Application */,
 				E0BCCBB92A8ADD8F00673287 /* Networking */,
 			);
 			path = WatchOS;
@@ -607,6 +618,7 @@
 				E0BCCB902A8ADD7600673287 /* WebasystApp.swift in Sources */,
 				E0BCCB7E2A8ADD7600673287 /* InstallInfo.swift in Sources */,
 				E0BCCB802A8ADD7600673287 /* Preferences.swift in Sources */,
+				E05B1BAA2A91F20F0051081B /* WebasystApp watchOS.swift in Sources */,
 				E0BCCB942A8ADD7600673287 /* WebasystNetworking.swift in Sources */,
 				E0BCCB722A8ADD7600673287 /* ImageType.swift in Sources */,
 				E0BCCB842A8ADD7600673287 /* AuthAppleIDData.swift in Sources */,
