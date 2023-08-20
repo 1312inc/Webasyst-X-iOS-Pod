@@ -7,7 +7,7 @@
 
 import Network
 
-final class NetworkingHelper {
+class NetworkingHelper {
     
     init() {
         monitor.pathUpdateHandler = { [weak self] path in
@@ -18,8 +18,14 @@ final class NetworkingHelper {
                 isConnectedToNetwork = false
             }
         }
+        monitor.start(queue: queue)
+    }
+    
+    deinit {
+        monitor.cancel()
     }
     
     private let monitor = NWPathMonitor()
-    private(set) var isConnectedToNetwork: Bool = false
+    private let queue = DispatchQueue(label: "NetworkConnectivityMonitor")
+    private(set) var isConnectedToNetwork: Bool = true
 }

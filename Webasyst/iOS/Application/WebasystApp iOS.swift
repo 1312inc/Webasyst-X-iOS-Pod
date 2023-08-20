@@ -22,7 +22,7 @@ extension WebasystApp {
     ///   - action: Closure to perform an action after authorization
     @available(*, deprecated, message: "This method is obsolete, use oAuthLogin")
     public func authWebasyst(navigationController: UINavigationController, action: @escaping ((_ result: WebasystServerAnswer) -> ())) {
-        let coordinator = AuthCoordinator(navigationController) { [weak self] success in
+        coordinator = AuthCoordinator(navigationController) { [weak self] success in
             switch success {
             case .success:
                 action(WebasystServerAnswer.success)
@@ -31,7 +31,7 @@ extension WebasystApp {
                 action(WebasystServerAnswer.error(error: error))
             }
         }
-        coordinator.start()
+        coordinator?.start()
     }
     
     /// The method presents a webView with a Webasyst authorisation form. After successful completion of the form, the user is authenticated and the user status is returned
@@ -41,7 +41,7 @@ extension WebasystApp {
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window
     ///   - action: Closure to perform an action after authorization with status of user
     public func oAuthLogin(with merge: Bool = false, with code: String = "", navigationController: UINavigationController, action: @escaping ((_ result: UserStatus) -> ())) {
-        let coordinator = AuthCoordinator(navigationController) { [weak self] success in
+        coordinator = AuthCoordinator(navigationController) { [weak self] success in
             switch success {
             case .success:
                 UserDefaults.standard.setValue("", forKey: "selectDomainUser")
@@ -55,7 +55,7 @@ extension WebasystApp {
                 action(.error(message: error))
             }
         }
-        coordinator.start(with: code)
+        coordinator?.start(with: code)
     }
     
     /// Authorization in Webasyst with an Apple ID
@@ -145,16 +145,15 @@ extension WebasystApp {
     public func defaultChecking(completion: @escaping (Bool) -> ()) {
         if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
             let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
-            getAllUserInstall { [weak self] installs in
-                if installs != nil, installs != [], domain == nil {
-                    completion(true)
-                    self?.logOutUser(completion: { _ in })
-                }
-                if !KeychainManager.token.isEmpty {
-                    completion(condition)
-                } else {
-                    completion(true)
-                }
+            let installs = getAllUserInstall()
+            if installs != nil, installs != [], domain == nil {
+                completion(true)
+                logOutUser(completion: { _ in })
+            }
+            if !KeychainManager.token.isEmpty {
+                completion(condition)
+            } else {
+                completion(true)
             }
         } else {
             completion(true)

@@ -25,6 +25,10 @@ public class WebasystApp {
     let networking = WebasystNetworking()
     let userNetworking = WebasystUserNetworking()
     
+    #if os(iOS)
+    internal var coordinator: AuthCoordinator?
+    #endif
+    
     public init() {}
     
     /// Webasyst library configuration method
@@ -96,10 +100,9 @@ public class WebasystApp {
     }
     
     /// Getting user install list
-    /// - Parameter completion: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
-    public func getAllUserInstall(_ result: @escaping ([UserInstall]?) -> ()) {
-        let installList = profileInstallService?.getInstallList()
-        result(installList)
+    /// - Returns: List of all user installations in UserInstall format (name, clientId, domain, accessToken, url)
+    public func getAllUserInstall() -> [UserInstall]? {
+        profileInstallService?.getInstallList()
     }
     
     /// Updating and Getting user install list from server

@@ -31,7 +31,13 @@ class KeychainManager {
         
         SecItemDelete(query as CFDictionary)
         
-        return SecItemAdd(query as CFDictionary, nil)
+        let osStatus = SecItemAdd(query as CFDictionary, nil)
+        
+        if osStatus == 0 {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "\(key)Updated"), object: nil)
+        }
+        
+        return osStatus
     }
     
     static var token: String {
