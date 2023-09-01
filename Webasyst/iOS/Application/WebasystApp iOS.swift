@@ -9,6 +9,12 @@ import UIKit
 
 extension WebasystApp {
     
+    /// Method to get device id for watchOS webasyst framework configuration
+    /// - Returns: iOS device identifier
+    public func getDeviceID() -> String {
+        networking.getDeviceId()
+    }
+    
     /// Start a confetti animation for selected viewController
     /// - Parameters:
     ///   - viewController: UIViewController for which the confetti animation will be called

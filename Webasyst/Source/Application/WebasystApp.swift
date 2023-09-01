@@ -32,7 +32,8 @@ public class WebasystApp {
     public init() {}
     
     /// Webasyst library configuration method
-    public func configure() {
+    /// - Parameter deviceID: Device identifier of main Webasyst iOS application. Parameter required for framework correctly work on companion applications of the main Webasyst application
+    public func configure(deviceID: String? = nil) {
         if let path = Bundle.main.path(forResource: "Webasyst", ofType: "plist"), let xml = FileManager.default.contents(atPath: path), let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml) {
             if preferences.scope.contains("webasyst") {
                 WebasystApp.config = WebasystConfig(clientId: preferences.clientId, host: preferences.host, scope: preferences.scope)
@@ -41,6 +42,9 @@ public class WebasystApp {
             }
         } else {
             print(NSError(domain: "Webasyst error(method: configure): Webasyst configuration error, check if there is a Webasyst.plist file in the root of the project", code: 500, userInfo: nil))
+        }
+        if let deviceID = deviceID {
+            UserDefaults.standard.set(deviceID, forKey: "deviceID")
         }
     }
     

@@ -10,6 +10,6 @@ import WatchKit
 extension WebasystNetworking {
     
     func getDeviceId() -> String {
-        WKInterfaceDevice.current().identifierForVendor!.uuidString
+        UserDefaults.standard.string(forKey: "deviceID") ?? WKInterfaceDevice.current().identifierForVendor!.uuidString
     }
 }
