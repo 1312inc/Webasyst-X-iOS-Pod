@@ -76,6 +76,10 @@ public class WebasystDataModel {
             return nil
         }
     }
+    
+    deinit {
+        managedObjectContext = nil
+    }
 }
 
 //MARK: Internal method
@@ -226,8 +230,8 @@ extension WebasystDataModel {
     func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
         persistentContainerQueue.addOperation() { [weak self] in
             guard let self = self, let context = self.managedObjectContext else { return }
-            context.performAndWait{ [weak self] in
-                guard self != nil else { return }
+            context.performAndWait{ [weak self, weak context] in
+                guard self != nil, let context = context else { return }
                 block(context)
                 do {
                     try context.save()
