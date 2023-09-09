@@ -78,6 +78,7 @@ public class WebasystDataModel {
     }
     
     deinit {
+        managedObjectContext?.reset()
         managedObjectContext = nil
     }
 }
