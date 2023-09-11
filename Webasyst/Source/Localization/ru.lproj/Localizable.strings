@@ -31,45 +31,45 @@
 "faileAppeIDRequest" = "Apple вернула сообщение об ошибке на запрос авторизации с помощью Apple ID. Более подробную информацию смотрите в описании.";
 "failedAppleIDMerge" = "Не удалось объединить учетные записи.";
 "failedAppleIDAuth" = "Не удалось осуществить вход с Apple.";
-"failedGetAppleIDAuthorizationCode" = "Не удается получить код авторизации с сервера Apple. Пожалуйста, попробуйте еще раз позже.";
-"failedGetAppleIDIdentityToken" = "Не удается получить идентификационный токен с сервера Apple. Пожалуйста, попробуйте еще раз позже.";
+"failedGetAppleIDAuthorizationCode" = "Не удается получить код авторизации от Apple. Пожалуйста, попробуйте еще раз позже.";
+"failedGetAppleIDIdentityToken" = "Не удается получить идентификационный токен от Apple. Пожалуйста, попробуйте еще раз позже.";
 
 // Install alert
 
 "checkInstallAppError" = "Произошла ошибка при установке %APPNAME%";
-"checkLicenseError" = "Произошла ошибка при установке лицензии";
-"successBody" = "%APPNAME% успешно установлен. Для %ACCOUNTNAME% выписана бесплатная лицензия на 30 дней.";
-"installTimeLimit" = "Что-то пошло не так. Попробуйте еще раз через минуту.";
+"checkLicenseError" = "Произошла ошибка при выписке лицензии";
+"successBody" = "%APPNAME% успешно установлен! Для %ACCOUNTNAME% выписана бесплатная лицензия на 30 дней.";
+"installTimeLimit" = "При установке что-то пошло не так: сервер ничего не ответил (time out). Попробуйте еще раз, пожалуйста.";
 
 // Add account alert
 
 "createWebasystAccountError" = "Произошла ошибка при создании аккаунта Webasyst";
-"shopNameErrorDescription" = "Возникла ошибка при считывании названия магазина.";
-"addAccountSuccessBody" = "Новый облачный аккаунт Webasyst успешно создан!";
-"addAccountSuccessButNotRenamedBody" = "Новый облачный аккаунт Webasyst успешно создан! Однако, не удалось сменить домен созданного аккаунта.";
+"shopNameErrorDescription" = "Возникла ошибка при сохранении названия магазина.";
+"addAccountSuccessBody" = "Новый магазин успешно созданы!";
+"addAccountSuccessButNotRenamedBody" = "Новый магазин успешно создан! Но не получилось установить введенный домен созданного аккаунта — что-то пошло не так.";
 
 // Connect account alert
 
-"connectWebasystAccountError" = "Что-то пошло не так. Код приглашения недействителен. Попросите новый код и повторите попытку через минуту.";
-"qrConnectWebasystAccountError" = "Что-то пошло не так. Не удалось добавить аккаунт по qr-коду.";
-"connectAccountSuccessBody" = "Ваш Webasyst ID был успешно подключен к %ACCOUNTNAME%.";
+"connectWebasystAccountError" = "Код приглашения недействителен. Попросите администратора прислать новый код и попробуйте снова.";
+"qrConnectWebasystAccountError" = "Не удалось добавить аккаунт. Вероятно, QR-код устарел.";
+"connectAccountSuccessBody" = "Ура, ваш Webasyst ID был успешно подключен к %ACCOUNTNAME%!";
 
 // Link accounts alert
 
-"mergeWelcomeError" = "Что-то пошло не так. Не удалось объединить учетные записи. Пожалуйста, свяжитесь со службой поддержки Webasyst, прикрепив к запросу скриншот этой ошибки.";
-"mergeWelcomeError2" = "Что-то пошло не так. Не удалось завершить объеденение учетных записей. Пожалуйста, свяжитесь со службой поддержки Webasyst, прикрепив к запросу скриншот этой ошибки.";
+"mergeWelcomeError" = "Не удалось объединить аккаунты. Пожалуйста, свяжитесь со службой поддержки Webasyst, прикрепив к запросу скриншот этой ошибки — поможем с настройкой.";
+"mergeWelcomeError2" = "Не удалось объединить аккаунты. Пожалуйста, свяжитесь со службой поддержки Webasyst, прикрепив к запросу скриншот этой ошибки — поможем с настройкой.";
 
 // Notifications alert
 
 "notificationsAlertTitle" = "Уведомления отключены";
-"notificationsAlertDescription" = "Уведомления отключены для приложения %APPNAME%. Включите уведомления в настройках iOS, чтобы начать получать уведомления о новых заказах.";
+"notificationsAlertDescription" = "Уведомления для приложения %APPNAME% отключены. Включите уведомления в общих настройках iOS, чтобы получать уведомления о новых заказах.";
 "openSettingsButtonTitle" = "Открыть настройки";
 
 // Onboarding failed
 
 "onboardingFailedTitle" = "Ошибка создания аккаунта";
 "onboardingFailedDescription" = "Ошибка: сервер ответил «не шмогла»";
-"onboardingFailedNameMissingDescription" = "Ошибка: не удалось считать имя аккаунта.";
+"onboardingFailedNameMissingDescription" = "Ошибка: не удалось сохранить имя аккаунта.";
 
 // Passcode alert button names
 
@@ -90,7 +90,7 @@
 
 "viewDemoAccount" = "Посмотреть демо-магазин"; // You need to change it according to the context of your application
 "phoneDescription" = "Пожалуйста, уточните свой номер телефона, чтобы создать новый профиль пользователя Webasyst ID и привязать его к мобильному приложению.";
-"appDescription" = "Вход с Webasyst ID автоматически подключит приложение ко всем вашем аккаунтам и сайтам на основе Webasyst.";
+"appDescription" = "Webasyst ID автоматически подключит приложение ко всем вашим аккаунтам и сайтам на основе Webasyst.";
 "expressPhoneLogin" = "Подтвердить номер";
 "phoneLogin" = "Войти по номеру телефона";
 "appleLogin" = "Вход с Apple";
@@ -98,7 +98,7 @@
 "appleLoginEmailConfirmationLogout" = "Выйти";
 "emailLogin" = " Войти с email и паролем";
 "QRLogin" = " Войти по QR-коду";
-"QRAdd" = "Добавить по QR-коду";
+"QRAdd" = " Войти по QR-коду";
 "aboutWebAsystID" = "Что такое Webasyst ID?";
 "webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
 
@@ -130,7 +130,7 @@
 "notSecureConnection" = "Небезопасное соединение";
 "expiresOn" = "Истекает %@";
 "expiredOn" = "Истек %@";
-"addWebasystButton" = "Добавить аккаунт";
+"addWebasystButton" = "Добавить магазин";
 "manageProfileButton" = "Мой профиль";
 "setPinCodeButton" = "Код-пароль";
 "exitAccountButtonTitle" = "Выйти";
@@ -139,11 +139,11 @@
 
 "createInstallNotPresentedDescriptionOfStoreConnect" = "Код подключения:";
 "showInfoAboutEightDigitCodeTitle" = "Где найти код";
-"joinDescription" = "Или подключитесь самостоятельно, сфотографировав QR-код в своем профиле Webasyst или войдя с Webasyst ID «по старинке» — по email и паролю:";
-"joinDescriptionOnlyQR" = "Или подключите магазин самостоятельно, сфотографировав QR-код в своем профиле Webasyst:";
-"errorCreateNewInstall" = "Не удалось создать аккаунт Webasyst. Скорее всего, превышен лимит на количество бесплатных пробных облачных аккаунтов.";
-"createInstallTitleOfStoreConnect" = "Подключить магазин";
-"createInstallDescriptionOfStoreConnect" = "Если магазин, с которым вы уже работаете, еще не подключен к вашему Webasyst ID%ACCOUNTEMAIL%, попросите у администратора магазина 8-значный код подключения. Получить код администратор может внутри Webasyst в вашем профиле в приложении «Команда».";
+"joinDescription" = "Или подключитесь к магазину самостоятельно — войдите в Webasyst в браузере на компьютере и сфотографируйте QR-код для подключения приложения в своем профиле Webasyst."; // "... или войдите с Webasyst ID по email и паролю."; // не интересно
+"joinDescriptionOnlyQR" = "Или подключитесь к магазину самостоятельно — войдите в Webasyst в браузере на компьютере и сфотографируйте QR-код для подключения приложения в своем профиле Webasyst.";
+"errorCreateNewInstall" = "Не удалось магазин. Скорее всего, превышен лимит на количество бесплатных пробных облачных аккаунтов Webasyst.";
+"createInstallTitleOfStoreConnect" = "Подключиться к магазину";
+"createInstallDescriptionOfStoreConnect" = "Чтобы подключить ваш Webasyst ID%ACCOUNTEMAIL% к существующему магазину, запросите у администратора магазина 8-значный код подключения. Получить код администратор может внутри Webasyst в приложении «Команда» в вашем профиле.";
 "createInstallButton" = "Создать магазин";
 "createNewShopTitle" = "Открыть новый магазин";
 "createNewShopDescription" = "Позже к магазину можно будет подключить свое доменное имя и пригласить коллег для совместной обработки заказов.";
@@ -179,9 +179,9 @@
 
 // MARK: - QR screen
 
-"QRDescription" = "Перейдите в свой профиль на сайте или в бекенде Webasyst в браузере и нажмите «Войти по QR-коду» вверху справа.";
-"QRFrameWrongTriggerDescriptionWithoutUsername" = "Это не тот QR-код! Вы уже авторизованы в приложении с Webasyst ID и сканируете QR-код для входа с другим Webasyst ID. А нужный вам QR-код в бекенде Webasyst на вашем сайте в вашем профиле в «Команде» — там особый типа кода, который свяжет ваш Webasyst ID с новым сайтом, к которому вы пока не подключены.";
-"QRFrameDescription" = "Да, это QR-код, но он никак не связан с Webasyst.";
+"QRDescription" = "Войдите в свой Webasyst в браузере на компьютере и сфотографируйте QR-код для входа в своем профиле в правом верхнем углу.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "Это не тот QR-код! Вы авторизованы в приложении с Webasyst ID, но сканируете QR-код для входа с другим Webasyst ID. А нужный вам QR-код — в бекенде Webasyst на вашем сайте в вашем профиле в «Команде». Там особый тип кода, который свяжет приложение с еще не подключенным аккаунтом Webasyst.";
+"QRFrameDescription" = "Да, это тоже QR-код, но он никак не связан с Webasyst.";
 "QRTopLabel" = "Отсканируйте QR-код";
 
 // MARK: - Install screen

@@ -31,33 +31,33 @@
 "faileAppeIDRequest" = "Apple has return an error on request to authorize with Apple ID. See more info in the description.";
 "failedAppleIDMerge" = "Failed to merge accounts.";
 "failedAppleIDAuth" = "Failed to sign in with Apple.";
-"failedGetAppleIDAuthorizationCode" = "Cannot get authorization code from Apple server. Please try again later.";
-"failedGetAppleIDIdentityToken" = "Cannot get identity token from Apple server. Please try again later.";
+"failedGetAppleIDAuthorizationCode" = "Cannot get authorization code from Apple. Please try again later.";
+"failedGetAppleIDIdentityToken" = "Cannot get identity token from Apple. Please try again later.";
 
 // Install alert
 
 "checkInstallAppError" = "An error occurred while installing %APPNAME%";
 "checkLicenseError" = "An error occurred while installing the license";
 "successBody" = "%APPNAME% has been successfully installed. A free 30 days license has been issued for %ACCOUNTNAME%.";
-"installTimeLimit" = "Something went wrong. Please try again in a minute.";
+"installTimeLimit" = "Something went wrong — server did not respond (time out). Please try again in a minute.";
 
 // Add account alert
 
-"createWebasystAccountError" = "An error occurred when creating a Webasyst account";
-"shopNameErrorDescription" = "An error occurred when reading the name of the store.";
-"addAccountSuccessBody" = "New Webasyst cloud account has been successfully created!";
-"addAccountSuccessButNotRenamedBody" = "New Webasyst cloud account has been successfully created! However, it was not possible to change the domain of the created account.";
+"createWebasystAccountError" = "An error occurred while creating a Webasyst account";
+"shopNameErrorDescription" = "An error occurred while reading the name of the store";
+"addAccountSuccessBody" = "New store has been successfully created!";
+"addAccountSuccessButNotRenamedBody" = "New store has been successfully created! However, we could not map the domain name to the created account. Something went wrong.";
 
 // Connect account alert
 
-"connectWebasystAccountError" = "Something went wrong. The invitation code is invalid. Ask your teammate for a new code and try again in a minute.";
-"qrConnectWebasystAccountError" = "Something went wrong. Failed to add an account using a QR code.";
-"connectAccountSuccessBody" = "Your Webasyst ID has been successfully connected to %ACCOUNTNAME%.";
+"connectWebasystAccountError" = "The invitation code is invalid. Ask your teammate for a new code and try again.";
+"qrConnectWebasystAccountError" = "Failed to add an account. Looks like the QR code has expired.";
+"connectAccountSuccessBody" = "Hooray, your Webasyst ID has been successfully connected to %ACCOUNTNAME%!";
 
 // Link accounts alert
 
-"mergeWelcomeError" = "Something went wrong. Could not merge accounts due to security concerns. Please contact Webasyst support team on the issue mentioning both Webasyst ID account credentials.";
-"mergeWelcomeError2" = "Something went wrong. Failed to complete merging of accounts. Please contact Webasyst support team on the issue mentioning both Webasyst ID account credentials.";
+"mergeWelcomeError" = "Could not merge accounts due to security concerns. Please contact Webasyst support team on the issue mentioning both Webasyst IDs and attaching a screenshot of this error message.";
+"mergeWelcomeError2" = "Failed to complete account merge. Please contact Webasyst support team on the issue mentioning both Webasyst IDs and attaching a screenshot of this error message.";
 
 // Notifications alert
 
@@ -68,7 +68,7 @@
 // Onboarding failed
 
 "onboardingFailedTitle" = "Account creation error";
-"onboardingFailedDescription" = "Error: Server returned 'false' in the response.";
+"onboardingFailedDescription" = "Error: Server returned 'i give up' in the response.";
 "onboardingFailedNameMissingDescription" = "Error: Account name could not be read.";
 
 // Passcode alert button names
@@ -90,15 +90,15 @@
 
 "viewDemoAccount" = "View Demo Store"; // You need to change it according to the context of your application
 "phoneDescription" = "Please specify your phone number to create a new Webasyst ID user profile and link it to the mobile application.";
-"appDescription" = "Sign in with Webasyst ID to automatically connect the app to all Webasyst accounts and sites you work with.";
+"appDescription" = "Webasyst ID will automatically connect the app to all Webasyst accounts and sites you work with.";
 "expressPhoneLogin" = "Confirm phone number";
 "phoneLogin" = "Sign in with phone number";
 "appleLogin" = "Sign in with Apple";
 "appleLoginEmailConfirmationDescription" = "Email%email% is already registered with us, and to link it to your Apple ID, you need to enter the code that was sent to your email just now.";
 "appleLoginEmailConfirmationLogout" = "Sign Out";
-"emailLogin" = "Sign in with email and password";
-"QRLogin" = "Sign in using QR";
-"QRAdd" = "Add account using QR";
+"emailLogin" = " Sign in with email and password";
+"QRLogin" = " Sign in using QR";
+"QRAdd" = " Sign in using QR";
 "aboutWebAsystID" = "What is Webasyst ID?";
 "webasystURL" = "https://www.webasyst.com/webasyst-id-how-to/";
 
@@ -130,7 +130,7 @@
 "notSecureConnection" = "Connection is not secure";
 "expiresOn" = "Expires on %@";
 "expiredOn" = "Expired on %@";
-"addWebasystButton" = "Add Account";
+"addWebasystButton" = "Add Store";
 "manageProfileButton" = "My Profile";
 "setPinCodeButton" = "Passcode";
 "exitAccountButtonTitle" = "Sign Out";
@@ -139,11 +139,11 @@
 
 "createInstallNotPresentedDescriptionOfStoreConnect" = "Invitation code:";
 "showInfoAboutEightDigitCodeTitle" = "Where do I get the code?";
-"joinDescription" = "Or connect by scanning a QR code in your Webasyst backend profile or by signing in the classic way — with an email and a password:";
-"joinDescriptionOnlyQR" = "Or connect by scanning a QR code in your Webasyst backend:";
+"joinDescription" = "Or connect the app manually — sign in to your Webasyst account in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
+"joinDescriptionOnlyQR" = "Or connect the app manually — sign in to your Webasyst account in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
 "errorCreateNewInstall" = "Sorry, we cannot create another account for you at the moment. Most likely, a limit on the number of free Webasyst cloud accounts has been exceeded.";
-"createInstallTitleOfStoreConnect" = "Link an existing store";
-"createInstallDescriptionOfStoreConnect" = "If your online store is not connected to your Webasyst ID%ACCOUNTEMAIL% for some reason, ask the store admin for a 8-digit invitation code and enter it below. The code can be found in the Team app > your Webasyst user profile.";
+"createInstallTitleOfStoreConnect" = "Connect to an existing store";
+"createInstallDescriptionOfStoreConnect" = "To connect your Webasyst ID%ACCOUNTEMAIL% to an existing store, ask the store admin for a 8-digit invitation code. The code can be found in Webasyst web app > Team > your Webasyst user profile.";
 "createInstallButton" = "Create a Store";
 "createNewShopTitle" = "Create a new store";
 "createNewShopDescription" = "Once created, you will be able to link your custom domain name and to invite your teammates to manage sales together.";
@@ -179,8 +179,8 @@
 
 // MARK: - QR screen
 
-"QRDescription" = "Open your profile in the Webasyst backend in a browser and click the “Sign in using QR” button on the right.";
-"QRFrameWrongTriggerDescriptionWithoutUsername" = "This is a wrong code! You are scanning a QR code to sign in with Webasyst ID while being authorized with another Webasyst ID already. But the code you need is located in your Webasyst backend profile on your custom domain in the Team app — this code will connect your current Webasyst ID to an new account which is not linked yet.";
+"QRDescription" = "Open your Webasyst profile in a browser on your computer and click the “Sign in using QR” button on the top right corner.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "This is a wrong code! You are scanning a QR code to sign in with Webasyst ID while being authorized with another Webasyst ID already. The valid code you need is located in your Webasyst backend profile on your custom domain in the Team app — this special QR code will connect your current Webasyst ID with the account which is not linked yet.";
 "QRFrameDescription" = "Yes, it’s a QR code, but it does not look like a Webasyst code at all.";
 "QRTopLabel" = "Scan the QR code";
 
