@@ -78,6 +78,7 @@ public class WebasystDataModel {
     }
     
     deinit {
+        persistentContainerQueue.cancelAllOperations()
         managedObjectContext?.reset()
         managedObjectContext = nil
     }
