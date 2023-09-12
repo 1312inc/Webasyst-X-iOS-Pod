@@ -139,14 +139,14 @@
 
 "createInstallNotPresentedDescriptionOfStoreConnect" = "Invitation code:";
 "showInfoAboutEightDigitCodeTitle" = "Where do I get the code?";
-"joinDescription" = "Or connect the app manually — sign in to your Webasyst account in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
-"joinDescriptionOnlyQR" = "Or connect the app manually — sign in to your Webasyst account in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
+"joinDescription" = "Or connect the app manually: sign in to your store backend in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
+"joinDescriptionOnlyQR" = "Or connect the app manually: sign in to your store backend in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
 "errorCreateNewInstall" = "Sorry, we cannot create another account for you at the moment. Most likely, a limit on the number of free Webasyst cloud accounts has been exceeded.";
 "createInstallTitleOfStoreConnect" = "Connect to an existing store";
-"createInstallDescriptionOfStoreConnect" = "To connect your Webasyst ID%ACCOUNTEMAIL% to an existing store, ask the store admin for a 8-digit invitation code. The code can be found in Webasyst web app > Team > your Webasyst user profile.";
+"createInstallDescriptionOfStoreConnect" = "To connect your Webasyst ID%ACCOUNTEMAIL% to an existing store, ask the store admin for a 8-digit invitation code. The code can be found in Webasyst > Team app > your Webasyst user profile.";
 "createInstallButton" = "Create a Store";
 "createNewShopTitle" = "Create a new store";
-"createNewShopDescription" = "Once created, you will be able to link your custom domain name and to invite your teammates to manage sales together.";
+"createNewShopDescription" = "Once your store is created, you will be able to link it with your custom domain name and to invite your teammates to manage sales together.";
 
 // MARK: - Redactor screen
 
