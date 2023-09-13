@@ -7,7 +7,8 @@
 
 import Foundation
 
-public class SettingsListModel: NSObject, NSCoding {
+public class SettingsListModel: NSObject, NSCoding, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
     
     enum Key: String {
         case selected = "selected"

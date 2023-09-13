@@ -265,7 +265,7 @@ extension WebasystDataModel {
         guard let object = try? Data(contentsOf: url) else { return
             creator(_installs: installs, url: url)
         }
-        if let archivedInstalls = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSDictionary.self, from: object) as? Dictionary<String,SettingsListModel>, archivedInstalls.count != installs.count {
+        if let archivedInstalls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSDictionary.self, SettingsListModel.self], from: object) as? Dictionary<String,SettingsListModel>, archivedInstalls.count != installs.count {
             creator(_installs: installs, url: url)
         }
     }
