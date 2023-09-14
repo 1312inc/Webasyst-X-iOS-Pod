@@ -30,4 +30,17 @@ extension WebasystApp {
             let _ = KeychainManager.save(key: "refreshToken", data: tokenData)
         }
     }
+    
+    /// Delete all records in the database
+    /// - Parameter completion: Boolean value of deauthorization success
+    public func logOutUser(completion: @escaping (Bool) -> ()) {
+        profileInstallService?.resetInstallList()
+        profileInstallService?.deleteProfileData()
+        KeychainManager.deleteAllKeys()
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.synchronize()
+        UserDefaults.standard.set(true, forKey: "firstLaunch")
+        completion(true)
+    }
 }
