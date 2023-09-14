@@ -137,8 +137,6 @@
 
 // MARK: - Create new install screen
 
-"createInstallNotPresentedDescriptionOfStoreConnect" = "Invitation code:";
-"showInfoAboutEightDigitCodeTitle" = "Where do I get the code?";
 "joinDescription" = "Or connect the app manually: sign in to your store backend in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
 "joinDescriptionOnlyQR" = "Or connect the app manually: sign in to your store backend in a browser on your computer, navigate to your user profile screen, and scan an authorization QR code.";
 "errorCreateNewInstall" = "Sorry, we cannot create another account for you at the moment. Most likely, a limit on the number of free Webasyst cloud accounts has been exceeded.";

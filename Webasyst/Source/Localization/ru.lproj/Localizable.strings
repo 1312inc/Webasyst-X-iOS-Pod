@@ -137,8 +137,6 @@
 
 // MARK: - Create new install screen
 
-"createInstallNotPresentedDescriptionOfStoreConnect" = "Код подключения:";
-"showInfoAboutEightDigitCodeTitle" = "Где найти код";
 "joinDescription" = "Или подключитесь к магазину самостоятельно: войдите в Webasyst в браузере на компьютере и сфотографируйте QR-код подключения приложения в своем профиле Webasyst."; // "... или войдите с Webasyst ID по email и паролю."; // не интересно
 "joinDescriptionOnlyQR" = "Или подключитесь к магазину самостоятельно: войдите в Webasyst в браузере на компьютере и сфотографируйте QR-код подключения приложения в своем профиле Webasyst.";
 "errorCreateNewInstall" = "Не удалось магазин. Скорее всего, превышен лимит на количество бесплатных пробных облачных аккаунтов Webasyst.";
