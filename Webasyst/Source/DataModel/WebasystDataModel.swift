@@ -60,12 +60,6 @@ public class WebasystDataModel {
         return container
     }()
     
-    private let persistentContainerQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        return queue
-    }()
-    
     private var managedObjectContext: NSManagedObjectContext?
     
     public init?() {
@@ -78,7 +72,6 @@ public class WebasystDataModel {
     }
     
     deinit {
-        persistentContainerQueue.cancelAllOperations()
         managedObjectContext?.reset()
         managedObjectContext = nil
     }
@@ -230,17 +223,15 @@ extension WebasystDataModel {
     
     /// Adding block to queue to saving the database context
     func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
-        persistentContainerQueue.addOperation() { [weak self] in
-            guard let self = self, let context = self.managedObjectContext else { return }
-            context.performAndWait{ [weak self, weak context] in
-                guard self != nil, let context = context else { return }
-                block(context)
-                do {
-                    try context.save()
-                } catch {
-                    let nserror = error as NSError
-                    print(NSError(domain: "Webasyst Database error(method: save): Unresolved error \(nserror), \(nserror.userInfo)", code: 500, userInfo: nil))
-                }
+        guard let context = self.managedObjectContext else { return }
+        context.performAndWait{ [weak self, weak context] in
+            guard self != nil, let context = context else { return }
+            block(context)
+            do {
+                try context.save()
+            } catch {
+                let nserror = error as NSError
+                print(NSError(domain: "Webasyst Database error(method: save): Unresolved error \(nserror), \(nserror.userInfo)", code: 500, userInfo: nil))
             }
         }
     }

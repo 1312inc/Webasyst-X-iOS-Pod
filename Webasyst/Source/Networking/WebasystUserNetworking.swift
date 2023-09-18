@@ -183,11 +183,16 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 switch httpResponse.statusCode {
                 case 200...299:
                     if let data = data {
-                        let userData = try! JSONDecoder().decode(UserData.self, from: data)
-                        let condition = userData.firstname.isEmpty || userData.lastname.isEmpty
-                        completion(condition)
-                        WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
-                            self?.profileInstallService?.saveProfileData(userData, avatar: data)
+                        do {
+                            let userData = try JSONDecoder().decode(UserData.self, from: data)
+                            let condition = userData.firstname.isEmpty || userData.lastname.isEmpty
+                            completion(condition)
+                            WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
+                                self?.profileInstallService?.saveProfileData(userData, avatar: data)
+                            }
+                        } catch {
+                            completion(false)
+                            print(NSError(domain: "Webasyst error: user data decode error \n\(error).", code: 400, userInfo: nil))
                         }
                     }
                 default:
@@ -360,13 +365,18 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 switch httpResponse.statusCode {
                 case 200...299:
                     if let data = data {
-                        let installList = try! JSONDecoder().decode([UserInstallCodable].self, from: data)
-                        let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser") ?? ""
-                        if let install = installList.first?.id, activeInstall.isEmpty || !installList.contains(where: { $0.id == activeInstall }) {
-                            UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
+                        do {
+                            let installList = try JSONDecoder().decode([UserInstallCodable].self, from: data)
+                            let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser") ?? ""
+                            if let install = installList.first?.id, activeInstall.isEmpty || !installList.contains(where: { $0.id == activeInstall }) {
+                                UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
+                            }
+                            completion(installList)
+                            self?.deleteNonActiveInstall(installList: installList)
+                        } catch {
+                            completion(nil)
+                            print(NSError(domain: "Webasyst error: Failed to decode list of user settings \n\(error).", code: 400, userInfo: nil))
                         }
-                        completion(installList)
-                        self?.deleteNonActiveInstall(installList: installList)
                     }
                 default:
                     completion(nil)

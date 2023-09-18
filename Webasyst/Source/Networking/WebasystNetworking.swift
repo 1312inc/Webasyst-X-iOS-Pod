@@ -463,12 +463,17 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                 switch httpResponse.statusCode {
                 case 200...299:
                     if let data = data {
-                        let authData = try! JSONDecoder().decode(UserToken.self, from: data)
-                        let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                        UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
-                        let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
-                        if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
-                            completion(true)
+                        do {
+                            let authData = try JSONDecoder().decode(UserToken.self, from: data)
+                            let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                            UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
+                            let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                            if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                                completion(true)
+                            }
+                        } catch {
+                            completion(false)
+                            print(NSError(domain: "Webasyst error: decode error (getAccessToken) \n\(error).", code: 400, userInfo: nil))
                         }
                     }
                 default:
@@ -513,13 +518,18 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     switch httpResponse.statusCode {
                     case 200...299:
                         if let data = data {
-                            let authData = try! JSONDecoder().decode(UserToken.self, from: data)
-                            KeychainManager.deleteAllKeys()
-                            let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                            UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
-                            let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
-                            if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
-                                completion(true)
+                            do {
+                                let authData = try JSONDecoder().decode(UserToken.self, from: data)
+                                KeychainManager.deleteAllKeys()
+                                let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
+                                UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
+                                let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                                if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                                    completion(true)
+                                }
+                            } catch {
+                                completion(false)
+                                print(NSError(domain: "Webasyst error: decode error (refreshAccessToken) \n\(error).", code: 400, userInfo: nil))
                             }
                         }
                     default:
