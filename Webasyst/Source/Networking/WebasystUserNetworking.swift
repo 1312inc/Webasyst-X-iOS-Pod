@@ -470,8 +470,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 }
                 
                 do {
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters {
-                        let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: json["access_token"] ?? "", url: installList[index].url, cloudPlanId: installList[index].cloudPlanId, cloudExpireDate: installList[index].cloudExpireDate, cloudTrial: installList[index].cloudTrial)
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? Parameters, let accessToken = json["access_token"] {
+                        let installToken = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: accessToken, url: installList[index].url, cloudPlanId: installList[index].cloudPlanId, cloudExpireDate: installList[index].cloudExpireDate, cloudTrial: installList[index].cloudTrial)
                         self?.getInstallInfo(installToken) { install in
                             if index == 0 {
                                 completion(json["access_token"] ?? "", true)
