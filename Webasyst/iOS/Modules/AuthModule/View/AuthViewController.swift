@@ -49,6 +49,11 @@ class AuthViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
                 return
             }
         }
+        if navigationAction.request.description.contains("error="), navigationAction.navigationType == .linkActivated {
+            decisionHandler(.cancel)
+            dismiss(animated: true)
+            return
+        }
         if navigationAction.request.description.contains("code=")  {
             guard let url = URLComponents(string: navigationAction.request.description) else { return }
             viewModel.successAuth(code: url.queryItems?.first(where: { $0.name == "code" })?.value ?? "", state: url.queryItems?.first(where: { $0.name == "state" })?.value ?? "")

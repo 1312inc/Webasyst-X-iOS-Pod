@@ -79,6 +79,14 @@
 		E0BCCBB72A8ADD8100673287 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBAF2A8ADD8100673287 /* AuthViewController.swift */; };
 		E0BCCBB82A8ADD8100673287 /* ConfettiAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E0BCCBB12A8ADD8100673287 /* ConfettiAsset.xcassets */; };
 		E0BCCBBB2A8ADD8F00673287 /* WebasystNetworking watchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BCCBBA2A8ADD8F00673287 /* WebasystNetworking watchOS.swift */; };
+		E0C1EBA02AC79A15001D267B /* AuthCoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EB9F2AC79A15001D267B /* AuthCoordinatorProtocol.swift */; };
+		E0C1EBA32AC79A5B001D267B /* WebasystServerAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EBA22AC79A5B001D267B /* WebasystServerAnswer.swift */; };
+		E0C1EBA62AC79A8F001D267B /* CoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EBA52AC79A8F001D267B /* CoordinatorProtocol.swift */; };
+		E0C1EBA82AC79ABA001D267B /* AuthCoordinatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EBA72AC79AB9001D267B /* AuthCoordinatorDelegate.swift */; };
+		E0C1EBAC2AC79B0A001D267B /* AuthViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EBAB2AC79B0A001D267B /* AuthViewModelProtocol.swift */; };
+		E0C1EBAE2AC7AD4E001D267B /* Notification.Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EBAD2AC7AD4E001D267B /* Notification.Name.swift */; };
+		E0C1EBB12AC7AF55001D267B /* WebasystTimeoutChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EBB02AC7AF55001D267B /* WebasystTimeoutChecker.swift */; };
+		E0C1EBB32AC7AFB1001D267B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C1EBB22AC7AFB1001D267B /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +138,14 @@
 		E0BCCBAF2A8ADD8100673287 /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		E0BCCBB12A8ADD8100673287 /* ConfettiAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ConfettiAsset.xcassets; sourceTree = "<group>"; };
 		E0BCCBBA2A8ADD8F00673287 /* WebasystNetworking watchOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WebasystNetworking watchOS.swift"; sourceTree = "<group>"; };
+		E0C1EB9F2AC79A15001D267B /* AuthCoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCoordinatorProtocol.swift; sourceTree = "<group>"; };
+		E0C1EBA22AC79A5B001D267B /* WebasystServerAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystServerAnswer.swift; sourceTree = "<group>"; };
+		E0C1EBA52AC79A8F001D267B /* CoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorProtocol.swift; sourceTree = "<group>"; };
+		E0C1EBA72AC79AB9001D267B /* AuthCoordinatorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCoordinatorDelegate.swift; sourceTree = "<group>"; };
+		E0C1EBAB2AC79B0A001D267B /* AuthViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModelProtocol.swift; sourceTree = "<group>"; };
+		E0C1EBAD2AC7AD4E001D267B /* Notification.Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.Name.swift; sourceTree = "<group>"; };
+		E0C1EBB02AC7AF55001D267B /* WebasystTimeoutChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystTimeoutChecker.swift; sourceTree = "<group>"; };
+		E0C1EBB22AC7AFB1001D267B /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +212,7 @@
 				E0BCCB562A8ADD7600673287 /* Configuration */,
 				E0BCCB3A2A8ADD7600673287 /* DataModel */,
 				E0BCCB5F2A8ADD7600673287 /* Extensions */,
+				E0C1EBAF2AC7AF49001D267B /* Support */,
 				E0BCCB622A8ADD7600673287 /* KeychainManager */,
 				E0BCCB522A8ADD7600673287 /* Localization */,
 				E0BCCB402A8ADD7600673287 /* Enum */,
@@ -333,6 +350,8 @@
 			children = (
 				E0BCCB602A8ADD7600673287 /* URLRequest.swift */,
 				E0BCCB612A8ADD7600673287 /* UIImage.swift */,
+				E0C1EBAD2AC7AD4E001D267B /* Notification.Name.swift */,
+				E0C1EBB22AC7AFB1001D267B /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -381,6 +400,7 @@
 		E0BCCBA82A8ADD8100673287 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				E0C1EBA42AC79A84001D267B /* Protocol */,
 				E0BCCBA92A8ADD8100673287 /* AuthModule */,
 			);
 			path = Modules;
@@ -389,9 +409,11 @@
 		E0BCCBA92A8ADD8100673287 /* AuthModule */ = {
 			isa = PBXGroup;
 			children = (
+				E0C1EB9E2AC79A06001D267B /* Protocol */,
+				E0C1EBA12AC79A50001D267B /* Model */,
+				E0BCCBAE2A8ADD8100673287 /* View */,
 				E0BCCBAA2A8ADD8100673287 /* ViewModel */,
 				E0BCCBAC2A8ADD8100673287 /* Coordinator */,
-				E0BCCBAE2A8ADD8100673287 /* View */,
 			);
 			path = AuthModule;
 			sourceTree = "<group>";
@@ -434,6 +456,56 @@
 				E0BCCBBA2A8ADD8F00673287 /* WebasystNetworking watchOS.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		E0C1EB9E2AC79A06001D267B /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1EBAA2AC79B02001D267B /* ViewModel */,
+				E0C1EBA92AC79AF9001D267B /* Coordinator */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		E0C1EBA12AC79A50001D267B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1EBA22AC79A5B001D267B /* WebasystServerAnswer.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E0C1EBA42AC79A84001D267B /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1EBA52AC79A8F001D267B /* CoordinatorProtocol.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		E0C1EBA92AC79AF9001D267B /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1EB9F2AC79A15001D267B /* AuthCoordinatorProtocol.swift */,
+				E0C1EBA72AC79AB9001D267B /* AuthCoordinatorDelegate.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		E0C1EBAA2AC79B02001D267B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1EBAB2AC79B0A001D267B /* AuthViewModelProtocol.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E0C1EBAF2AC7AF49001D267B /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				E0C1EBB02AC7AF55001D267B /* WebasystTimeoutChecker.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -559,10 +631,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0BCCB872A8ADD7600673287 /* CreateNewAccount.swift in Sources */,
+				E0C1EBA02AC79A15001D267B /* AuthCoordinatorProtocol.swift in Sources */,
+				E0C1EBB32AC7AFB1001D267B /* String.swift in Sources */,
 				E0BCCB672A8ADD7600673287 /* SettingsListModel.swift in Sources */,
 				E0BCCB6D2A8ADD7600673287 /* UserStatus.swift in Sources */,
 				E0BCCB792A8ADD7600673287 /* TokenType.swift in Sources */,
+				E0C1EBAC2AC79B0A001D267B /* AuthViewModelProtocol.swift in Sources */,
 				E0BCCBB62A8ADD8100673287 /* AuthCoordinator.swift in Sources */,
+				E0C1EBA62AC79A8F001D267B /* CoordinatorProtocol.swift in Sources */,
 				E0BCCB6F2A8ADD7600673287 /* AuthResult.swift in Sources */,
 				E0BCCB692A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld in Sources */,
 				E0BCCB9B2A8ADD7600673287 /* UIImage.swift in Sources */,
@@ -572,13 +648,16 @@
 				E0BCCB892A8ADD7600673287 /* Installs.swift in Sources */,
 				E0BCCB772A8ADD7600673287 /* AuthType.swift in Sources */,
 				E0BCCB952A8ADD7600673287 /* NetworkingHelper.swift in Sources */,
+				E0C1EBA32AC79A5B001D267B /* WebasystServerAnswer.swift in Sources */,
 				E0BCCB812A8ADD7600673287 /* UserToken.swift in Sources */,
 				E0BCCB8F2A8ADD7600673287 /* WebasystApp.swift in Sources */,
 				E0BCCB7D2A8ADD7600673287 /* InstallInfo.swift in Sources */,
+				E0C1EBB12AC7AF55001D267B /* WebasystTimeoutChecker.swift in Sources */,
 				E0BCCBB72A8ADD8100673287 /* AuthViewController.swift in Sources */,
 				E0BCCB7F2A8ADD7600673287 /* Preferences.swift in Sources */,
 				E0BCCB932A8ADD7600673287 /* WebasystNetworking.swift in Sources */,
 				E0BCCB712A8ADD7600673287 /* ImageType.swift in Sources */,
+				E0C1EBA82AC79ABA001D267B /* AuthCoordinatorDelegate.swift in Sources */,
 				E0BCCBB22A8ADD8100673287 /* ConfettiAnimationView.swift in Sources */,
 				E0BCCB832A8ADD7600673287 /* AuthAppleIDData.swift in Sources */,
 				E0BCCB6B2A8ADD7600673287 /* AuthAppleIDResult.swift in Sources */,
@@ -589,6 +668,7 @@
 				E0BCCBB32A8ADD8100673287 /* WebasystApp iOS.swift in Sources */,
 				E0BCCB8D2A8ADD7600673287 /* Config.swift in Sources */,
 				E0BCCBB42A8ADD8100673287 /* WebasystNetworking iOS.swift in Sources */,
+				E0C1EBAE2AC7AD4E001D267B /* Notification.Name.swift in Sources */,
 				E0BCCBB52A8ADD8100673287 /* AuthViewModel.swift in Sources */,
 				E0BCCB652A8ADD7600673287 /* WebasystDataModel.swift in Sources */,
 				E0BCCB7B2A8ADD7600673287 /* ProfileData.swift in Sources */,

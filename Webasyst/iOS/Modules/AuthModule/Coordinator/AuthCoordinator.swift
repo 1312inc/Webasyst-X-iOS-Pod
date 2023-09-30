@@ -7,25 +7,6 @@
 
 import UIKit
 
-protocol Coordinator: AnyObject {
-    func start(with code: String)
-}
-
-protocol AuthCoordinatorProtocol {
-    init(_ navigationController: UINavigationController, action: @escaping (WebasystServerAnswer) -> ())
-}
-
-protocol AuthCoordinatorDelegate: AnyObject {
-    func successAuth()
-    func listOrProfileIsEmpty(_ status: UserStatus)
-    func errorAuth()
-}
-
-public enum WebasystServerAnswer {
-    case success
-    case error(error: String)
-}
-
 public class AuthCoordinator: Coordinator, AuthCoordinatorProtocol {
     
     private unowned var navigationController: UINavigationController
@@ -49,21 +30,15 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorProtocol {
 
 extension AuthCoordinator: AuthCoordinatorDelegate {
     
-    func successAuth() {
+    func successAuth(_ status: UserStatus) {
         DispatchQueue.main.async {
-            self.action(WebasystServerAnswer.success)
+            self.action(.success(status))
         }
     }
     
-    func listOrProfileIsEmpty(_ status: UserStatus) {
+    func errorAuth(_ error: String) {
         DispatchQueue.main.async {
-            self.action(.success)
-        }
-    }
-    
-    func errorAuth() {
-        DispatchQueue.main.async {
-            self.action(WebasystServerAnswer.error(error: "Undefined error"))
+            self.action(.error(error))
         }
     }
 }

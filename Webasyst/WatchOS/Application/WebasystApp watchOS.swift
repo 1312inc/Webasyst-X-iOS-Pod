@@ -7,19 +7,20 @@
 
 import Foundation
 
+public
 extension WebasystApp {
     
     /// Method of setting the iOS device identifier for the correct operation of the webasyst framework on watchOS
-    /// - Parameters:
-    /// - deviceID: Id of iOS device identifier
-    public func setDeviceID(_ deviceID: String) {
+    /// - Parameter deviceID: Id of iOS device identifier.
+    func setDeviceID(_ deviceID: String) {
         UserDefaults.standard.set(deviceID, forKey: "deviceID")
     }
     
     /// A method for setting Webasyst tokens
-    /// - Parameter tokenType: Type of token (Access Token or Refresh Token)
-    /// - Parameter token: Token in string format for saving
-    public func setToken(_ tokenType: TokenType, token: String) {
+    /// - Parameters:
+    ///    - tokenType: Type of token.
+    ///    - token: Token in string format for saving.
+    func setToken(_ tokenType: TokenType, token: String) {
         switch tokenType {
         case .access:
             let tokenData = Data(token.utf8)
@@ -32,8 +33,8 @@ extension WebasystApp {
     }
     
     /// Delete all records in the database
-    /// - Parameter completion: Boolean value of deauthorization success
-    public func logOutUser(completion: @escaping (Bool) -> ()) {
+    /// - Parameter completion: Boolean value of deauthorization success.
+    func logOutUser(completion: (Bool) -> ()) {
         profileInstallService?.resetInstallList()
         profileInstallService?.deleteProfileData()
         KeychainManager.deleteAllKeys()

@@ -79,6 +79,23 @@
 
 // ------------------------------------
 
+// MARK: - Server
+
+// ---------------- Server errors --------------------
+
+"unownedStatusCode" = "Неизвестный статус ответа.";
+"emptyResponsedData" = "Ответ сервера не содержит данных.";
+"404Error" = "Не удалось найти аккаунт Webasyst по запрошенному домену.";
+"missingAuthToken" = "Отсутствует токен доступа.";
+"unownedErrorWithStatusCode" = "Неизвестная ошибка со статусом ответа – %CODE%.";
+"unownedServerError" = "Сервер вернул непонятные данные (%METHOD%): '%DATA%'. Статус ответа: %CODE%.";
+"unableToDecodeResponsedData" = "Не удалось расшифровать данные, которые вернул сервер.";
+"unableToGetDecodedParameters" = "Не удалось получить расшифрованные параметры.";
+"failedToGetAccessTokenForCreatedAccount" = "Аккаунт был успешно создан, однако для него не удалось получить токен доступа.";
+"preloadTimeout" = "Не удалось получить ответ от сервера.";
+
+// ------------------------------------
+
 // MARK: - Main module
 
 "loading" = "Загрузка...";

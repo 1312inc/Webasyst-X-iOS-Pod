@@ -8,7 +8,8 @@
 import Foundation
 import CoreData
 
-public class WebasystDataModel {
+public 
+class WebasystDataModel {
     
     private lazy var installEntityName: String = {
         return String(describing: InstallList.self)
@@ -82,9 +83,8 @@ extension WebasystDataModel {
     
     /// Saving a user installation
     /// - Parameters:
-    ///   - userInstall: Installation information in UserInstall format (Warning! If the installation already exists in the database its data will be updated)
-    internal func saveInstall(_ userInstall: UserInstall) {
-        
+    ///   - userInstall: Installation information in UserInstall format (Warning! If the installation already exists in the database its data will be updated).
+    func saveInstall(_ userInstall: UserInstall) {
         enqueue { [weak self] context in
             guard let self = self else { return }
             
@@ -130,10 +130,9 @@ extension WebasystDataModel {
     }
     
     /// Obtaining user installation information
-    /// - Parameter clientId: install clientId
-    /// - Returns: Returns the installation in UserInstall format
-    internal func getInstall(with clientId: String) -> UserInstall? {
-        
+    /// - Parameter clientId: install clientId.
+    /// - Returns: Returns the installation in UserInstall format.
+    func getInstall(with clientId: String) -> UserInstall? {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
         
         guard let context = managedObjectContext else { return nil }
@@ -155,9 +154,8 @@ extension WebasystDataModel {
     }
     
     /// Getting a list of all user install
-    /// - Returns: Returns the list of user installations in UserInstall format
-    internal func getInstallList() -> [UserInstall]? {
-        
+    /// - Returns: Returns the list of user installations in UserInstall format.
+    func getInstallList() -> [UserInstall]? {
         guard let context = managedObjectContext else {
             return nil
         }
@@ -181,9 +179,8 @@ extension WebasystDataModel {
     }
     
     /// Deleting a user installation
-    /// - Parameter clientId: clientId setting
+    /// - Parameter clientId: clientId setting.
     func deleteInstall(clientId: String) {
-        
         enqueue { [weak self] context in
             guard let self = self else { return }
             
@@ -201,7 +198,6 @@ extension WebasystDataModel {
     
     /// Deleting all user install list
     func resetInstallList() {
-        
         enqueue { [weak self] context in
             guard let self = self else { return }
             
@@ -219,9 +215,10 @@ extension WebasystDataModel {
 }
 
 //MARK: Private method
+private
 extension WebasystDataModel {
     
-    /// Adding block to queue to saving the database context
+    /// Adding block to queue to saving the database context.
     func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
         guard let context = self.managedObjectContext else { return }
         context.performAndWait{ [weak self, weak context] in
@@ -263,10 +260,9 @@ extension WebasystDataModel {
     
     /// Saving profile data
     /// - Parameters:
-    ///   - user: User data
-    ///   - avatar: user avatar image
+    ///   - user: User data.
+    ///   - avatar: user avatar image.
     func saveProfileData(_ user: UserData, avatar: Data) {
-        
         enqueue { [weak self] context in
             guard let self = self else { return }
             
@@ -302,7 +298,6 @@ extension WebasystDataModel {
     }
     
     func saveNewAvatar(_ image: Data) {
-        
         enqueue { [weak self] context in
             guard let self = self else { return }
             
@@ -318,26 +313,24 @@ extension WebasystDataModel {
     }
     
     /// Retrieving user data from the database
-    /// - Returns: User data in ProfileData format
-    func getProfile(completion: @escaping (ProfileData?) -> ()) {
-        
-        guard let context = managedObjectContext else { return }
+    /// - Returns: User data in ProfileData format.
+    func getProfile() -> ProfileData? {
+        guard let context = managedObjectContext else { return nil }
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
         
         do {
-            guard let result = try context.fetch(request) as? [Profile] else {
-                completion(nil)
-                return
-            }
+            guard let result = try context.fetch(request) as? [Profile] else { return nil }
+            
             if !result.isEmpty {
                 let profileData = ProfileData(name: result.first?.fullName ?? "", firstname: result.first?.firstName ?? "", lastname: result.first?.lastName ?? "", middlename: result.first?.middleName ?? "", email: result.first?.email ?? "", phone: result.first?.phone ?? "", userpic_original_crop: result.first?.userPic)
-                completion(profileData)
+                return profileData
             } else {
-                completion(nil)
+                return nil
             }
-        } catch let error {
+        } catch {
             print(NSError(domain: "Webasyst Database error(method: getProfile): \(error.localizedDescription)", code: 502, userInfo: nil))
+            return nil
         }
     }
     

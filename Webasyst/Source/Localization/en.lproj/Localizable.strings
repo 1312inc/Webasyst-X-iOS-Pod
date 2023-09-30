@@ -79,6 +79,23 @@
 
 // ------------------------------------
 
+// MARK: - Server
+
+// ---------------- Server errors --------------------
+
+"unownedStatusCode" = "Unowned server response status code.";
+"emptyResponsedData" = "Empty responsed data.";
+"404Error" = "The Webasyst account was not found for the requested domain.";
+"missingAuthToken" = "The authentication token is missing.";
+"unownedErrorWithStatusCode" = "Unowned error with response status code – %CODE%.";
+"unownedServerError" = "The server returned incomprehensible data (%METHOD%): '%DATA%'. Response status: %CODE%.";
+"unableToDecodeResponsedData" = "The data returned by the server could not be decoded.";
+"unableToGetDecodedParameters" = "Unable to get decoded parameters.";
+"failedToGetAccessTokenForCreatedAccount" = "The account was successfully created, but it was not possible to get an access token for it.";
+"preloadTimeout" = "Failed to get a response from the server.";
+
+// ------------------------------------
+
 // MARK: - Main module
 
 "loading" = "Loading...";
