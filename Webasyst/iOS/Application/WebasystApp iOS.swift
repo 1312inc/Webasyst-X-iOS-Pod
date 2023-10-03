@@ -205,6 +205,18 @@ extension WebasystApp {
         }
     }
     
+    /// Force update WAID access token
+    /// - Parameter completion: The result of updating the access token. If the update failed, the user will log out.
+    func refreshAccessToken(_ completion: @escaping (Bool) -> ()) {
+        networking.refreshAccessToken { [weak self] success in
+            guard let self = self else { return }
+            completion(success)
+            if !success {
+                logOutUser()
+            }
+        }
+    }
+    
     /// User authentication check on Webasyst server
     /// - Parameter completion: Updating the user token, and checking authorization. Returns user status in the application.
     func checkUserAuth(completion: @escaping (Result<UserStatus, String>) -> ()) {
