@@ -1009,7 +1009,7 @@ extension WebasystUserNetworking {
             }
             
             if let error = error {
-                completion(.failure(error.localizedDescription))
+                completion(.failure("Responsed error: " + error.localizedDescription))
                 return
             }
             
@@ -1044,7 +1044,7 @@ extension WebasystUserNetworking {
                         
                         if let error = error {
                             let loc = WebasystApp.getDefaultLocalizedString(withKey: "serverSentError", comment: "Server send error")
-                            let errorDescription = loc + "\(error)."
+                            let errorDescription = loc + "\(error)"
                             completion(.failure(errorDescription))
                         } else {
                             let loc = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
@@ -1098,9 +1098,9 @@ extension WebasystUserNetworking {
             let errorDescription = "Webasyst error (\(methodName)): \(installDomain) – " + loc
             return errorDescription
         case .standart(let error, let methodName):
-            return "Webasyst error (\(methodName)): '\(error)'."
+            return "Webasyst error (\(methodName)): '\(error)'"
         case .standartWithInstall(let error, let installDomain, let methodName):
-            return "Webasyst error (\(methodName)): \(installDomain) – '\(error)'."
+            return "Webasyst error (\(methodName)): \(installDomain) – '\(error)'"
         }
     }
     
