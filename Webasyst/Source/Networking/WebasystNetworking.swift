@@ -213,7 +213,8 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             "user_identifier": authData.userIdentifier,
             "identity_token": authData.identityToken,
             "authorization_code": authData.authorizationCode,
-            "email_verified": "\(authData.isRealUserStatus)"
+            "email_verified": "\(authData.isRealUserStatus)",
+            "locale": "\(NSLocale.current.identifier)"
         ]
         
         if let firstName = authData.userFirstName {
