@@ -1,0 +1,217 @@
+// MARK: - Alert module
+
+// ---------------- Main alert attributes --------------------
+
+// Titles
+
+"errorTitle" = "错误";
+"success" = "成功";
+"cantOpenNotificationOrder" = "无法打开通知订单";
+"spaErrorDescription" = "发生意外错误";
+"requestFailedError" = "服务器请求失败";
+"tryAgain" = "请稍后重试";
+
+// Actions
+
+"okAlert" = "确定";
+"delete" = "删除";
+"errorDescription" = "错误描述";
+"cancel" = "取消";
+
+// Additional part to the alert error
+
+"serverSentError" = "服务器发送错误消息：";
+
+// ------------------------------------
+
+// ---------------- Types of alert --------------------
+
+// Apple ID alert
+
+"faileAppeIDRequest" = "Apple返回了关于使用Apple ID进行授权请求的错误消息。请参阅说明以获取更多详细信息。";
+"failedAppleIDMerge" = "无法合并帐户。";
+"failedAppleIDAuth" = "无法使用Apple登录。";
+"failedGetAppleIDAuthorizationCode" = "无法获取来自Apple的授权代码。请稍后重试。";
+"failedGetAppleIDIdentityToken" = "无法获取来自Apple的身份令牌。请稍后重试。";
+
+// Install alert
+
+"checkInstallAppError" = "安装%APPNAME%时发生错误。";
+"checkLicenseError" = "颁发许可证时发生错误";
+"successBody" = "%APPNAME%已成功安装！为%ACCOUNTNAME%颁发了30天的免费许可证。";
+"installTimeLimit" = "在安装过程中出现问题：服务器没有响应（超时）。请重试。";
+
+// Add account alert
+
+"createWebasystAccountError" = "创建Webasyst帐户时发生错误";
+"shopNameErrorDescription" = "保存商店名称时发生错误。";
+"addAccountSuccessBody" = "新商店已成功创建！";
+"addAccountSuccessButNotRenamedBody" = "新商店已成功创建！但无法设置已输入的帐户域名 - 出现问题。";
+
+// Connect account alert
+
+"connectWebasystAccountError" = "邀请码无效。请要求管理员重新发送新的代码，然后重试。";
+"qrConnectWebasystAccountError" = "无法添加帐户。可能QR码已过期。";
+"connectAccountSuccessBody" = "太好了，您的Webasyst ID已成功连接到%ACCOUNTNAME%！";
+
+// Link accounts alert
+
+"mergeWelcomeError" = "无法链接帐户。请联系Webasyst支持服务，并附上此错误的屏幕截图 - 我们将协助您进行设置。";
+"mergeWelcomeError2" = "无法链接帐户。请联系Webasyst支持服务，并附上此错误的屏幕截图 - 我们将协助您进行设置。";
+
+// Notifications alert
+
+"notificationsAlertTitle" = "通知已关闭";
+"notificationsAlertDescription" = "已关闭%APPNAME%应用程序的通知。在iOS的通用设置中启用通知，以便接收新订单的通知。";
+"openSettingsButtonTitle" = "打开设置";
+
+// Onboarding failed
+
+"onboardingFailedTitle" = "创建帐户时出错";
+"onboardingFailedDescription" = "错误：服务器返回\"未能完成\"。";
+"onboardingFailedNameMissingDescription" = "错误：无法保存帐户名称。";
+
+// Passcode alert button names
+
+"localizedOnTitle" = "启用密码";
+"localizedOffTitle" = "关闭密码";
+"localizedChangeTitle" = "更改密码";
+
+// ------------------------------------
+
+// MARK: - Server
+
+// ---------------- Server errors --------------------
+
+"unownedStatusCode" = "未知的响应状态。";
+"emptyResponsedData" = "服务器响应不包含数据。";
+"404Error" = "未找到请求的Webasyst帐户。";
+"missingAuthToken" = "缺少访问令牌。";
+"unownedErrorWithStatusCode" = "未知的响应状态错误 - %CODE%。";
+"unownedServerError" = "服务器返回了不明确的数据（%METHOD%）：'%DATA%'。响应状态：%CODE%。";
+"unableToDecodeResponsedData" = "无法解码服务器返回的数据。";
+"unableToGetDecodedParameters" = "无法获取解码的参数。";
+"failedToGetAccessTokenForCreatedAccount" = "帐户已成功创建，但无法获取访问令牌。";
+"preloadTimeout" = "无法获取服务器响应。";
+// ------------------------------------
+
+// MARK: - Main module
+
+"loading" = "加载中...";
+"demoAccount" = "演示";
+
+// MARK: - Screens
+
+// MARK: - Auth screen
+
+"viewDemoAccount" = "查看演示商店"; // You need to change it according to the context of your application
+"phoneDescription" = "请提供您的手机号码以创建新的Webasyst ID用户配置文件，并将其绑定到移动应用程序。";
+"appDescription" = "Webasyst ID将自动将应用程序连接到您的所有Webasyst基础上的帐户和网站。";
+"expressPhoneLogin" = "确认手机号码";
+"phoneLogin" = "使用手机号码登录";
+"appleLogin" = "使用 Apple 登录";
+"appleLoginEmailConfirmationDescription" = "电子邮件%email%已在Webasyst注册。要将其与您的Apple ID关联，您需要输入刚刚通过电子邮件发送的确认代码。";
+"appleLoginEmailConfirmationLogout" = "退出";
+"emailLogin" = "使用电子邮件和密码登录";
+"QRLogin" = "使用 QR 码登录";
+"QRAdd" = "使用 QR 码登录";
+"aboutWebAsystID" = "什么是Webasyst ID？";
+"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+
+// MARK: - Phone authorization screen
+
+// Auth
+
+"titleConfirmCode" = "确认代码";
+"descriptionPhone" = "代码已通过短信发送到以下号码";
+"resendCodeLabel" = "没有收到短信？";
+"resendCodeButton" = "重新发送";
+"codeSendLabel" = "代码已发送";
+"timerText" = "您可以在以下时间段内再次发送";
+"seconds" = "秒";
+
+// Errors
+
+"phoneError" = "无效的手机号码";
+"clientIdError" = "Webasyst ID client_id 无效或被锁定。请联系应用程序开发人员。";
+"codeChalengeError" = "授权代码无效或丢失。请联系应用程序开发人员。";
+"emailError" = "无效的电子邮件地址";
+"requestTimeoutLimit" = "无法频繁发送确认代码请求。请等待一分钟后重试。";
+"sentNotificationFail" = "出现问题，代码未发送。";
+"errorCode" = "代码输入不正确";
+"errorQRCode" = "无效的 QR 码";
+
+// MARK: - Settings screen
+
+"notSecureConnection" = "不安全连接";
+"expiresOn" = "有效至 %@";
+"expiredOn" = "已过期 %@";
+"addWebasystButton" = "添加商店";
+"manageProfileButton" = "管理个人资料";
+"setPinCodeButton" = "设置 PIN 码";
+"exitAccountButtonTitle" = "退出";
+
+// MARK: - Create new install screen
+
+"joinDescription" = "或者，您可以自行连接到商店：在计算机上的Webasyst浏览器中登录并扫描您的Webasyst配置文件中的连接应用程序的QR码。"; // "... 或者使用电子邮件和密码登录Webasyst ID。"; // not relevant
+"joinDescriptionOnlyQR" = "或者，您可以自行连接到商店：在计算机上的Webasyst浏览器中登录并扫描您的Webasyst配置文件中的连接应用程序的QR码。";
+"errorCreateNewInstall" = "无法创建商店。最有可能的原因是超过了免费试用Webasyst云帐户的数量限制。";
+"createInstallTitleOfStoreConnect" = "连接到商店";
+"createInstallDescriptionOfStoreConnect" = "要将您的Webasyst ID%ACCOUNTEMAIL%连接到现有商店，请向商店管理员请求8位连接代码。管理员可以在Webasyst的“团队”应用程序中的您的配置文件中找到代码。";
+"createInstallButton" = "创建商店";
+"createNewShopTitle" = "创建新商店";
+"createNewShopDescription" = "稍后，您可以为商店添加自己的域名并邀请同事共同处理订单。";
+
+// MARK: - Redactor screen
+
+"deleteAccountConfirm" = "删除";
+"cacnelAccountDelete" = "取消";
+"addPhoto" = "添加照片";
+"aboutSameself" = "联系信息";
+"specifyLater" = "稍后指定";
+"save" = "保存";
+"name" = "名字";
+"surname" = "姓氏";
+"phone" = "手机号码";
+"removePhoto" = "删除照片";
+"changePhoto" = "更改照片";
+"successfullyUpdated" = "信息已成功更新";
+"connectionAlertMessage" = "无法连接到互联网。请检查连接并重试。";
+"updateError" = "出现问题，信息未更新。";
+"cameraEditScreen" = "相机";
+"galleryEditScreen" = "相册";
+"cancelEditScreen" = "取消";
+"deleteAccount" = "删除帐户";
+"accountDeleteFirstAlert" = "删除Webasyst ID将删除您创建的所有Webasyst云帐户，并永久丢失数据。您确定要删除Webasyst ID吗？";
+"accountDeleteSecondAlert" = "危险！删除后无法恢复数据！确认删除Webasyst ID？";
+"accountWasDeleted" = "已将确认邮件发送到您的Webasyst ID配置文件中提供的电子邮件/手机号码。请按照邮件中的说明进行确认删除。";
+"accountDeleteError" = "出现问题，帐户未删除。";
+
+// MARK: - Error screen
+
+"errorAccessDenied" = "无访问权限";
+
+// MARK: - QR screen
+
+"QRDescription" = "在计算机的Webasyst浏览器中登录并扫描右上角您的配置文件中的QR码以登录您的Webasyst帐户。";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "这不是正确的QR码！您使用Webasyst ID在应用程序中进行身份验证，但尝试使用不同的Webasyst ID扫描登录的QR码。您需要的QR码位于Webasyst站点的配置文件中的“团队”部分。那里有一个特殊类型的代码，可以将应用程序连接到尚未连接的Webasyst帐户。";
+"QRFrameDescription" = "是的，这也是QR码，但与Webasyst无关。";
+"QRTopLabel" = "扫描QR码";
+
+// MARK: - Install screen
+
+"freeInstall" = "免费试用30天！";
+"descriptionInstall" = "应用程序“%APPNAME%”尚未安装在“%ACCOUNTNAME%”帐户上。单击“安装”按钮，几秒钟后应用程序将通过安装程序安装在您的Webasyst帐户中。";
+"buttonInstall" = "安装“%APPNAME%”";
+"titleInstall" = "在“%ACCOUNTNAME%”上安装“%APPNAME%”";
+"installProgressDescription" = "正在创建应用程序许可证并向安装程序发送安装请求...";
+
+// MARK: - PayWall screen
+
+// Paywall screen
+
+"payWallRegulations" = "订阅从您的iTunes帐户扣除并自动续订。取消订阅可在当前周期结束前的至少24小时内在iOS的iTunes帐户设置中进行。订阅费用将在当前周期结束后的24小时内扣除。";
+"termsAndPrivacy" = "数据处理";
+"payWallRestore" = "恢复";
+"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"restorePurchases" = "购买已成功恢复！";

@@ -1,0 +1,219 @@
+// MARK: - Alert module
+
+// ---------------- Main alert attributes --------------------
+
+// Titles
+
+"errorTitle" = "오류";
+"success" = "완료!";
+"cantOpenNotificationOrder" = "계정 목록을 가져올 수 없습니다";
+"spaErrorDescription" = "예기치 않은 오류가 발생했습니다";
+"requestFailedError" = "서버 요청 중 오류가 발생했습니다";
+"tryAgain" = "1분 후에 다시 시도하세요";
+
+// Actions
+
+"okAlert" = "확인";
+"delete" = "삭제";
+"errorDescription" = "오류 설명";
+"cancel" = "취소";
+
+// Additional part to the alert error
+
+"serverSentError" = "서버에서 오류 메시지를 보냈습니다: ";
+
+// ------------------------------------
+
+// ---------------- Types of alert --------------------
+
+// Apple ID alert
+
+"faileAppeIDRequest" = "Apple ID를 사용하여 인증 요청 중에 오류 메시지를 반환했습니다. 자세한 정보는 설명에서 확인하세요.";
+"failedAppleIDMerge" = "계정을 병합하지 못했습니다.";
+"failedAppleIDAuth" = "Apple ID로 로그인하지 못했습니다.";
+"failedGetAppleIDAuthorizationCode" = "Apple로부터 인증 코드를 가져올 수 없습니다. 나중에 다시 시도하세요.";
+"failedGetAppleIDIdentityToken" = "Apple로부터 식별 토큰을 가져올 수 없습니다. 나중에 다시 시도하세요.";
+
+// Install alert
+
+"checkInstallAppError" = "%APPNAME% 설치 중 오류가 발생했습니다";
+"checkLicenseError" = "라이선스 발급 중 오류가 발생했습니다";
+"successBody" = "%APPNAME% 설치 완료! %ACCOUNTNAME%에 대한 30일 무료 라이선스가 생성되었습니다.";
+"installTimeLimit" = "설치 중에 문제가 발생했습니다: 서버 응답이 없음 (타임아웃). 나중에 다시 시도하세요.";
+
+// Add account alert
+
+"createWebasystAccountError" = "Webasyst 계정 생성 중 오류가 발생했습니다";
+"shopNameErrorDescription" = "상점 이름 저장 중 오류가 발생했습니다.";
+"addAccountSuccessBody" = "새로운 상점이 성공적으로 생성되었습니다!";
+"addAccountSuccessButNotRenamedBody" = "새로운 상점이 성공적으로 생성되었습니다! 그러나 입력한 계정 도메인을 설정하지 못했습니다. 문제가 발생한 것 같습니다.";
+
+// Connect account alert
+
+"connectWebasystAccountError" = "초대 코드가 유효하지 않습니다. 관리자에게 새 코드를 요청하고 다시 시도하세요.";
+"qrConnectWebasystAccountError" = "계정을 추가할 수 없습니다. 아마도 QR 코드가 만료되었습니다.";
+"connectAccountSuccessBody" = "축하합니다! Webasyst ID가 성공적으로 %ACCOUNTNAME%에 연결되었습니다!";
+
+// Link accounts alert
+
+"mergeWelcomeError" = "계정을 병합하지 못했습니다. 지원팀에 문의하여이 오류 스크린샷을 제출하십시오. 설정 지원을 제공하겠습니다.";
+"mergeWelcomeError2" = "계정을 병합하지 못했습니다. 지원팀에 문의하여이 오류 스크린샷을 제출하십시오. 설정 지원을 제공하겠습니다.";
+
+// Notifications alert
+
+"notificationsAlertTitle" = "알림이 비활성화되었습니다";
+"notificationsAlertDescription" = "%APPNAME% 앱에 대한 알림이 비활성화되었습니다. 새 주문 알림을 받으려면 iOS 일반 설정에서 알림을 활성화하세요.";
+"openSettingsButtonTitle" = "설정 열기";
+
+// Onboarding failed
+
+"onboardingFailedTitle" = "계정 생성 오류";
+"onboardingFailedDescription" = "오류: 서버에서 '쉬면서도 어려운'이라는 응답을 받았습니다.";
+"onboardingFailedNameMissingDescription" = "오류: 계정 이름을 저장할 수 없습니다.";
+
+// Passcode alert button names
+
+"localizedOnTitle" = "암호 사용";
+"localizedOffTitle" = "암호 사용 중지";
+"localizedChangeTitle" = "암호 변경";
+
+// ------------------------------------
+
+// MARK: - Server
+
+// ---------------- Server errors --------------------
+
+"unownedStatusCode" = "알 수 없는 상태 코드입니다.";
+"emptyResponsedData" = "서버 응답에 데이터가 없습니다.";
+"404Error" = "요청한 도메인에 해당하는 Webasyst 계정을 찾을 수 없습니다.";
+"missingAuthToken" = "인증 토큰이 없습니다.";
+"unownedErrorWithStatusCode" = "상태 코드 %CODE%와 함께 알 수 없는 오류가 발생했습니다.";
+"unownedServerError" = "서버가 이해할 수없는 데이터를 반환했습니다 (%METHOD%): '%DATA%'. 상태 코드: %CODE%.";
+"unableToDecodeResponsedData" = "서버에서 반환한 데이터를 디코딩할 수 없습니다.";
+"unableToGetDecodedParameters" = "디코딩된 매개 변수를 가져올 수 없습니다.";
+"failedToGetAccessTokenForCreatedAccount" = "계정이 성공적으로 생성되었지만 액세스 토큰을 가져올 수 없습니다.";
+"preloadTimeout" = "서버 응답을 가져올 수 없습니다.";
+
+// ------------------------------------
+
+// MARK: - Main module
+
+"loading" = "로딩 중...";
+"demoAccount" = "데모";
+
+// MARK: - Screens
+
+// MARK: - Auth screen
+
+"viewDemoAccount" = "데모 계정 보기"; // 애플리케이션 컨텍스트에 따라 변경해야 합니다.
+"phoneDescription" = "새로운 웹아시스트 ID 프로필을 만들고 모바일 앱에 연결하려면 전화번호를 확인하십시오.";
+"appDescription" = "웹아시스트 ID는 모든 웹아시스트 기반 계정 및 웹 사이트를 자동으로 앱에 연결합니다.";
+"expressPhoneLogin" = "번호 확인";
+"phoneLogin" = "전화번호로 로그인";
+"appleLogin" = "Apple로 로그인";
+"appleLoginEmailConfirmationDescription" = "이미 %email% 이메일 주소가 웹아시스트에 등록되어 있습니다. Apple ID와 연결하려면 방금 전송된 확인 코드를 입력해야 합니다.";
+"appleLoginEmailConfirmationLogout" = "로그아웃";
+"emailLogin" = "이메일 및 비밀번호로 로그인";
+"QRLogin" = "QR 코드로 로그인";
+"QRAdd" = "QR 코드로 추가";
+"aboutWebAsystID" = "웹아시스트 ID란 무엇인가요?";
+"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+
+// MARK: - Phone authorization screen
+
+// Auth
+
+"titleConfirmCode" = "확인 코드";
+"descriptionPhone" = "코드가 SMS로 전송되었습니다.";
+"resendCodeLabel" = "메시지를 받지 못하셨나요?";
+"resendCodeButton" = "다시 보내기";
+"codeSendLabel" = "코드가 전송되었습니다";
+"timerText" = "다시 보낼 수 있게 될 때까지:";
+"seconds" = "초";
+
+// Errors
+
+"phoneError" = "올바르지 않은 전화번호";
+"clientIdError" = "웹아시스트 ID client_id가 잘못되었거나 차단되었습니다. 앱 개발자에게 문의하십시오.";
+"codeChalengeError" = "인증 코드가 올바르지 않거나 누락되었습니다. 앱 개발자에게 문의하십시오.";
+"emailError" = "올바르지 않은 이메일 주소";
+"requestTimeoutLimit" = "인증 코드 요청은 너무 자주 보낼 수 없습니다. 1분 후에 다시 시도하십시오.";
+"sentNotificationFail" = "문제가 발생하여 코드가 전송되지 않았습니다.";
+"errorCode" = "올바르지 않은 코드 입력";
+"errorQRCode" = "유효하지 않은 QR 코드";
+
+// MARK: - Settings screen
+
+"notSecureConnection" = "보안 연결 아님";
+"expiresOn" = "%@ 만료됨";
+"expiredOn" = "%@ 만료됨";
+"addWebasystButton" = "상점 추가";
+"manageProfileButton" = "내 프로필";
+"setPinCodeButton" = "PIN 코드 설정";
+"exitAccountButtonTitle" = "로그아웃";
+
+// MARK: - Create new install screen
+
+"joinDescription" = "또는 직접 상점에 연결하려면 컴퓨터에서 웹아시스트에서 로그인하고 프로필에서 앱 연결 QR 코드를 스캔하세요."; // "... 또는 이메일 및 비밀번호로 웹아시스트 ID로 로그인하십시오."; // 관심 없음
+"joinDescriptionOnlyQR" = "또는 직접 상점에 연결하려면 컴퓨터에서 웹아시스트에서 로그인하고 프로필에서 앱 연결 QR 코드를 스캔하세요.";
+"errorCreateNewInstall" = "상점을 만들 수 없습니다. 아마도 무료 평가 웹아시스트 클라우드 계정 수가 초과되었습니다.";
+"createInstallTitleOfStoreConnect" = "상점에 연결";
+"createInstallDescriptionOfStoreConnect" = "웹아시스트 ID%ACCOUNTEMAIL%를 기존 상점에 연결하려면 상점 관리자에게 8 자리 연결 코드를 요청하십시오. 코드를 얻으려면 웹아시스트 '팀' 탭에서 상점 관리자에게 연락하세요.";
+"createInstallButton" = "상점 만들기";
+"createNewShopTitle" = "새 상점 만들기";
+"createNewShopDescription" = "나중에 상점에 도메인 이름을 연결하고 동료를 초대하여 주문을 공동 처리할 수 있습니다.";
+
+// MARK: - Redactor screen
+
+"deleteAccountConfirm" = "삭제";
+"cacnelAccountDelete" = "취소";
+"addPhoto" = "사진 추가";
+"aboutSameself" = "연락 정보";
+"specifyLater" = "나중에 지정";
+"save" = "저장";
+"name" = "이름";
+"surname" = "성";
+"phone" = "전화번호";
+"removePhoto" = "사진 삭제";
+"changePhoto" = "사진 변경";
+"successfullyUpdated" = "데이터가 성공적으로 업데이트되었습니다";
+"connectionAlertMessage" = "인터넷 연결이 없습니다. 연결을 확인하고 다시 시도하십시오.";
+"updateError" = "문제가 발생하여 정보를 업데이트하지 못했습니다.";
+"cameraEditScreen" = "카메라";
+"galleryEditScreen" = "갤러리";
+"cancelEditScreen" = "닫기";
+"deleteAccount" = "계정 삭제";
+"accountDeleteFirstAlert" = "웹아시스트 ID를 삭제하면 만든 모든 웹아시스트 클라우드 계정도 삭제되어 데이터를 복구할 수 없게 됩니다. 웹아시스트 ID를 삭제하시겠습니까?";
+"accountDeleteSecondAlert" = "경고! 데이터를 삭제한 후에는 복구할 수 없습니다! 웹아시스트 ID 삭제를 확인하시겠습니까?";
+"accountWasDeleted" = "웹아시스트 ID 프로필에 등록된 이메일/전화번호로 확인 메일이 전송되었습니다. 삭제를 확인하려면 메일 안내를 따르세요.";
+"accountDeleteError" = "문제가 발생하여 계정을 삭제하지 못했습니다.";
+
+// MARK: - Error screen
+
+"errorAccessDenied" = "접근 거부됨";
+
+// MARK: - QR screen
+
+"QRDescription" = "컴퓨터에서 웹아시스트에 로그인하고 프로필의 오른쪽 상단에 있는 QR 코드를 스캔하여 프로필에 로그인하세요.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "이 QR 코드는 아닙니다! 당신은 웹아시스트 ID로 앱에 로그인되어 있지만 다른 웹아시스트 ID로 로그인하기 위한 QR 코드를 스캔하고 있습니다. 필요한 QR 코드는 웹사이트 '팀' 탭에서 찾을 수 있으며, 앱이 아직 연결되지 않은 계정에 특화된 코드입니다.";
+"QRFrameDescription" = "이것도 QR 코드이지만 웹아시스트와 관련이 없습니다.";
+"QRTopLabel" = "QR 코드 스캔";
+
+// MARK: - Install screen
+
+"freeInstall" = "30일 무료로 이용하세요!";
+"descriptionInstall" = "앱 '%APPNAME%'이(가) '%ACCOUNTNAME%' 계정에 설치되지 않았습니다. '설치'를 누르면 몇 초 안에 앱이 웹아시스트 ID 내 설치자에 의해 설치됩니다.";
+"buttonInstall" = "'%APPNAME%' 설치";
+"titleInstall" = "'%ACCOUNTNAME%'에 '%APPNAME%' 설치";
+"installProgressDescription" = "앱 라이선스를 생성하고 설치자에게 설치 요청을 보냅니다.";
+
+// MARK: - PayWall screen
+
+// Paywall screen
+
+"payWallRegulations" = "구독은 iTunes 계정에서 청구되며 자동으로 갱신됩니다. 현재 기간이 종료되기 최소 24시간 전에 iTunes 계정 설정에서 구독을 취소해야 합니다. 구독 비용은 현재 기간 종료 후 24시간 이내에 청구됩니다.";
+"termsAndPrivacy" = "개인 정보 처리";
+"payWallRestore" = "복원";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
+"restorePurchases" = "구매가 성공적으로 복원되었습니다!";
+

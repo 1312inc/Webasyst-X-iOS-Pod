@@ -1,0 +1,218 @@
+// MARK: - Alert module
+
+// ---------------- Main alert attributes --------------------
+
+// Titles
+
+"errorTitle" = "Errore";
+"success" = "Completato!";
+"cantOpenNotificationOrder" = "Impossibile aprire l'elenco degli account";
+"spaErrorDescription" = "Si è verificato un errore imprevisto";
+"requestFailedError" = "Errore nella richiesta al server";
+"tryAgain" = "Riprova fra un minuto";
+
+// Actions
+
+"okAlert" = "OK";
+"delete" = "Elimina";
+"errorDescription" = "Descrizione dell'errore";
+"cancel" = "Annulla";
+
+// Additional part to the alert error
+
+"serverSentError" = "Il server ha inviato un messaggio di errore: ";
+
+// ------------------------------------
+
+// ---------------- Types of alert --------------------
+
+// Apple ID alert
+
+"faileAppeIDRequest" = "Apple ha restituito un messaggio di errore in risposta alla richiesta di autorizzazione con Apple ID. Per ulteriori dettagli, consulta la descrizione.";
+"failedAppleIDMerge" = "Impossibile unire gli account.";
+"failedAppleIDAuth" = "Impossibile effettuare l'accesso con Apple.";
+"failedGetAppleIDAuthorizationCode" = "Impossibile ottenere il codice di autorizzazione da Apple. Riprova più tardi, per favore.";
+"failedGetAppleIDIdentityToken" = "Impossibile ottenere il token di identità da Apple. Riprova più tardi, per favore.";
+
+// Install alert
+
+"checkInstallAppError" = "Errore durante l'installazione di %APPNAME%";
+"checkLicenseError" = "Errore durante il rilascio della licenza";
+"successBody" = "%APPNAME% è stato installato con successo! È stata rilasciata una licenza gratuita per %ACCOUNTNAME% per 30 giorni.";
+"installTimeLimit" = "Qualcosa è andato storto durante l'installazione: il server non ha risposto (timeout). Riprova, per favore.";
+
+// Add account alert
+
+"createWebasystAccountError" = "Errore durante la creazione dell'account Webasyst";
+"shopNameErrorDescription" = "Si è verificato un errore durante il salvataggio del nome del negozio.";
+"addAccountSuccessBody" = "Nuovo negozio creato con successo!";
+"addAccountSuccessButNotRenamedBody" = "Nuovo negozio creato con successo! Tuttavia, non è stato possibile impostare il dominio inserito per l'account creato, qualcosa è andato storto.";
+
+// Connect account alert
+
+"connectWebasystAccountError" = "Il codice di invito non è valido. Richiedi all'amministratore di inviarti un nuovo codice e riprova.";
+"qrConnectWebasystAccountError" = "Impossibile aggiungere l'account. Il codice QR potrebbe essere scaduto.";
+"connectAccountSuccessBody" = "Ottimo, il tuo Webasyst ID è stato collegato con successo a %ACCOUNTNAME%!";
+
+// Link accounts alert
+
+"mergeWelcomeError" = "Impossibile unire gli account. Per favore, contatta il supporto di Webasyst, allegando uno screenshot di questo errore - ti aiuteremo con la configurazione.";
+"mergeWelcomeError2" = "Impossibile unire gli account. Per favore, contatta il supporto di Webasyst, allegando uno screenshot di questo errore - ti aiuteremo con la configurazione.";
+
+// Notifications alert
+
+"notificationsAlertTitle" = "Notifiche disattivate";
+"notificationsAlertDescription" = "Le notifiche per l'applicazione %APPNAME% sono disattivate. Attiva le notifiche nelle impostazioni generali di iOS per ricevere avvisi sui nuovi ordini.";
+"openSettingsButtonTitle" = "Apri impostazioni";
+
+// Onboarding failed
+
+"onboardingFailedTitle" = "Errore durante la creazione dell'account";
+"onboardingFailedDescription" = "Errore: il server ha risposto 'non riesco'";
+"onboardingFailedNameMissingDescription" = "Errore: impossibile salvare il nome dell'account.";
+
+// Passcode alert button names
+
+"localizedOnTitle" = "Attiva il codice di sicurezza";
+"localizedOffTitle" = "Disattiva il codice di sicurezza";
+"localizedChangeTitle" = "Cambia il codice di sicurezza";
+
+// ------------------------------------
+
+// MARK: - Server
+
+// ---------------- Server errors --------------------
+
+"unownedStatusCode" = "Stato di risposta sconosciuto.";
+"emptyResponsedData" = "La risposta del server non contiene dati.";
+"404Error" = "Impossibile trovare un account Webasyst con il dominio richiesto.";
+"missingAuthToken" = "Token di accesso mancante.";
+"unownedErrorWithStatusCode" = "Errore sconosciuto con stato di risposta - %CODE%.";
+"unownedServerError" = "Il server ha restituito dati non chiari (%METHOD%): '%DATA%'. Stato di risposta: %CODE%.";
+"unableToDecodeResponsedData" = "Impossibile decodificare i dati restituiti dal server.";
+"unableToGetDecodedParameters" = "Impossibile ottenere i parametri decodificati.";
+"failedToGetAccessTokenForCreatedAccount" = "L'account è stato creato con successo, ma non è stato possibile ottenere il token di accesso per esso.";
+"preloadTimeout" = "Nessuna risposta dal server, timeout.";
+
+// ------------------------------------
+
+// MARK: - Main module
+
+"loading" = "Caricamento...";
+"demoAccount" = "Demo";
+
+// MARK: - Screens
+
+// MARK: - Auth screen
+
+"viewDemoAccount" = "Visualizza negozio demo"; // You need to change it according to the context of your application
+"phoneDescription" = "Per favore, conferma il tuo numero di telefono per creare un nuovo profilo utente Webasyst ID e collegarlo all'applicazione mobile.";
+"appDescription" = "Webasyst ID connetterà automaticamente l'app a tutti i tuoi account e siti basati su Webasyst.";
+"expressPhoneLogin" = "Conferma numero";
+"phoneLogin" = "Accedi con il numero di telefono";
+"appleLogin" = "Accedi con Apple";
+"appleLoginEmailConfirmationDescription" = "L'indirizzo email %email% è già registrato in Webasyst. Per collegarlo al tuo Apple ID, inserisci il codice di conferma appena inviato via email.";
+"appleLoginEmailConfirmationLogout" = "Esci";
+"emailLogin" = "Accedi con email e password";
+"QRLogin" = "Accedi con QR Code";
+"QRAdd" = "Accedi con QR Code";
+"aboutWebAsystID" = "Cos'è Webasyst ID?";
+"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+
+// MARK: - Phone authorization screen
+
+// Auth
+
+"titleConfirmCode" = "Codice di conferma";
+"descriptionPhone" = "Il codice è stato inviato via SMS al numero";
+"resendCodeLabel" = "Non hai ricevuto il messaggio?";
+"resendCodeButton" = "Invia di nuovo";
+"codeSendLabel" = "Codice inviato";
+"timerText" = "Puoi inviare nuovamente tra";
+"seconds" = "secondi";
+
+// Errors
+
+"phoneError" = "Numero di telefono non valido";
+"clientIdError" = "Il client_id di Webasyst ID è errato o bloccato. Si prega di contattare lo sviluppatore dell'applicazione.";
+"codeChalengeError" = "Il codice di autorizzazione è errato o mancante. Si prega di contattare lo sviluppatore dell'applicazione.";
+"emailError" = "Indirizzo email non valido";
+"requestTimeoutLimit" = "La richiesta di un codice di conferma non può essere inviata troppo spesso. Riprova tra un minuto, per favore.";
+"sentNotificationFail" = "Qualcosa è andato storto. Il codice non è stato inviato.";
+"errorCode" = "Codice inserito in modo errato";
+"errorQRCode" = "QR Code non valido";
+
+// MARK: - Settings screen
+
+"notSecureConnection" = "Connessione non sicura";
+"expiresOn" = "Scade il %@";
+"expiredOn" = "Scaduto il %@";
+"addWebasystButton" = "Aggiungi negozio";
+"manageProfileButton" = "Il mio profilo";
+"setPinCodeButton" = "Codice di sicurezza";
+"exitAccountButtonTitle" = "Esci";
+
+// MARK: - Create new install screen
+
+"joinDescription" = "O collegati al negozio manualmente: accedi a Webasyst sul tuo computer e scansiona il QR Code di connessione nell'area del tuo profilo Webasyst."; 
+"joinDescriptionOnlyQR" = "O collegati al negozio manualmente: accedi a Webasyst sul tuo computer e scansiona il QR Code di connessione nell'area del tuo profilo Webasyst.";
+"errorCreateNewInstall" = "Impossibile creare il negozio. Probabilmente hai raggiunto il limite di account Webasyst cloud di prova gratuiti.";
+"createInstallTitleOfStoreConnect" = "Collegati al negozio";
+"createInstallDescriptionOfStoreConnect" = "Per collegare il tuo Webasyst ID%ACCOUNTEMAIL% a un negozio esistente, richiedi all'amministratore del negozio un codice di connessione a 8 cifre. L'amministratore può ottenere il codice all'interno di Webasyst nell'applicazione 'Team' nel tuo profilo.";
+"createInstallButton" = "Crea negozio";
+"createNewShopTitle" = "Apri un nuovo negozio";
+"createNewShopDescription" = "In seguito potrai collegare un tuo dominio al negozio e invitare colleghi per collaborare nell'elaborazione degli ordini.";
+
+// MARK: - Redactor screen
+
+"deleteAccountConfirm" = "Elimina";
+"cacnelAccountDelete" = "Annulla";
+"addPhoto" = "Aggiungi foto";
+"aboutSameself" = "Informazioni di contatto";
+"specifyLater" = "Specificare in seguito";
+"save" = "Salva";
+"name" = "Nome";
+"surname" = "Cognome";
+"phone" = "Numero di telefono";
+"removePhoto" = "Rimuovi foto";
+"changePhoto" = "Cambia foto";
+"successfullyUpdated" = "Dati aggiornati con successo";
+"connectionAlertMessage" = "Nessuna connessione a Internet. Controlla la connessione e riprova.";
+"updateError" = "Qualcosa è andato storto. I dati non sono stati aggiornati.";
+"cameraEditScreen" = "Fotocamera";
+"galleryEditScreen" = "Galleria";
+"cancelEditScreen" = "Chiudi";
+"deleteAccount" = "Elimina account";
+"accountDeleteFirstAlert" = "L'eliminazione di Webasyst ID comporterà la cancellazione di tutti gli account cloud Webasyst creati da te e la perdita irreversibile dei dati. Sei sicuro di voler eliminare il tuo Webasyst ID?";
+"accountDeleteSecondAlert" = "Pericoloso! Dopo l'eliminazione, non sarà possibile recuperare i dati! Confermare l'eliminazione di Webasyst ID?";
+"accountWasDeleted" = "È stata inviata una email/messaggio al telefono associato al tuo profilo Webasyst ID. Segui le istruzioni nell'email per confermare l'eliminazione.";
+"accountDeleteError" = "Qualcosa è andato storto. L'account non è stato eliminato.";
+
+// MARK: - Error screen
+
+"errorAccessDenied" = "Accesso negato";
+
+// MARK: - QR screen
+
+"QRDescription" = "Accedi a Webasyst sul tuo computer e scansiona il QR Code per l'accesso nel tuo profilo nell'angolo in alto a destra.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "Questo non è il QR Code giusto! Sei autenticato nell'app con Webasyst ID, ma stai scansionando un QR Code per l'accesso con un altro Webasyst ID. Il QR Code di cui hai bisogno si trova nel backend Webasyst sul tuo sito, nel tuo profilo in 'Team'. Lì c'è un tipo speciale di codice che collega l'app a un account Webasyst non ancora collegato.";
+"QRFrameDescription" = "Sì, è un QR Code, ma non ha nulla a che fare con Webasyst.";
+"QRTopLabel" = "Scansiona il QR Code";
+
+// MARK: - Install screen
+
+"freeInstall" = "30 giorni gratuiti!";
+"descriptionInstall" = "L'applicazione '%APPNAME%' non è ancora installata nell'account '%ACCOUNTNAME%'. Premi 'Installa' - l'app verrà installata nel tuo Webasyst con l'aiuto dell'Installer in pochi istanti.";
+"buttonInstall" = "Installa '%APPNAME%'";
+"titleInstall" = "Installa '%APPNAME%' su %ACCOUNTNAME%";
+"installProgressDescription" = "Stiamo creando una licenza per l'app e inviando una richiesta all'Installer per l'installazione...";
+
+// MARK: - PayWall screen
+
+// Paywall screen
+
+"payWallRegulations" = "L'abbonamento è addebitato dal tuo account iTunes e si rinnova automaticamente. La cancellazione dell'abbonamento è effettuata nelle impostazioni principali di iOS, nell'account iTunes, almeno 24 ore prima della scadenza del periodo corrente. Il costo dell'abbonamento verrà addebitato entro 24 ore dalla fine del periodo corrente.";
+"termsAndPrivacy" = "Trattamento dei dati";
+"payWallRestore" = "Ripristina";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
+"restorePurchases" = "Acquisti ripristinati con successo!";

@@ -1,0 +1,219 @@
+// MARK: - Alert module
+
+// ---------------- Main alert attributes --------------------
+
+// Titles
+
+"errorTitle" = "Fout";
+"success" = "Gelukt!";
+"cantOpenNotificationOrder" = "Kan lijst van accounts niet openen";
+"spaErrorDescription" = "Er is een onverwachte fout opgetreden";
+"requestFailedError" = "Fout bij serververzoek";
+"tryAgain" = "Probeer opnieuw over een minuut";
+
+// Actions
+
+"okAlert" = "OK";
+"delete" = "Verwijderen";
+"errorDescription" = "Foutbeschrijving";
+"cancel" = "Annuleren";
+
+// Additional part to the alert error
+
+"serverSentError" = "De server heeft een foutbericht verzonden: ";
+
+// ------------------------------------
+
+// ---------------- Types of alert --------------------
+
+// Apple ID alert
+
+"faileAppeIDRequest" = "Apple heeft een foutbericht geretourneerd bij het aanvragen van autorisatie met Apple ID. Zie de beschrijving voor meer informatie.";
+"failedAppleIDMerge" = "Het samenvoegen van de accounts is mislukt.";
+"failedAppleIDAuth" = "Aanmelden met Apple is mislukt.";
+"failedGetAppleIDAuthorizationCode" = "Het verkrijgen van de autorisatiecode van Apple is mislukt. Probeer het later opnieuw.";
+"failedGetAppleIDIdentityToken" = "Het verkrijgen van het identiteitstoken van Apple is mislukt. Probeer het later opnieuw.";
+
+// Install alert
+
+"checkInstallAppError" = "Er is een fout opgetreden bij het installeren van %APPNAME%";
+"checkLicenseError" = "Er is een fout opgetreden bij het verkrijgen van de licentie";
+"successBody" = "%APPNAME% is succesvol geïnstalleerd! Er is een gratis licentie voor 30 dagen voor %ACCOUNTNAME% uitgegeven.";
+"installTimeLimit" = "Er is iets fout gegaan bij de installatie: de server heeft niet gereageerd (time-out). Probeer het opnieuw alstublieft.";
+
+// Add account alert
+
+"createWebasystAccountError" = "Er is een fout opgetreden bij het aanmaken van een Webasyst-account";
+"shopNameErrorDescription" = "Er is een fout opgetreden bij het opslaan van de winkelnaam.";
+"addAccountSuccessBody" = "De nieuwe winkel is succesvol aangemaakt!";
+"addAccountSuccessButNotRenamedBody" = "De nieuwe winkel is succesvol aangemaakt! De ingevoerde domeinnaam voor het aangemaakte account kon echter niet worden ingesteld - er is iets misgegaan.";
+
+// Connect account alert
+
+"connectWebasystAccountError" = "De uitnodigingscode is ongeldig. Vraag de beheerder om een nieuwe code en probeer het opnieuw.";
+"qrConnectWebasystAccountError" = "Het toevoegen van het account is mislukt. De QR-code is mogelijk verlopen.";
+"connectAccountSuccessBody" = "Geweldig, je Webasyst ID is succesvol gekoppeld aan %ACCOUNTNAME%!";
+
+// Link accounts alert
+
+"mergeWelcomeError" = "Het samenvoegen van de accounts is mislukt. Neem contact op met de Webasyst-ondersteuning en voeg een schermafbeelding van deze foutmelding toe - we helpen je bij de configuratie.";
+"mergeWelcomeError2" = "Het samenvoegen van de accounts is mislukt. Neem contact op met de Webasyst-ondersteuning en voeg een schermafbeelding van deze foutmelding toe - we helpen je bij de configuratie.";
+
+// Notifications alert
+
+"notificationsAlertTitle" = "Meldingen uitgeschakeld";
+"notificationsAlertDescription" = "Meldingen voor de %APPNAME%-app zijn uitgeschakeld. Schakel meldingen in de algemene iOS-instellingen in om meldingen te ontvangen over nieuwe bestellingen.";
+"openSettingsButtonTitle" = "Instellingen openen";
+
+// Onboarding failed
+
+"onboardingFailedTitle" = "Account maken mislukt";
+"onboardingFailedDescription" = "Fout: de server heeft 'kan niet' geantwoord";
+"onboardingFailedNameMissingDescription" = "Fout: de accountnaam kon niet worden opgeslagen.";
+
+// Passcode alert button names
+
+"localizedOnTitle" = "Schakel toegangscode in";
+"localizedOffTitle" = "Schakel toegangscode uit";
+"localizedChangeTitle" = "Wijzig toegangscode";
+
+// ------------------------------------
+
+// MARK: - Server
+
+// ---------------- Server errors --------------------
+
+"unownedStatusCode" = "Onbekende statuscode ontvangen.";
+"emptyResponsedData" = "Antwoord van de server bevat geen gegevens.";
+"404Error" = "Webasyst-account kon niet worden gevonden voor het opgegeven domein.";
+"missingAuthToken" = "Toegangstoken ontbreekt.";
+"unownedErrorWithStatusCode" = "Onbekende fout met statuscode - %CODE%.";
+"unownedServerError" = "De server heeft onbegrijpelijke gegevens geretourneerd (%METHOD%): '%DATA%'. Statuscode van het antwoord: %CODE%.";
+"unableToDecodeResponsedData" = "Kan de gegevens die door de server zijn geretourneerd niet decoderen.";
+"unableToGetDecodedParameters" = "Kan de gedecodeerde parameters niet ophalen.";
+"failedToGetAccessTokenForCreatedAccount" = "Het account is succesvol aangemaakt, maar het is niet gelukt om een toegangstoken te verkrijgen.";
+"preloadTimeout" = "Er is geen reactie van de server ontvangen.";
+
+// ------------------------------------
+
+// MARK: - Main module
+
+"loading" = "Laden...";
+"demoAccount" = "Demo";
+
+// MARK: - Screens
+
+// MARK: - Auth screen
+
+"viewDemoAccount" = "Bekijk demo-winkel"; // U moet dit aanpassen aan de context van uw applicatie
+"phoneDescription" = "Voer uw telefoonnummer in om een nieuw gebruikersprofiel voor Webasyst ID aan te maken en het aan de mobiele app te koppelen.";
+"appDescription" = "Webasyst ID zal automatisch de app koppelen aan al uw accounts en websites op basis van Webasyst.";
+"expressPhoneLogin" = "Telefoonnummer bevestigen";
+"phoneLogin" = "Inloggen met telefoonnummer";
+"appleLogin" = "Inloggen met Apple";
+"appleLoginEmailConfirmationDescription" = "E-mail%email% is al geregistreerd bij Webasyst. Voer de bevestigingscode in die zojuist naar u is gemaild om het aan uw Apple ID te koppelen.";
+"appleLoginEmailConfirmationLogout" = "Afmelden";
+"emailLogin" = "Inloggen met e-mail en wachtwoord";
+"QRLogin" = "Inloggen met QR-code";
+"QRAdd" = "Inloggen met QR-code";
+"aboutWebAsystID" = "Wat is Webasyst ID?";
+"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+
+// MARK: - Phone authorization screen
+
+// Auth
+
+"titleConfirmCode" = "Bevestigingscode";
+"descriptionPhone" = "De code is per sms verzonden naar het nummer";
+"resendCodeLabel" = "Geen bericht ontvangen?";
+"resendCodeButton" = "Opnieuw verzenden";
+"codeSendLabel" = "Code verzonden";
+"timerText" = "Opnieuw verzenden is mogelijk binnen";
+"seconds" = "seconden";
+
+// Errors
+
+"phoneError" = "Ongeldig telefoonnummer";
+"clientIdError" = "Webasyst ID client_id is onjuist of geblokkeerd. Neem contact op met de ontwikkelaar van de app.";
+"codeChalengeError" = "Ongeldige of ontbrekende autorisatiecode. Neem contact op met de ontwikkelaar van de app.";
+"emailError" = "Ongeldig e-mailadres";
+"requestTimeoutLimit" = "Het verzoek voor een bevestigingscode kan niet te vaak worden verzonden. Probeer het over een minuut opnieuw.";
+"sentNotificationFail" = "Er is iets misgegaan. Code niet verzonden.";
+"errorCode" = "De ingevoerde code is onjuist";
+"errorQRCode" = "Ongeldige QR-code";
+
+// MARK: - Settings screen
+
+"notSecureConnection" = "Onveilige verbinding";
+"expiresOn" = "Verloopt op %@";
+"expiredOn" = "Verlopen op %@";
+"addWebasystButton" = "Winkel toevoegen";
+"manageProfileButton" = "Mijn profiel";
+"setPinCodeButton" = "Pincode instellen";
+"exitAccountButtonTitle" = "Uitloggen";
+
+// MARK: - Create new install screen
+
+"joinDescription" = "Of sluit u zelf aan bij de winkel: log in op Webasyst in uw webbrowser op uw computer en scan de installatie QR-code in uw Webasyst-profiel.";
+"joinDescriptionOnlyQR" = "Of sluit u zelf aan bij de winkel: log in op Webasyst in uw webbrowser op uw computer en scan de installatie QR-code in uw Webasyst-profiel.";
+"errorCreateNewInstall" = "Het is niet gelukt om de winkel aan te maken. Waarschijnlijk is het limiet voor het aantal gratis Webasyst-cloudaccounts overschreden.";
+"createInstallTitleOfStoreConnect" = "Verbinding maken met de winkel";
+"createInstallDescriptionOfStoreConnect" = "Vraag de beheerder van de winkel om een 8-cijferige verbindingscode om uw Webasyst ID%ACCOUNTEMAIL% aan een bestaande winkel te koppelen. De beheerder kan de code verkrijgen in de Webasyst-app in uw profiel in 'Team'.";
+"createInstallButton" = "Winkel aanmaken";
+"createNewShopTitle" = "Nieuwe winkel openen";
+"createNewShopDescription" = "U kunt later uw eigen domeinnaam aan de winkel koppelen en collega's uitnodigen om samen bestellingen te verwerken.";
+
+// MARK: - Redactor screen
+
+"deleteAccountConfirm" = "Verwijderen";
+"cacnelAccountDelete" = "Annuleren";
+"addPhoto" = "Foto toevoegen";
+"aboutSameself" = "Contactgegevens";
+"specifyLater" = "Later specificeren";
+"save" = "Opslaan";
+"name" = "Naam";
+"surname" = "Achternaam";
+"phone" = "Telefoonnummer";
+"removePhoto" = "Foto verwijderen";
+"changePhoto" = "Foto wijzigen";
+"successfullyUpdated" = "Gegevens succesvol bijgewerkt";
+"connectionAlertMessage" = "Geen internetverbinding. Controleer uw verbinding en probeer het opnieuw.";
+"updateError" = "Er is iets misgegaan. De informatie is niet bijgewerkt.";
+"cameraEditScreen" = "Camera";
+"galleryEditScreen" = "Galerij";
+"cancelEditScreen" = "Sluiten";
+"deleteAccount" = "Account verwijderen";
+"accountDeleteFirstAlert" = "Het verwijderen van Webasyst ID leidt tot het verwijderen van alle door u aangemaakte Webasyst-cloudaccounts en het permanent verlies van gegevens. Weet u zeker dat u uw Webasyst ID wilt verwijderen?";
+"accountDeleteSecondAlert" = "Let op! Na verwijdering kunnen de gegevens niet worden hersteld! Bevestig de verwijdering van Webasyst ID?";
+"accountWasDeleted" = "Er is een bevestigingsmail gestuurd naar het e-mailadres/telefoonnummer dat in uw Webasyst ID-profiel staat. Volg de instructies in het bericht om de verwijdering te bevestigen.";
+"accountDeleteError" = "Er is iets misgegaan. Het account is niet verwijderd.";
+
+// MARK: - Error screen
+
+"errorAccessDenied" = "Toegang geweigerd";
+
+// MARK: - QR screen
+
+"QRDescription" = "Meld u aan bij uw Webasyst in uw webbrowser op uw computer en scan de QR-code om in te loggen in uw profiel in de rechterbovenhoek.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "Dit is niet de juiste QR-code! U bent ingelogd in de app met Webasyst ID, maar scant een QR-code om in te loggen met een ander Webasyst ID. De benodigde QR-code bevindt zich in de Webasyst-backend op uw website in uw profiel in 'Team'. Daar is een speciaal type code dat de app koppelt aan een nog niet aangesloten Webasyst-account.";
+"QRFrameDescription" = "Dit is ook een QR-code, maar heeft niets met Webasyst te maken.";
+"QRTopLabel" = "Scan de QR-code";
+
+// MARK: - Install screen
+
+"freeInstall" = "30 dagen gratis!";
+"descriptionInstall" = "De applicatie \"%APPNAME%\" is nog niet geïnstalleerd in het account \"%ACCOUNTNAME%\". Klik op \"Installeren\" en binnen enkele momenten zal de app worden geïnstalleerd in uw Webasyst met behulp van de Installer.";
+"buttonInstall" = "Installeer \"%APPNAME%\"";
+"titleInstall" = "Installeer \"%APPNAME%\" op %ACCOUNTNAME%";
+"installProgressDescription" = "We maken een licentie voor de app aan en sturen een verzoek naar de Installer om te installeren...";
+
+// MARK: - PayWall screen
+
+// Paywall screen
+
+"payWallRegulations" = "Het abonnement wordt gefactureerd vanaf uw iTunes-account en wordt automatisch verlengd. Het abonnement kan worden geannuleerd in de iOS-instellingen onder uw iTunes-account, uiterlijk 24 uur vóór het einde van de huidige periode. De kosten van het abonnement worden binnen 24 uur na het einde van de proefperiode in rekening gebracht.";
+"termsAndPrivacy" = "Privacybeleid";
+"payWallRestore" = "Herstellen";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
+"restorePurchases" = "Aankopen zijn succesvol hersteld!";
+

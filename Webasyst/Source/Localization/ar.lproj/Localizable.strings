@@ -1,0 +1,221 @@
+// ------------------------------------
+
+// MARK: - Alert module
+
+// ---------------- Main alert attributes --------------------
+
+// Titles
+
+"errorTitle" = "خطأ";
+"success" = "تم بنجاح!";
+"cantOpenNotificationOrder" = "لا يمكن فتح قائمة الحسابات";
+"spaErrorDescription" = "حدث خطأ غير متوقع";
+"requestFailedError" = "فشل طلب الخادم";
+"tryAgain" = "حاول مرة أخرى في دقيقة واحدة";
+
+// Actions
+
+"okAlert" = "حسنًا";
+"delete" = "حذف";
+"errorDescription" = "وصف الخطأ";
+"cancel" = "إلغاء";
+
+// Additional part to the alert error
+
+"serverSentError" = "أرسل الخادم رسالة خطأ: ";
+
+// ------------------------------------
+
+// ---------------- Types of alert --------------------
+
+// Apple ID alert
+
+"faileAppeIDRequest" = "أرسل Apple رسالة خطأ بناءً على طلب المصادقة باستخدام Apple ID. لمزيد من المعلومات، راجع الوصف.";
+"failedAppleIDMerge" = "فشل دمج الحسابات.";
+"failedAppleIDAuth" = "فشل تسجيل الدخول باستخدام Apple.";
+"failedGetAppleIDAuthorizationCode" = "غير قادر على الحصول على رمز المصادقة من Apple. يرجى المحاولة مرة أخرى في وقت لاحق.";
+"failedGetAppleIDIdentityToken" = "غير قادر على الحصول على رمز الهوية من Apple. يرجى المحاولة مرة أخرى في وقت لاحق.";
+
+// Install alert
+
+"checkInstallAppError" = "حدث خطأ أثناء تثبيت %APPNAME%";
+"checkLicenseError" = "حدث خطأ أثناء إصدار الترخيص";
+"successBody" = "تم تثبيت %APPNAME% بنجاح! تم إصدار ترخيص مجاني لمدة 30 يومًا لـ %ACCOUNTNAME%.";
+"installTimeLimit" = "حدث خطأ أثناء التثبيت: الخادم لم يستجب (انتهاء الوقت). يرجى المحاولة مرة أخرى.";
+
+// Add account alert
+
+"createWebasystAccountError" = "حدث خطأ أثناء إنشاء حساب Webasyst";
+"shopNameErrorDescription" = "حدث خطأ أثناء حفظ اسم المتجر.";
+"addAccountSuccessBody" = "تم إنشاء المتجر الجديد بنجاح!";
+"addAccountSuccessButNotRenamedBody" = "تم إنشاء المتجر الجديد بنجاح! لكن لم يتم تحديد النطاق الذي تم إدخاله للحساب المنشأ - حدث خطأ.";
+
+// Connect account alert
+
+"connectWebasystAccountError" = "الرمز المدعوم غير صالح. اطلب من المسؤول إعادة إرسال الرمز وحاول مرة أخرى.";
+"qrConnectWebasystAccountError" = "فشلت إضافة الحساب. ربما انتهت صلاحية الرمز الشريطي.";
+"connectAccountSuccessBody" = "مبروك، تم توصيل Webasyst ID الخاص بك بـ %ACCOUNTNAME%!";
+
+// Link accounts alert
+
+"mergeWelcomeError" = "فشل دمج الحسابات. يرجى الاتصال بدعم Webasyst وإرفاق لقطة شاشة لهذا الخطأ - سنساعدك في الإعداد.";
+"mergeWelcomeError2" = "فشل دمج الحسابات. يرجى الاتصال بدعم Webasyst وإرفاق لقطة شاشة لهذا الخطأ - سنساعدك في الإعداد.";
+
+// Notifications alert
+
+"notificationsAlertTitle" = "تم تعطيل الإشعارات";
+"notificationsAlertDescription" = "تم تعطيل الإشعارات لتطبيق %APPNAME%. قم بتمكين الإشعارات في إعدادات iOS العامة لتلقي إشعارات حول الطلبات الجديدة.";
+"openSettingsButtonTitle" = "فتح الإعدادات";
+
+// Onboarding failed
+
+"onboardingFailedTitle" = "خطأ في إنشاء الحساب";
+"onboardingFailedDescription" = "خطأ: الخادم قام بالرد بكلمة 'لم تتم'";
+"onboardingFailedNameMissingDescription" = "خطأ: لم يتم حفظ اسم الحساب.";
+
+// Passcode alert button names
+
+"localizedOnTitle" = "تمكين رمز المرور";
+"localizedOffTitle" = "تعطيل رمز المرور";
+"localizedChangeTitle" = "تغيير رمز المرور";
+
+// ------------------------------------
+
+// MARK: - Server
+
+// ---------------- Server errors --------------------
+
+"unownedStatusCode" = "حالة الاستجابة غير معروفة.";
+"emptyResponsedData" = "استجابة الخادم لا تحتوي على بيانات.";
+"404Error" = "تعذر العثور على حساب Webasyst باستخدام النطاق المطلوب.";
+"missingAuthToken" = "نقص رمز المصادقة.";
+"unownedErrorWithStatusCode" = "خطأ غير معروف مع حالة الاستجابة - %CODE%.";
+"unownedServerError" = "الخادم أرجع بيانات غير واضحة (%METHOD%): '%DATA%'. حالة الاستجابة: %CODE%.";
+"unableToDecodeResponsedData" = "تعذر فك تشفير البيانات التي أرجعها الخادم.";
+"unableToGetDecodedParameters" = "تعذر الحصول على المعلمات المفككة.";
+"failedToGetAccessTokenForCreatedAccount" = "تم إنشاء الحساب بنجاح، ولكن تعذر الحصول على رمز المصادقة الوصول إليه.";
+"preloadTimeout" = "تعذر الحصول على استجابة من الخادم.";
+
+// ------------------------------------
+
+// MARK: - Main module
+
+"loading" = "جار التحميل...";
+"demoAccount" = "حساب تجريبي";
+
+// MARK: - Screens
+
+// MARK: - Auth screen
+
+"viewDemoAccount" = "عرض حساب التجربة"; // You need to change it according to the context of your application
+"phoneDescription" = "يرجى توضيح رقم هاتفك لإنشاء ملف تعريف جديد لمستخدم Webasyst ID وربطه بتطبيق الجوال.";
+"appDescription" = "سيقوم Webasyst ID تلقائيًا بربط التطبيق بجميع حساباتك ومواقعك على أساس Webasyst.";
+"expressPhoneLogin" = "تأكيد الرقم";
+"phoneLogin" = "تسجيل الدخول باستخدام الهاتف";
+"appleLogin" = "تسجيل الدخول باستخدام Apple";
+"appleLoginEmailConfirmationDescription" = "البريد الإلكتروني %email% مسجل بالفعل في Webasyst. لربطه بحساب Apple الخاص بك، يجب عليك إدخال رمز التأكيد الذي تم إرساله لك عبر البريد الإلكتروني.";
+"appleLoginEmailConfirmationLogout" = "تسجيل الخروج";
+"emailLogin" = "تسجيل الدخول باستخدام البريد الإلكتروني وكلمة المرور";
+"QRLogin" = "تسجيل الدخول باستخدام رمز الاستجابة السريعة (QR)";
+"QRAdd" = "إضافة باستخدام رمز الاستجابة السريعة (QR)";
+"aboutWebAsystID" = "ما هو هوية Webasyst؟";
+"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+
+// MARK: - Phone authorization screen
+
+// Auth
+
+"titleConfirmCode" = "رمز التأكيد";
+"descriptionPhone" = "تم إرسال رمز عبر الرسائل القصيرة (SMS) إلى الرقم";
+"resendCodeLabel" = "لم يصلك الرمز؟";
+"resendCodeButton" = "إعادة الإرسال مرة أخرى";
+"codeSendLabel" = "تم إرسال الرمز";
+"timerText" = "يمكن إعادة الإرسال في غضون";
+"seconds" = "ثانية";
+
+// Errors
+
+"phoneError" = "رقم هاتف غير صحيح";
+"clientIdError" = "تم توجيه خطأ في Webasyst ID client_id أو تم حظره. يرجى التواصل مع مطور التطبيق.";
+"codeChalengeError" = "رمز المصادقة غير صحيح أو مفقود. يرجى التواصل مع مطور التطبيق.";
+"emailError" = "عنوان البريد الإلكتروني غير صحيح";
+"requestTimeoutLimit" = "لا يمكن إرسال طلب رمز التأكيد بكثرة. يرجى المحاولة مرة أخرى بعد دقيقة واحدة.";
+"sentNotificationFail" = "حدث خطأ. لم يتم إرسال الرمز.";
+"errorCode" = "تم إدخال رمز غير صحيح";
+"errorQRCode" = "رمز الاستجابة السريعة (QR) غير صالح";
+
+// MARK: - Settings screen
+
+"notSecureConnection" = "اتصال غير آمن";
+"expiresOn" = "ينتهي في %@";
+"expiredOn" = "انتهت الصلاحية في %@";
+"addWebasystButton" = "إضافة متجر";
+"manageProfileButton" = "إدارة ملف التعريف";
+"setPinCodeButton" = "تعيين رمز المرور";
+"exitAccountButtonTitle" = "تسجيل الخروج";
+
+// MARK: - Create new install screen
+
+"joinDescription" = "أو انضم إلى المتجر بنفسك: قم بتسجيل الدخول إلى Webasyst في متصفح الكمبيوتر الخاص بك وقم بتصوير رمز الاستجابة السريعة (QR) للاتصال بالتطبيق في ملف التعريف الخاص بك.";
+"joinDescriptionOnlyQR" = "أو انضم إلى المتجر بنفسك: قم بتسجيل الدخول إلى Webasyst في متصفح الكمبيوتر الخاص بك وقم بتصوير رمز الاستجابة السريعة (QR) للاتصال بالتطبيق في ملف التعريف الخاص بك.";
+"errorCreateNewInstall" = "تعذر إنشاء المتجر. على الأرجح، تم تجاوز الحد الأقصى لعدد الحسابات السحابية التجريبية المجانية في Webasyst.";
+"createInstallTitleOfStoreConnect" = "الانضمام إلى المتجر";
+"createInstallDescriptionOfStoreConnect" = "للانضمام إلى Webasyst ID الخاص بك %ACCOUNTEMAIL% بمتجر موجود بالفعل، اطلب من مسؤول المتجر رمز الاتصال المكون من 8 أرقام. يمكن للمسؤول الحصول على الرمز من داخل التطبيق الخاص بـ Webasyst في قسم \"الفريق\" في ملف التعريف الخاص بك.";
+"createInstallButton" = "إنشاء المتجر";
+"createNewShopTitle" = "فتح متجر جديد";
+"createNewShopDescription" = "يمكنك في وقت لاحق ربط اسم النطاق الخاص بك بالمتجر ودعوة زملائك للمشاركة في معالجة الطلبات معًا.";
+
+// MARK: - Redactor screen
+
+"deleteAccountConfirm" = "حذف";
+"cacnelAccountDelete" = "إلغاء";
+"addPhoto" = "إضافة صورة";
+"aboutSameself" = "معلومات الاتصال";
+"specifyLater" = "تحديد لاحقًا";
+"save" = "حفظ";
+"name" = "الاسم";
+"surname" = "اللقب";
+"phone" = "رقم الهاتف";
+"removePhoto" = "إزالة الصورة";
+"changePhoto" = "تغيير الصورة";
+"successfullyUpdated" = "تم تحديث البيانات بنجاح";
+"connectionAlertMessage" = "لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال والمحاولة مرة أخرى.";
+"updateError" = "حدث خطأ. لم تتم عملية التحديث.";
+"cameraEditScreen" = "الكاميرا";
+"galleryEditScreen" = "المعرض";
+"cancelEditScreen" = "إلغاء";
+"deleteAccount" = "حذف الحساب";
+"accountDeleteFirstAlert" = "سيؤدي حذف Webasyst ID إلى حذف جميع حسابات Webasyst السحابية التي تم إنشاؤها بواسطتك وفقدان البيانات بشكل لا رجعة فيه. هل أنت متأكد أنك تريد حذف Webasyst ID الخاص بك؟";
+"accountDeleteSecondAlert" = "خطر! بعد حذف البيانات، لن يمكن استعادتها! هل تريد تأكيد حذف Webasyst ID الخاص بك؟";
+"accountWasDeleted" = "تم إرسال بريد إلكتروني/رسالة نصية إلى البريد الإلكتروني/رقم الهاتف الذي تم توضيحه في ملف التعريف الخاص بك في Webasyst ID. يرجى اتباع التعليمات في الرسالة لتأكيد الحذف.";
+"accountDeleteError" = "حدث خطأ. لم يتم حذف الحساب.";
+
+// MARK: - Error screen
+
+"errorAccessDenied" = "تم رفض الوصول";
+
+// MARK: - QR screen
+
+"QRDescription" = "قم بتسجيل الدخول إلى حسابك في Webasyst على متصفح الكمبيوتر الخاص بك وقم بتصوير رمز الاستجابة السريعة (QR) لتسجيل الدخول إلى ملف التعريف الخاص بك في الزاوية العلوية اليمنى.";
+"QRFrameWrongTriggerDescriptionWithoutUsername" = "هذا ليس رمز الاستجابة السريعة (QR) المطلوب! أنت مسجل الدخول إلى التطبيق باستخدام Webasyst ID، ولكنك تقوم بمسح رمز الاستجابة السريعة (QR) لتسجيل الدخول باستخدام Webasyst ID مختلف. الرمز الذي تحتاجه متوفر في الخادم الخاص بـ Webasyst على موقع الويب الخاص بك في ملف التعريف الخاص بك في قسم \"الفريق\". هناك نوع خاص من الرموز يربط التطبيق بحساب Webasyst الذي لم يتم توصيله بعد.";
+"QRFrameDescription" = "نعم، هذا أيضًا رمز الاستجابة السريعة (QR)، ولكنه ليس مرتبطًا بـ Webasyst.";
+"QRTopLabel" = "مسح رمز الاستجابة السريعة (QR)";
+
+// MARK: - Install screen
+
+"freeInstall" = "مجانًا لمدة 30 يومًا!";
+"descriptionInstall" = "تطبيق \"%APPNAME%\" غير مثبت حاليًا في حساب \"%ACCOUNTNAME%\". اضغط \"تثبيت\" وفي بضع لحظات سيتم تثبيت التطبيق في Webasyst الخاص بك باستخدام الإعداد.";
+"buttonInstall" = "تثبيت \"%APPNAME%\"";
+"titleInstall" = "تثبيت \"%APPNAME%\" على %ACCOUNTNAME%";
+// MARK: - Install screen
+
+"installProgressDescription" = "نقوم بإنشاء ترخيص للتطبيق وإرسال طلب إلى المثبت للتثبيت...";
+
+// MARK: - PayWall screen
+
+"payWallRegulations" = "يتم الاشتراك من حساب iTunes الخاص بك ويتم تجديده تلقائيًا. يمكن إلغاء الاشتراك من إعدادات iTunes الرئيسية في حسابك في iOS، وذلك قبل مرور 24 ساعة على انتهاء الفترة الحالية. سيتم خصم تكلفة الاشتراك خلال 24 ساعة من انتهاء الفترة التجريبية.";
+"termsAndPrivacy" = "معالجة البيانات";
+"payWallRestore" = "استعادة";
+"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"restorePurchases" = "تم استعادة الشراء بنجاح!";
+
