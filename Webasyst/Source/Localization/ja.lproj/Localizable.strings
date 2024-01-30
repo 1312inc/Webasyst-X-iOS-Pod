@@ -83,6 +83,7 @@
 
 // ---------------- Server errors --------------------
 
+"preparedAccountNotExists" = "おっと、Webasyst Cloudは現在過負荷のようです。アカウントを作成できませんでした。30分後にもう一度お試しください。";
 "unownedStatusCode" = "未知のステータスコードです。";
 "emptyResponsedData" = "サーバーの応答にデータが含まれていません。";
 "404Error" = "要求されたドメインのWebasystアカウントが見つかりませんでした。";

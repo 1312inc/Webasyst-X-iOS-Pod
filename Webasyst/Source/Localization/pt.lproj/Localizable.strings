@@ -83,6 +83,7 @@
 
 // ---------------- Server errors --------------------
 
+"preparedAccountNotExists" = "Oops, parece que o Webasyst Cloud está a ter uma sobrecarga neste momento. Não foi possível criar uma conta. Por favor, tente novamente em 30 minutos.";
 "unownedStatusCode" = "Status de resposta desconhecido.";
 "emptyResponsedData" = "A resposta do servidor não contém dados.";
 "404Error" = "Não foi possível encontrar a conta Webasyst pelo domínio solicitado.";

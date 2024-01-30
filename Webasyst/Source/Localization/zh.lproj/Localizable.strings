@@ -83,6 +83,7 @@
 
 // ---------------- Server errors --------------------
 
+"preparedAccountNotExists" = "哎呀，看来 Webasyst Cloud 目前正处于超负荷运行状态。我们无法创建账户。请 30 分钟后再试。";
 "unownedStatusCode" = "未知的响应状态。";
 "emptyResponsedData" = "服务器响应不包含数据。";
 "404Error" = "未找到请求的Webasyst帐户。";

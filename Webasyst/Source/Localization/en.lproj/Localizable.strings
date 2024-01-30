@@ -83,6 +83,7 @@
 
 // ---------------- Server errors --------------------
 
+"preparedAccountNotExists" = "Oops, looks like Webasyst Cloud is having an overload at the moment. We were not able to create an account. Please try again in 30 minutes.";
 "unownedStatusCode" = "Unowned server response status code.";
 "emptyResponsedData" = "Empty responsed data.";
 "404Error" = "The Webasyst account was not found for the requested domain.";

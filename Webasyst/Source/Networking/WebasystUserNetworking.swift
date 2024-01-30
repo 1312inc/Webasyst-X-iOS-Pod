@@ -1036,16 +1036,21 @@ extension WebasystUserNetworking {
                         let json = try JSONDecoder().decode([String : String].self, from: data)
                         
                         var error: String?
-                        if let e = json["error_description"] {
+                        if let e = json["error_description"], !e.isEmpty {
                             error = e
                         } else if let e = json["error"] {
                             error = e
                         }
                         
                         if let error = error {
-                            let loc = WebasystApp.getDefaultLocalizedString(withKey: "serverSentError", comment: "Server send error")
-                            let errorDescription = loc + "\(error)"
-                            completion(.failure(errorDescription))
+                            if error == "prepared_account_not_exists" {
+                                let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "preparedAccountNotExists", comment: "Prepared account not exists")
+                                completion(.failure(errorDescription))
+                            } else {
+                                let loc = WebasystApp.getDefaultLocalizedString(withKey: "serverSentError", comment: "Server send error")
+                                let errorDescription = loc + "\(error)"
+                                completion(.failure(errorDescription))
+                            }
                         } else {
                             let loc = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
                             let errorDescription = loc.replacingOccurrences(of: "%CODE%", with: response.statusCode.description)

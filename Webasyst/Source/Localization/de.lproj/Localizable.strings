@@ -83,6 +83,7 @@
 
 // ---------------- Server errors --------------------
 
+"preparedAccountNotExists" = "Ups, es sieht so aus, als ob die Webasyst Cloud im Moment überlastet ist. Wir waren nicht in der Lage, ein Konto zu erstellen. Bitte versuchen Sie es in 30 Minuten erneut.";
 "unownedStatusCode" = "Unbekannter Antwortstatus.";
 "emptyResponsedData" = "Die Serverantwort enthält keine Daten.";
 "404Error" = "Das Webasyst-Konto konnte nicht anhand der angeforderten Domäne gefunden werden.";
