@@ -1033,12 +1033,12 @@ extension WebasystUserNetworking {
                     completion(.failure(errorDescription))
                 default:
                     do {
-                        let json = try JSONDecoder().decode([String : String].self, from: data)
+                        let errorModel = try JSONDecoder().decode(ErrorModel.self, from: data)
                         
                         var error: String?
-                        if let e = json["error_description"], !e.isEmpty {
+                        if let e = errorModel.errorDescription, !e.isEmpty {
                             error = e
-                        } else if let e = json["error"] {
+                        } else if let e = errorModel.error {
                             error = e
                         }
                         
