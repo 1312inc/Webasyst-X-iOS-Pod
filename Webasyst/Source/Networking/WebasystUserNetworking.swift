@@ -1043,14 +1043,9 @@ extension WebasystUserNetworking {
                         }
                         
                         if let error = error {
-                            if error == "prepared_account_not_exists" {
-                                let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "preparedAccountNotExists", comment: "Prepared account not exists")
-                                completion(.failure(errorDescription))
-                            } else {
-                                let loc = WebasystApp.getDefaultLocalizedString(withKey: "serverSentError", comment: "Server send error")
-                                let errorDescription = loc + "\(error)"
-                                completion(.failure(errorDescription))
-                            }
+                            let loc = WebasystApp.getDefaultLocalizedString(withKey: "serverSentError", comment: "Server send error")
+                            let errorDescription = loc + "\(error)"
+                            completion(.failure(errorDescription))
                         } else {
                             let loc = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
                             let errorDescription = loc.replacingOccurrences(of: "%CODE%", with: response.statusCode.description)
