@@ -8,6 +8,6 @@
 import Foundation
 
 public enum AuthType {
-    case phone
+    case phone(isRepeated: Bool = false)
     case email
 }

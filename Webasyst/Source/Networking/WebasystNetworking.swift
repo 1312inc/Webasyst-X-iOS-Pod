@@ -79,8 +79,11 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         ]
         
         switch type {
-        case .phone:
+        case .phone(let isRepeated):
             parametersRequest["phone"] = value
+            if isRepeated {
+                parametersRequest["is_repeated"] = "true"
+            }
         case .email:
             parametersRequest["email"] = value
         }
