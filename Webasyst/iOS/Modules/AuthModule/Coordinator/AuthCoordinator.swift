@@ -24,6 +24,7 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorProtocol {
                                           delegate: self,
                                           with: code)
         authViewController.viewModel = authViewModel
+        authViewController.modalPresentationCapturesStatusBarAppearance = true
         self.navigationController.present(authViewController, animated: true, completion: nil)
     }
 }
