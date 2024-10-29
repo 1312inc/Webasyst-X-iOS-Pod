@@ -1,10 +1,3 @@
-//
-//  WebasystApp iOS.swift
-//  Webasyst watchOS
-//
-//  Created by Леонид Лукашевич on 14.08.2023.
-//
-
 import UIKit
 
 public
@@ -32,7 +25,7 @@ extension WebasystApp {
             guard let self = self else { return }
             switch result {
             case .success:
-                UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
             case .error(let error):
                 checkMissingAuthTokenError(error)
             }
@@ -52,11 +45,11 @@ extension WebasystApp {
             guard let self = self else { return }
             switch result {
             case .success:
-                UserDefaults.standard.setValue("", forKey: "selectDomainUser")
+                UserDefaults.standard.setValue("", forKey: UserDefaultsKeys.selectDomainUser.rawValue)
                 userNetworking.preloadUserData { result in
                     switch result {
                     case .success(let status):
-                        UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                        UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
                         action(.success(status))
                     case .failure(let error):
                         action(.failure(error))
@@ -85,7 +78,7 @@ extension WebasystApp {
                         guard let self = self else { return }
                         switch res {
                         case .success(let status):
-                            UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                            UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
                             result(.completed(status))
                         case .failure(let error):
                             checkMissingAuthTokenError(error)
@@ -105,7 +98,7 @@ extension WebasystApp {
                                         guard let self = self else { return }
                                         switch res {
                                         case .success:
-                                            UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                                            UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
                                             confirmation.successHandler(true, nil)
                                         case .failure(let error):
                                             checkMissingAuthTokenError(error)
@@ -157,7 +150,7 @@ extension WebasystApp {
                     guard let self = self else { return }
                     switch result {
                     case .success:
-                        UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                        UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
                         success(true)
                     case .failure(let error):
                         checkMissingAuthTokenError(error)
@@ -175,12 +168,15 @@ extension WebasystApp {
     func defaultChecking(completion: @escaping (Bool) -> ()) {
         if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
             let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
+            
             let installs = getAllUserInstall()
+            
             if installs != nil, installs != [], domain == nil {
                 completion(true)
                 logOutUser()
             }
-            if !KeychainManager.token.isEmpty {
+            
+            if !KeychainManager.getToken(.accessToken).isEmpty {
                 completion(condition)
             } else {
                 completion(true)
@@ -313,13 +309,19 @@ extension WebasystApp {
     /// - Parameter completion: Boolean value of deauthorization success.
     func logOutUser() {
         userNetworking.singUpUser { _ in }
+        
         profileInstallService?.resetInstallList()
         profileInstallService?.deleteProfileData()
-        KeychainManager.deleteAllKeys()
-        let domain = Bundle.main.bundleIdentifier!
-        UserDefaults.standard.removePersistentDomain(forName: domain)
-        UserDefaults.standard.synchronize()
-        UserDefaults.standard.set(true, forKey: "firstLaunch")
+        
+        KeychainManager.deleteAll()
+        
+        if let domain = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: domain)
+            UserDefaults.standard.synchronize()
+        }
+        
+        UserDefaults.standard.set(true, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+        
         NotificationCenter.default.post(name: .webasystDidLoggedOut, object: nil)
     }
 }
