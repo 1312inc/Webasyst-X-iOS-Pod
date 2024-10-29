@@ -276,13 +276,17 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             case 200...299:
                 do {
                     let authData = try JSONDecoder().decode(UserToken.self, from: data)
-                    let accessToken = Data("Bearer \(authData.access_token)".utf8)
+                    
+                    let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
+                    
                     if let emailConfirm = authData.email_confirm, emailConfirm == true {
-                        completion(.success(.needEmailConfirmation(accessToken: accessToken)))
+                        completion(.success(.needEmailConfirmation(accessToken: accessTokenData)))
                     } else {
-                        let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: accessToken)
-                        UserDefaults.standard.set(accessToken, forKey: "accessToken")
-                        let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                        let refreshTokenData = Data(authData.refresh_token.utf8)
+                        
+                        let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
+                        let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
+                        
                         if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                             completion(.success(.succeess))
                         }
@@ -398,9 +402,13 @@ internal class WebasystNetworking: WebasystNetworkingManager {
             case 200...299:
                 do {
                     let authData = try JSONDecoder().decode(UserToken.self, from: data)
-                    let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                    UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
-                    let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                    
+                    let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
+                    let refreshTokenData = Data(authData.refresh_token.utf8)
+                    
+                    let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
+                    let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
+                    
                     if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                         success(true)
                     }
@@ -469,9 +477,13 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     if let data = data {
                         do {
                             let authData = try JSONDecoder().decode(UserToken.self, from: data)
-                            let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                            UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
-                            let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                            
+                            let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
+                            let refreshTokenData = Data(authData.refresh_token.utf8)
+                            
+                            let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
+                            let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
+                            
                             if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                                 completion(true)
                             }
@@ -491,14 +503,13 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// - Parameter completion: Short-circuiting after work methods
     /// - Returns: Returns the boolean value of token update success
     internal func refreshAccessToken(completion: @escaping (Bool)->()) {
-        
-        let refreshToken = KeychainManager.load(key: "refreshToken")
-        let refreshTokenString = String(decoding: refreshToken ?? Data("".utf8), as: UTF8.self)
         guard let config = self.config else { return }
+        
+        let refreshToken = KeychainManager.getToken(.refreshToken)
         
         let paramsRequest: Parameters = [
             "grant_type": "refresh_token",
-            "refresh_token": refreshTokenString,
+            "refresh_token": refreshToken,
             "client_id": config.clientId,
             "device_id": getDeviceId()
         ]
@@ -524,10 +535,13 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                         if let data = data {
                             do {
                                 let authData = try JSONDecoder().decode(UserToken.self, from: data)
-                                KeychainManager.deleteAllKeys()
-                                let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                                UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
-                                let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                                
+                                let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
+                                let refreshTokenData = Data(authData.refresh_token.utf8)
+                                
+                                let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
+                                let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
+                                
                                 if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                                     completion(true)
                                 }

@@ -5,78 +5,150 @@
 //  Created by Виктор Кобыхно on 1/15/21.
 //
 
-
 import Security
 import Foundation
 
-enum KeychainEnum: String {
-    case accessToken
-    case refreshToken
+final class KeychainManager {
+    
+    
+    // MARK: Init
+    
+    private init() {}
+    
+    //
+    
+    
+    // MARK: Methods
+    
+    static func getToken(_ key: KeychainEnum) -> String {
+        guard let data = getData(from: key), let token = String(data: data, encoding: .utf8) else { return "" }
+        
+        return token
+    }
+    
+    static func save(_ key: KeychainEnum, data: Data) -> OSStatus {
+        let status = saveKeychainData(key, data: data, type: .default)
+        _ = saveKeychainData(key, data: data, type: .group)
+        
+        return status
+    }
+    
+    static func getData(from key: KeychainEnum) -> Data? {
+        if let localTokenData = getKeychainData(from: key, type: .default) {
+            return localTokenData
+        } else {
+            let groupTokenData = getKeychainData(from: key, type: .group)
+            
+            return groupTokenData
+        }
+    }
+    
+    static func deleteAll() {
+        deleteAllKeychainData()
+    }
+    
+    //
+    
 }
 
-class KeychainManager {
+
+// MARK: - Private
+
+private
+extension KeychainManager {
+    
+    
+    // MARK: Parameters
+    
+    static private let accessGroup: String = "group.com.webasyst.shared"
+    
+    //
+    
+    
+    // MARK: Methods
+    
+    static func saveKeychainData(_ key: KeychainEnum, data: Data, type: KeychainDataType) -> OSStatus {
+        let keychainQuery = generateKeychainQuery(key: key, data: data, type: type)
         
-    /// Saving an entry in the Keychain
-    /// - Parameters:
-    ///   - key: Key to save the record
-    ///   - data: Data for recording
-    /// - Returns: Returns data in OSStatus format
-    class func save(key: String, data: Data) -> OSStatus {
+        SecItemDelete(keychainQuery as CFDictionary)
         
-        let query = [
-            kSecClass as String       : kSecClassGenericPassword as String,
-            kSecAttrAccount as String : key,
-            kSecValueData as String   : data
-        ] as [String : Any]
+        let osStatus = SecItemAdd(keychainQuery as CFDictionary, nil)
         
-        SecItemDelete(query as CFDictionary)
-        
-        let osStatus = SecItemAdd(query as CFDictionary, nil)
-        
-        if osStatus == 0 {
+        if osStatus == 0, case .default = type {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "\(key)Updated"), object: nil)
         }
         
         return osStatus
     }
     
-    static var token: String {
-        let data = load(key: KeychainEnum.accessToken.rawValue)
-        if let data, let token = String(data: data, encoding: .utf8) {
-            return token
-        } else {
-            return .init()
-        }
-    }
-    
-    /// Retrieving data from the Keychain
-    /// - Parameter key: Record key
-    /// - Returns: Data in Data format
-    class func load(key: String) -> Data? {
-        let query = [
-            kSecClass as String       : kSecClassGenericPassword,
-            kSecAttrAccount as String : key,
-            kSecReturnData as String  : kCFBooleanTrue!,
-            kSecMatchLimit as String  : kSecMatchLimitOne ] as [String : Any]
+    static func getKeychainData(from key: KeychainEnum, type: KeychainDataType) -> Data? {
+        let keychainQuery = generateKeychainQuery(key: key, type: type)
         
-        var dataTypeRef: AnyObject? = nil
+        var data: AnyObject?
         
-        let status: OSStatus = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
+        let status = SecItemCopyMatching(keychainQuery as CFDictionary, &data)
         
         if status == noErr {
-            return dataTypeRef as! Data?
+            return data as? Data
         } else {
             return nil
         }
     }
     
-    /// Deletes all data from Kechain
-    class func deleteAllKeys() {
-        let secItemClasses = [kSecClassGenericPassword, kSecClassInternetPassword, kSecClassCertificate, kSecClassKey, kSecClassIdentity]
-        for itemClass in secItemClasses {
-            let spec: NSDictionary = [kSecClass: itemClass]
-            SecItemDelete(spec)
+    static func deleteAllKeychainData() {
+        let queries: [[String : Any]] = [
+            generateKeychainQuery(key: .accessToken, type: .default),
+            generateKeychainQuery(key: .refreshToken, type: .default),
+            generateKeychainQuery(key: .accessToken, type: .group),
+            generateKeychainQuery(key: .refreshToken, type: .group)
+        ]
+        
+        for query in queries {
+            SecItemDelete(query as CFDictionary)
         }
     }
+    
+    //
+    
+    
+    // MARK: Support
+    
+    static func generateKeychainQuery(key: KeychainEnum, data: Data? = nil, type: KeychainDataType) -> [String : Any] {
+        var keychainQuery: [String : Any] =
+        [
+            kSecClass as String         : kSecClassGenericPassword,
+            kSecAttrAccount as String   : key.rawValue
+        ]
+        
+        switch type {
+        case .default:
+            break
+        case .group:
+            keychainQuery[kSecAttrAccessGroup as String] = accessGroup
+        }
+        
+        if let data {
+            keychainQuery[kSecValueData as String] = data
+        } else {
+            keychainQuery[kSecReturnData as String] = true
+            keychainQuery[kSecMatchLimit as String] = kSecMatchLimitOne
+        }
+        
+        return keychainQuery
+    }
+    
+    //
+    
 }
 
+
+// MARK: - Private Model
+
+private
+extension KeychainManager {
+    
+    enum KeychainDataType {
+        case `default`
+        case group
+    }
+}

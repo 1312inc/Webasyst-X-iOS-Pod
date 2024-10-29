@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import WebKit
+@preconcurrency import WebKit
 
 class AuthViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     

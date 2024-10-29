@@ -20,7 +20,7 @@ class WebasystDataModel {
     }()
     
     /// Obtaining a library database
-    class WebasystPersistentContainer: NSPersistentContainer {
+    class WebasystPersistentContainer: NSPersistentContainer, @unchecked Sendable {
         override open class func defaultDirectoryURL() -> URL {
             let urlForApplicationSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             

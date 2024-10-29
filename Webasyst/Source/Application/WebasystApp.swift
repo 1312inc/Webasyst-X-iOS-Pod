@@ -1,12 +1,3 @@
-//
-//  Webasyst.swift
-//  Webasyst
-//
-//  Created by Виктор Кобыхно on 12.05.2021.
-//
-
-import UIKit
-
 /**
  Open class for working with Webasyst
   
@@ -15,36 +6,56 @@ import UIKit
  let webasyst =  WebasystApp()
  webasyst.configure()
  let accessToken = webasyst.getToken(_ tokenType: .access)
- print(token)
+ print(accessToken)
  ```
  */
 
 public class WebasystApp {
     
-    internal static var config: WebasystConfig?
+    
+    // MARK: Init
+    
+    public init() {}
+    
+    //
+    
+    
+    // MARK: Parameters
+    
+    static private(set) var config: WebasystConfig?
     
     let profileInstallService = WebasystDataModel()
     let networking = WebasystNetworking()
     let userNetworking = WebasystUserNetworking()
     
     #if os(iOS)
-    internal var coordinator: AuthCoordinator?
+    var coordinator: AuthCoordinator?
     #endif
     
-    public init() {}
+    //
+    
+    
+    // MARK: Methods
     
     /// Webasyst library configuration method
     /// - Parameter deviceID: Device identifier of main Webasyst iOS application. Parameter required for library correctly work on companion applications of the main Webasyst application.
     public func configure(deviceID: String? = nil) {
-        if let path = Bundle.main.path(forResource: "Webasyst", ofType: "plist"), let xml = FileManager.default.contents(atPath: path), let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml) {
+        if let path = Bundle.main.path(forResource: "Webasyst", ofType: "plist"),
+            let xml = FileManager.default.contents(atPath: path),
+            let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml) {
+            
+            let scope: String
             if preferences.scope.contains("webasyst") {
-                WebasystApp.config = WebasystConfig(clientId: preferences.clientId, host: preferences.host, scope: preferences.scope)
+                scope = preferences.scope
             } else {
-                WebasystApp.config = WebasystConfig(clientId: preferences.clientId, host: preferences.host, scope: "\(preferences.scope).webasyst")
+                scope = "\(preferences.scope).webasyst"
             }
+            
+            WebasystApp.config = WebasystConfig(clientId: preferences.clientId, host: preferences.host, scope: scope)
         } else {
             print(NSError(domain: "Webasyst error(method: configure): Webasyst configuration error, check if there is a Webasyst.plist file in the root of the project", code: 500, userInfo: nil))
         }
+        
         if let deviceID = deviceID {
             UserDefaults.standard.set(deviceID, forKey: "deviceID")
         }
@@ -67,17 +78,8 @@ public class WebasystApp {
     /// A method for getting Webasyst tokens
     /// - Parameter tokenType: Type of token..
     /// - Returns: Requested token in string format.
-    public func getToken(_ tokenType: TokenType) -> String? {
-        let tokenString: String?
-        switch tokenType {
-        case .access:
-            let token = KeychainManager.load(key: "accessToken")
-            tokenString = String(decoding: token ?? Data("".utf8), as: UTF8.self)
-        case .refresh:
-            let token = KeychainManager.load(key: "refreshToken")
-            tokenString = String(decoding: token ?? Data("".utf8), as: UTF8.self)
-        }
-        return tokenString
+    public class func getToken(_ tokenType: TokenType) -> String? {
+        KeychainManager.getToken(tokenType.keychainValue)
     }
     
     /// App installation
@@ -156,4 +158,6 @@ public class WebasystApp {
     public func getProfileData() -> ProfileData? {
         return profileInstallService?.getProfile()
     }
+    
+    //
 }

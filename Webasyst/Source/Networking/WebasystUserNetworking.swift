@@ -118,9 +118,13 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             case .success(let response):
                 do {
                     let authData = try JSONDecoder().decode(UserToken.self, from: response.data)
-                    let accessTokenSuccess = KeychainManager.save(key: "accessToken", data: Data("Bearer \(authData.access_token)".utf8))
-                    UserDefaults.standard.set(Data("Bearer \(authData.access_token)".utf8), forKey: "accessToken")
-                    let refreshTokenSuccess = KeychainManager.save(key: "refreshToken", data: Data(authData.refresh_token.utf8))
+                    
+                    let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
+                    let refreshTokenData = Data(authData.refresh_token.utf8)
+                    
+                    let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
+                    let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
+                    
                     if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                         completion(.success(true))
                     }
@@ -139,12 +143,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     //MARK: Download user data
     internal func downloadUserData(_ completion: @escaping (Bool) -> Void) {
-        
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let headers: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/", parameters: [:]) else { return }
@@ -181,8 +183,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     public func changeUserData(_ profile: ProfileData,_ completion: @escaping (Result<ProfileData, Error>) -> Void) {
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         var parameters: Dictionary<String,Any> = [
             "firstname": profile.firstname,
@@ -199,7 +200,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         let headers: Parameters = [
             "Accept" : "application/json",
-            "Authorization" : accessTokenString,
+            "Authorization" : accessToken,
             "Content-Type" : "application/json"
         ]
         
@@ -236,11 +237,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     public func deleteUserAvatar(_ completion: @escaping (Result<Bool, String>) -> ()) {
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let headers: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/userpic/", parameters: [:]) else { return }
@@ -275,8 +275,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     public func updateUserAvatar(_ image: UIImage, _ completion: @escaping (Result<Bool, String>) -> ()) {
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/userpic", parameters: [:]) else { return }
         var request = URLRequest(url: url)
@@ -285,7 +284,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         let imageData = image.jpegData(compressionQuality: 1)!
         
         let headers: Parameters = [
-            "Authorization": accessTokenString,
+            "Authorization": accessToken,
             "Content-Type": "image/jpeg"
         ]
         
@@ -329,11 +328,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     //MARK: Get installation's list user
     public func getInstallList(_ completion: @escaping (Result<[UserInstallCodable], String>) -> ()) {
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let headers: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/installations/", parameters: [:]) else {
@@ -385,8 +383,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "client_id": clientId
         ]
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         guard let url = buildWebasystUrl("/id/api/v1/auth/client/", parameters: [:]) else {
             completion(.failure("Webasyst error (getAccessTokenApi): 'Wrong target url'."))
@@ -396,7 +393,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(accessTokenString, forHTTPHeaderField: "Authorization")
+        request.addValue(accessToken, forHTTPHeaderField: "Authorization")
         
         do {
             let data = try JSONSerialization.data(withJSONObject: paramReqestApi) as Data
@@ -593,11 +590,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     func createWebasystAccount(bundle: String, plainId: String, accountName: String?, _ completion: @escaping (Result<(id: String, url: String), String>) -> ()) {
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let headers: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         
         var parametersRequest: Parameters = [
@@ -673,11 +669,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     func renameWebasystAccount(clientId: String, domain: String, _ completion: @escaping (Result<Bool, String>) -> ()) {
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let headers: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         
         let parametersRequest: Parameters = [
@@ -719,12 +714,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     func singUpUser(_ completion: @escaping (Bool) -> ()) {
-        
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let headerRequest: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/delete/", parameters: [:]) else { return }
@@ -787,11 +780,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let parameters: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         let json = ["client_id": domain,
                     "slug":app]
@@ -833,11 +825,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/mergecode", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let parameters: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -868,11 +859,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/mergeresult", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let parameters: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -907,11 +897,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     func deleteAccount(_ completion: @escaping (Result<Bool, String>) -> Void) {
         guard let url = buildWebasystUrl("/id/api/v1/terminate", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let parameters: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
@@ -948,11 +937,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/cloud/extend/", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.load(key: "accessToken")
-        let accessTokenString = String(decoding: accessToken ?? Data("".utf8), as: UTF8.self)
+        let accessToken = KeychainManager.getToken(.accessToken)
         
         let parameters: Parameters = [
-            "Authorization": accessTokenString
+            "Authorization": accessToken
         ]
         let json = ["client_id": domain,
                     "expire_date": date,
