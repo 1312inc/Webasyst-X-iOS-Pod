@@ -166,6 +166,12 @@ extension WebasystApp {
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not.
     func defaultChecking(completion: @escaping (Bool) -> ()) {
+        let restorationSuccess = KeychainManager.checkRestorationSuccess()
+        
+        if restorationSuccess {
+            UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+        }
+        
         if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
             let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
             

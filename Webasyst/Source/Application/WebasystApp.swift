@@ -76,10 +76,21 @@ public class WebasystApp {
     }
     
     /// A method for getting Webasyst tokens
-    /// - Parameter tokenType: Type of token..
+    /// - Parameter tokenType: Type of token.
     /// - Returns: Requested token in string format.
-    public class func getToken(_ tokenType: TokenType) -> String? {
-        KeychainManager.getToken(tokenType.keychainValue)
+    public func getToken(_ tokenType: TokenType) -> String? {
+        let token = KeychainManager.getToken(tokenType.keychainValue)
+        guard !token.isEmpty else { return nil }
+        return token
+    }
+    
+    /// A method for getting Webasyst tokens
+    /// - Parameter tokenType: Type of token.
+    /// - Returns: Requested token in string format.
+    public static func getToken(_ tokenType: TokenType) -> String? {
+        let token = KeychainManager.getToken(tokenType.keychainValue)
+        guard !token.isEmpty else { return nil }
+        return token
     }
     
     /// App installation

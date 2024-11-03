@@ -20,27 +20,65 @@ final class KeychainManager {
     
     // MARK: Methods
     
+    static func checkRestorationSuccess() -> Bool {
+        
+        // Temporary commented
+        
+//        let localRefreshTokenData = getKeychainData(from: .refreshToken, type: .local)
+//
+//        if localRefreshTokenData == nil {
+//            if let groupRefreshTokenData = getKeychainData(from: .refreshToken, type: .group) {
+//                let status = saveKeychainData(.refreshToken, data: groupRefreshTokenData, type: .local)
+//
+//                if let groupAccessTokenData = getKeychainData(from: .accessToken, type: .group) {
+//                    _ = saveKeychainData(.accessToken, data: groupAccessTokenData, type: .local)
+//                }
+//
+//                return status == noErr
+//            } else {
+//                return false
+//            }
+//        } else {
+//            return false
+//        }
+        
+        //
+        
+        return false
+    }
+    
     static func getToken(_ key: KeychainEnum) -> String {
         guard let data = getData(from: key), let token = String(data: data, encoding: .utf8) else { return "" }
-        
         return token
     }
     
     static func save(_ key: KeychainEnum, data: Data) -> OSStatus {
-        let status = saveKeychainData(key, data: data, type: .default)
-        _ = saveKeychainData(key, data: data, type: .group)
+        let status = saveKeychainData(key, data: data, type: .local)
+        
+        // Temporary commented
+        
+//        _ = saveKeychainData(key, data: data, type: .group)
+        
+        //
         
         return status
     }
     
     static func getData(from key: KeychainEnum) -> Data? {
-        if let localTokenData = getKeychainData(from: key, type: .default) {
-            return localTokenData
-        } else {
-            let groupTokenData = getKeychainData(from: key, type: .group)
-            
-            return groupTokenData
-        }
+        
+        // Temporary commented
+        
+//        if let localTokenData = getKeychainData(from: key, type: .local) {
+//            return localTokenData
+//        } else if let groupTokenData = getKeychainData(from: key, type: .group) {
+//            return groupTokenData
+//        } else {
+//            return nil
+//        }
+        
+        //
+        
+        return getKeychainData(from: key, type: .local)
     }
     
     static func deleteAll() {
@@ -74,7 +112,7 @@ extension KeychainManager {
         
         let osStatus = SecItemAdd(keychainQuery as CFDictionary, nil)
         
-        if osStatus == 0, case .default = type {
+        if osStatus == 0, case .local = type {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "\(key)Updated"), object: nil)
         }
         
@@ -97,10 +135,16 @@ extension KeychainManager {
     
     static func deleteAllKeychainData() {
         let queries: [[String : Any]] = [
-            generateKeychainQuery(key: .accessToken, type: .default),
-            generateKeychainQuery(key: .refreshToken, type: .default),
-            generateKeychainQuery(key: .accessToken, type: .group),
-            generateKeychainQuery(key: .refreshToken, type: .group)
+            
+            // Temporary commented
+            
+//            generateKeychainQuery(key: .accessToken, type: .group, forDelete: true),
+//            generateKeychainQuery(key: .refreshToken, type: .group, forDelete: true),
+            
+            //
+            
+            generateKeychainQuery(key: .accessToken, type: .local, forDelete: true),
+            generateKeychainQuery(key: .refreshToken, type: .local, forDelete: true)
         ]
         
         for query in queries {
@@ -113,25 +157,32 @@ extension KeychainManager {
     
     // MARK: Support
     
-    static func generateKeychainQuery(key: KeychainEnum, data: Data? = nil, type: KeychainDataType) -> [String : Any] {
+    static func generateKeychainQuery(key: KeychainEnum, data: Data? = nil, type: KeychainDataType, forDelete delete: Bool = false) -> [String : Any] {
         var keychainQuery: [String : Any] =
         [
             kSecClass as String         : kSecClassGenericPassword,
             kSecAttrAccount as String   : key.rawValue
         ]
         
-        switch type {
-        case .default:
-            break
-        case .group:
-            keychainQuery[kSecAttrAccessGroup as String] = accessGroup
-        }
+        // Temporary commented
         
-        if let data {
-            keychainQuery[kSecValueData as String] = data
-        } else {
-            keychainQuery[kSecReturnData as String] = true
-            keychainQuery[kSecMatchLimit as String] = kSecMatchLimitOne
+//        switch type {
+//        case .group:
+//            keychainQuery[kSecAttrAccessGroup as String] = accessGroup
+//            keychainQuery[kSecAttrService as String] = "group"
+//        case .local:
+//            keychainQuery[kSecAttrService as String] = "local"
+//        }
+        
+        //
+        
+        if !delete {
+            if let data {
+                keychainQuery[kSecValueData as String] = data
+            } else {
+                keychainQuery[kSecReturnData as String] = true
+                keychainQuery[kSecMatchLimit as String] = kSecMatchLimitOne
+            }
         }
         
         return keychainQuery
@@ -148,7 +199,7 @@ private
 extension KeychainManager {
     
     enum KeychainDataType {
-        case `default`
         case group
+        case local
     }
 }
