@@ -165,44 +165,72 @@ extension WebasystApp {
     
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not.
-    func defaultChecking(completion: @escaping (Bool) -> ()) {
+    func defaultChecking(completion: @escaping (CheckingType) -> ()) {
         let restorationSuccess = KeychainManager.checkRestorationSuccess()
         
         if restorationSuccess {
-            UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
-        }
-        
-        if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
-            let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
-            
-            let installs = getAllUserInstall()
-            
-            if installs != nil, installs != [], domain == nil {
-                completion(true)
-                logOutUser()
-            }
-            
-            if !KeychainManager.getToken(.accessToken).isEmpty {
-                completion(condition)
-            } else {
-                completion(true)
-                logOutUser()
+            userNetworking.restoreTokensFromGroup { [weak self] success in
+                guard let self else { return }
+                
+                if success {
+                    userNetworking.preloadUserData { [weak self] result in
+                        guard let self else { return }
+                        
+                        switch result {
+                        case .success:
+                            UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+                            completion(.restoredAuthorization)
+                        case .failure:
+                            completion(.notRestoredAuthorizaton)
+                            logOutUser()
+                        }
+                    }
+                } else {
+                    completion(.notRestoredAuthorizaton)
+                    logOutUser()
+                }
             }
         } else {
-            completion(true)
-        }
-        
-        networking.refreshAccessToken { [weak self] success in
-            guard let self = self else { return }
-            if success {
-                userNetworking.preloadUserData { [weak self] result in
-                    guard let self = self else { return }
-                    if case .failure(let error) = result {
-                        checkMissingAuthTokenError(error)
+            if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
+                let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
+                
+                let installs = getAllUserInstall()
+                
+                if installs != nil, installs != [], domain == nil {
+                    completion(.notAuthorized)
+                    logOutUser()
+                }
+                
+                if !KeychainManager.getToken(.accessToken).isEmpty {
+                    if condition {
+                        completion(.notAuthorized)
+                        logOutUser()
+                    } else {
+                        completion(.authorized)
                     }
+                } else {
+                    completion(.notAuthorized)
+                    logOutUser()
                 }
             } else {
+                completion(.notAuthorized)
                 logOutUser()
+            }
+            
+            networking.refreshAccessToken { [weak self] success in
+                guard let self else { return }
+                
+                if success {
+                    userNetworking.preloadUserData { [weak self] result in
+                        guard let self else { return }
+                        
+                        if case .failure(let error) = result {
+                            checkMissingAuthTokenError(error)
+                        }
+                    }
+                } else {
+                    logOutUser()
+                }
             }
         }
     }

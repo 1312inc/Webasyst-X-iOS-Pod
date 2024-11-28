@@ -22,29 +22,19 @@ final class KeychainManager {
     
     static func checkRestorationSuccess() -> Bool {
         
-        // Temporary commented
-        
-//        let localRefreshTokenData = getKeychainData(from: .refreshToken, type: .local)
-//
-//        if localRefreshTokenData == nil {
-//            if let groupRefreshTokenData = getKeychainData(from: .refreshToken, type: .group) {
-//                let status = saveKeychainData(.refreshToken, data: groupRefreshTokenData, type: .local)
-//
-//                if let groupAccessTokenData = getKeychainData(from: .accessToken, type: .group) {
-//                    _ = saveKeychainData(.accessToken, data: groupAccessTokenData, type: .local)
-//                }
-//
-//                return status == noErr
-//            } else {
-//                return false
-//            }
-//        } else {
-//            return false
-//        }
-        
-        //
-        
-        return false
+        let localRefreshTokenData = getKeychainData(from: .refreshToken, type: .local)
+
+        if localRefreshTokenData == nil, let groupRefreshTokenData = getKeychainData(from: .refreshToken, type: .group) {
+            let status = saveKeychainData(.refreshToken, data: groupRefreshTokenData, type: .local)
+            
+            if let groupAccessTokenData = getKeychainData(from: .accessToken, type: .group) {
+                _ = saveKeychainData(.accessToken, data: groupAccessTokenData, type: .local)
+            }
+            
+            return status == noErr
+        } else {
+            return false
+        }
     }
     
     static func getToken(_ key: KeychainEnum) -> String {
@@ -54,31 +44,19 @@ final class KeychainManager {
     
     static func save(_ key: KeychainEnum, data: Data) -> OSStatus {
         let status = saveKeychainData(key, data: data, type: .local)
-        
-        // Temporary commented
-        
-//        _ = saveKeychainData(key, data: data, type: .group)
-        
-        //
+        _ = saveKeychainData(key, data: data, type: .group)
         
         return status
     }
     
     static func getData(from key: KeychainEnum) -> Data? {
-        
-        // Temporary commented
-        
-//        if let localTokenData = getKeychainData(from: key, type: .local) {
-//            return localTokenData
-//        } else if let groupTokenData = getKeychainData(from: key, type: .group) {
-//            return groupTokenData
-//        } else {
-//            return nil
-//        }
-        
-        //
-        
-        return getKeychainData(from: key, type: .local)
+        if let localTokenData = getKeychainData(from: key, type: .local) {
+            return localTokenData
+        } else if let groupTokenData = getKeychainData(from: key, type: .group) {
+            return groupTokenData
+        } else {
+            return nil
+        }
     }
     
     static func deleteAll() {
@@ -135,14 +113,8 @@ extension KeychainManager {
     
     static func deleteAllKeychainData() {
         let queries: [[String : Any]] = [
-            
-            // Temporary commented
-            
-//            generateKeychainQuery(key: .accessToken, type: .group, forDelete: true),
-//            generateKeychainQuery(key: .refreshToken, type: .group, forDelete: true),
-            
-            //
-            
+            generateKeychainQuery(key: .accessToken, type: .group, forDelete: true),
+            generateKeychainQuery(key: .refreshToken, type: .group, forDelete: true),
             generateKeychainQuery(key: .accessToken, type: .local, forDelete: true),
             generateKeychainQuery(key: .refreshToken, type: .local, forDelete: true)
         ]
@@ -164,17 +136,13 @@ extension KeychainManager {
             kSecAttrAccount as String   : key.rawValue
         ]
         
-        // Temporary commented
-        
-//        switch type {
-//        case .group:
-//            keychainQuery[kSecAttrAccessGroup as String] = accessGroup
-//            keychainQuery[kSecAttrService as String] = "group"
-//        case .local:
-//            keychainQuery[kSecAttrService as String] = "local"
-//        }
-        
-        //
+        switch type {
+        case .group:
+            keychainQuery[kSecAttrAccessGroup as String] = accessGroup
+            keychainQuery[kSecAttrService as String] = "group"
+        case .local:
+            keychainQuery[kSecAttrService as String] = "local"
+        }
         
         if !delete {
             if let data {

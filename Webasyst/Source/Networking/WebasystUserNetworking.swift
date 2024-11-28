@@ -86,6 +86,63 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
     }
     
+    internal func restoreTokensFromGroup(_ completion: @escaping (Bool) -> ()) {
+        guard let config = self.config else { return }
+        
+        let accessToken = KeychainManager.getToken(.accessToken)
+        
+        let headers: Parameters = [
+            "Authorization": accessToken
+        ]
+        
+        let paramsRequest: Parameters = [
+            "client_id": config.clientId
+        ]
+        
+        guard let url = buildWebasystUrl("/id/api/v1/auth/cross-app/", parameters: [:]) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        for (key, value) in headers {
+            request.addValue(value, forHTTPHeaderField: key)
+        }
+        
+        if let encodedData = try? JSONSerialization.data(withJSONObject: paramsRequest, options: .fragmentsAllowed) {
+            request.httpBody = encodedData
+        }
+        
+        queue.async {
+            URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let httpResponse = response as? HTTPURLResponse {
+                    switch httpResponse.statusCode {
+                    case 200...299:
+                        if let data = data {
+                            do {
+                                let authData = try JSONDecoder().decode(UserToken.self, from: data)
+                                
+                                let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
+                                let refreshTokenData = Data(authData.refresh_token.utf8)
+                                
+                                let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
+                                let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
+                                
+                                if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
+                                    completion(true)
+                                }
+                            } catch {
+                                completion(false)
+                                print(NSError(domain: "Webasyst error: decode error (restoreTokensFromGroup) \n\(error).", code: 400, userInfo: nil))
+                            }
+                        }
+                    default:
+                        completion(false)
+                    }
+                }
+            }.resume()
+        }
+    }
+    
     // MARK: - Send Apple ID email confirmation code
     internal func sendAppleIDEmailConfirmationCode(_ code: String, accessToken: Data, _ completion: @escaping (Result<Bool, String>) -> ()) {
         

@@ -502,7 +502,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// Token update method on the WAID server
     /// - Parameter completion: Short-circuiting after work methods
     /// - Returns: Returns the boolean value of token update success
-    internal func refreshAccessToken(completion: @escaping (Bool)->()) {
+    internal func refreshAccessToken(completion: @escaping (Bool) -> ()) {
         guard let config = self.config else { return }
         
         let refreshToken = KeychainManager.getToken(.refreshToken)
