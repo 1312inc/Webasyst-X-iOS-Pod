@@ -21,19 +21,26 @@ final class KeychainManager {
     // MARK: Methods
     
     static func checkRestorationSuccess() -> Bool {
-        
-        let localRefreshTokenData = getKeychainData(from: .refreshToken, type: .local)
-
-        if localRefreshTokenData == nil, let groupRefreshTokenData = getKeychainData(from: .refreshToken, type: .group) {
-            let status = saveKeychainData(.refreshToken, data: groupRefreshTokenData, type: .local)
-            
-            if let groupAccessTokenData = getKeychainData(from: .accessToken, type: .group) {
-                _ = saveKeychainData(.accessToken, data: groupAccessTokenData, type: .local)
-            }
-            
-            return status == noErr
-        } else {
+        if let localRefreshTokenData = getKeychainData(from: .refreshToken, type: .local), !localRefreshTokenData.isEmpty {
             return false
+        } else {
+            let transferSuccess = checkTransferKeychainDataSuccess()
+            
+            if !transferSuccess {
+                if let groupRefreshTokenData = getKeychainData(from: .refreshToken, type: .group) {
+                    let status = saveKeychainData(.refreshToken, data: groupRefreshTokenData, type: .local)
+                    
+                    if let groupAccessTokenData = getKeychainData(from: .accessToken, type: .group) {
+                        _ = saveKeychainData(.accessToken, data: groupAccessTokenData, type: .local)
+                    }
+                    
+                    return status == noErr
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
         }
     }
     
@@ -60,7 +67,7 @@ final class KeychainManager {
     }
     
     static func deleteAll() {
-        deleteAllKeychainData()
+        deleteKeychainData()
     }
     
     //
@@ -111,17 +118,41 @@ extension KeychainManager {
         }
     }
     
-    static func deleteAllKeychainData() {
-        let queries: [[String : Any]] = [
-            generateKeychainQuery(key: .accessToken, type: .group, forDelete: true),
-            generateKeychainQuery(key: .refreshToken, type: .group, forDelete: true),
-            generateKeychainQuery(key: .accessToken, type: .local, forDelete: true),
-            generateKeychainQuery(key: .refreshToken, type: .local, forDelete: true)
-        ]
+    static func deleteKeychainData(_ types: [KeychainDataType] = KeychainDataType.allCases) {
+        let queries: [[String : Any]] = types.map { type in
+            [
+                generateKeychainQuery(key: .accessToken, type: type, forDelete: true),
+                generateKeychainQuery(key: .refreshToken, type: type, forDelete: true)
+            ]
+        }
+        .reduce([]) { partialResult, queries in
+            partialResult + queries.reduce([]) { result, query in
+                result + [query]
+            }
+        }
         
         for query in queries {
             SecItemDelete(query as CFDictionary)
         }
+    }
+    
+    static func checkTransferKeychainDataSuccess() -> Bool {
+        guard let pastRefreshToken = getKeychainData(from: .refreshToken, type: .past), !pastRefreshToken.isEmpty else {
+            return false
+        }
+        
+        let status = saveKeychainData(.refreshToken, data: pastRefreshToken, type: .local)
+        
+        if status == noErr {
+            _ = saveKeychainData(.refreshToken, data: pastRefreshToken, type: .group)
+            
+            if let pastAccessToken = getKeychainData(from: .accessToken, type: .past), !pastAccessToken.isEmpty {
+                _ = saveKeychainData(.accessToken, data: pastAccessToken, type: .local)
+                _ = saveKeychainData(.accessToken, data: pastAccessToken, type: .group)
+            }
+        }
+        
+        return status == noErr
     }
     
     //
@@ -142,6 +173,8 @@ extension KeychainManager {
             keychainQuery[kSecAttrService as String] = "group"
         case .local:
             keychainQuery[kSecAttrService as String] = "local"
+        case .past:
+            break
         }
         
         if !delete {
@@ -166,8 +199,9 @@ extension KeychainManager {
 private
 extension KeychainManager {
     
-    enum KeychainDataType {
+    enum KeychainDataType: CaseIterable {
         case group
         case local
+        case past
     }
 }
