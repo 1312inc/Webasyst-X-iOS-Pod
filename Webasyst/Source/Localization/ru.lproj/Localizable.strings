@@ -170,6 +170,7 @@
 "cacnelAccountDelete" = "Отменить";
 "addPhoto" = "Добавить фото";
 "aboutSameself" = "Контактная информация";
+"redactorView.email.description" = "Отправим данные для входа на компьютере.";
 "specifyLater" = "Указать позже";
 "save" = "Сохранить";
 "name" = "Имя";

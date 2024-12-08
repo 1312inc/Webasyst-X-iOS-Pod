@@ -170,6 +170,7 @@
 "cacnelAccountDelete" = "Annuleren";
 "addPhoto" = "Foto toevoegen";
 "aboutSameself" = "Contactgegevens";
+"redactorView.email.description" = "Voor aanmelden op een computer.";
 "specifyLater" = "Later specificeren";
 "save" = "Opslaan";
 "name" = "Naam";

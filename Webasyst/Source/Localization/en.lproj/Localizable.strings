@@ -170,6 +170,7 @@
 "cacnelAccountDelete" = "Cancel";
 "addPhoto" = "Add photo";
 "aboutSameself" = "Contact Information";
+"redactorView.email.description" = "For signing in on a computer.";
 "specifyLater" = "Specify Later";
 "save" = "Save";
 "name" = "First Name";

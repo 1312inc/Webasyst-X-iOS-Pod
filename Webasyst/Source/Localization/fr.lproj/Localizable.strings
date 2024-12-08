@@ -169,6 +169,7 @@
 "cacnelAccountDelete" = "Annuler";
 "addPhoto" = "Ajouter une photo";
 "aboutSameself" = "Coordonnées";
+"redactorView.email.description" = "Pour se connecter sur un ordinateur.";
 "specifyLater" = "Spécifier ultérieurement";
 "save" = "Enregistrer";
 "name" = "Prénom";

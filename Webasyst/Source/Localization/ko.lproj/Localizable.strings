@@ -170,6 +170,7 @@
 "cacnelAccountDelete" = "취소";
 "addPhoto" = "사진 추가";
 "aboutSameself" = "연락 정보";
+"redactorView.email.description" = "컴퓨터에서 로그인하는 경우.";
 "specifyLater" = "나중에 지정";
 "save" = "저장";
 "name" = "이름";

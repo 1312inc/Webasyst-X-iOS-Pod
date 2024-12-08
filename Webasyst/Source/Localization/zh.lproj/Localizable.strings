@@ -169,6 +169,7 @@
 "cacnelAccountDelete" = "取消";
 "addPhoto" = "添加照片";
 "aboutSameself" = "联系信息";
+"redactorView.email.description" = "用於在電腦上登入。";
 "specifyLater" = "稍后指定";
 "save" = "保存";
 "name" = "名字";

@@ -170,6 +170,7 @@
 "cacnelAccountDelete" = "キャンセル";
 "addPhoto" = "写真を追加";
 "aboutSameself" = "連絡先情報";
+"redactorView.email.description" = "コンピューターでサインインする場合。";
 "specifyLater" = "後で指定";
 "save" = "保存";
 "name" = "名前";

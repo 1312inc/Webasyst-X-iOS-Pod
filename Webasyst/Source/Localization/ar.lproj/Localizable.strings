@@ -172,6 +172,7 @@
 "cacnelAccountDelete" = "إلغاء";
 "addPhoto" = "إضافة صورة";
 "aboutSameself" = "معلومات الاتصال";
+"redactorView.email.description" = "لتسجيل الدخول على الكمبيوتر.";
 "specifyLater" = "تحديد لاحقًا";
 "save" = "حفظ";
 "name" = "الاسم";
