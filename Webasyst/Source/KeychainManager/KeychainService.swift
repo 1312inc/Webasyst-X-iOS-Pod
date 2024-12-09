@@ -141,6 +141,10 @@ extension KeychainManager {
             return false
         }
         
+        let groupRefreshToken = getKeychainData(from: .refreshToken, type: .group)
+        
+        guard groupRefreshToken?.isEmpty ?? true else { return false }
+        
         let status = saveKeychainData(.refreshToken, data: pastRefreshToken, type: .local)
         
         if status == noErr {
