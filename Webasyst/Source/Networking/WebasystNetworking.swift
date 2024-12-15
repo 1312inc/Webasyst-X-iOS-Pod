@@ -65,7 +65,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         
         guard let config = self.config else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.missedConfig")
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getAuthCode")
             let error = getError(errorModel)
             success(.undefined(error: error))
@@ -93,7 +93,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         
         guard let url = self.buildWebasystUrl("/id/oauth2/auth/headless/code/", parameters: [:]) else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.urlGeneration")
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getAuthCode")
             let error = getError(errorModel)
             success(.undefined(error: error))
@@ -108,7 +108,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         } catch let error {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.multipartFormDataGeneration")
                 .replacingOccurrences(of: "@DESC", with: error.localizedDescription)
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getAuthCode")
             let error = getError(errorModel)
             success(.undefined(error: error))
@@ -209,7 +209,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         
         guard let config = self.config else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.missedConfig")
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "oAuthAppleID")
             let error = getError(errorModel)
             completion(.error(error))
@@ -246,7 +246,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         
         guard let url = buildWebasystUrl("/id/oauth2/auth/apple/", parameters: [:]) else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.urlGeneration")
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "oAuthAppleID")
             let error = getError(errorModel)
             completion(.error(error))
@@ -262,7 +262,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
         } catch let error {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.multipartFormDataGeneration")
                 .replacingOccurrences(of: "@DESC", with: error.localizedDescription)
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "oAuthAppleID")
             let error = getError(errorModel)
             completion(.error(error))
@@ -294,7 +294,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                             completion(.success(.succeess))
                         } else {
                             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.keychainSave")
-                            let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                            let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
                             let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "oAuthAppleID")
                             let error = getError(errorType)
                             completion(.error(error))
@@ -302,7 +302,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
                     }
                 } catch let error {
                     let loc = "\(error)"
-                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
                     let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "oAuthAppleID")
                     let error = getError(errorType)
                     completion(.error(error))

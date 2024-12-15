@@ -265,7 +265,7 @@ extension WebasystApp {
                 
                 let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.invalidRefreshToken", comment: "Invalid refresh token")
                 
-                let webasystError = WebasystError(localizadError: loc)
+                let webasystError = WebasystError(localizedError: loc)
                 
                 let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "checkUserAuth")
                 let error = WebasystError.getError(errorType)
@@ -372,7 +372,7 @@ extension WebasystApp {
     
     func checkMissingAuthTokenError(_ error: WebasystError) {
         let missingTokenLoc = WebasystApp.getDefaultLocalizedString(withKey: "missingAuthToken", comment: "The authentication token is missing.")
-        if error.localizadError.contains(missingTokenLoc) {
+        if error.localizedError.contains(missingTokenLoc) {
             logOutUser()
         }
     }

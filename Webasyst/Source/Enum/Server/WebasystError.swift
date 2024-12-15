@@ -8,18 +8,18 @@
 public
 struct WebasystError: Error, Equatable {
     
-    let localizadError: String
-    let statusCode: Int?
-    let errorValue: String?
+    public let localizedError: String
+    public let statusCode: Int?
+    public let errorValue: String?
     
-    init(localizadError: String, statusCode: Int? = nil, errorValue: String? = nil) {
-        self.localizadError = localizadError
+    init(localizedError: String, statusCode: Int? = nil, errorValue: String? = nil) {
+        self.localizedError = localizedError
         self.statusCode = statusCode
         self.errorValue = errorValue
     }
     
-    var localizedDescription: String {
-        localizadError
+    public var localizedDescription: String {
+        localizedError
     }
     
     static func getError(_ model: ErrorTypeModel) -> WebasystError {
@@ -36,7 +36,7 @@ struct WebasystError: Error, Equatable {
                 .replacingOccurrences(of: "@CD", with: response.statusCode.description)
                 .replacingOccurrences(of: "@DT", with: dataStr)
             
-            let error = WebasystError(localizadError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
+            let error = WebasystError(localizedError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
             
             return error
         case .decodingData:
@@ -46,9 +46,9 @@ struct WebasystError: Error, Equatable {
                 .replacingOccurrences(of: "@INSTL", with: "")
                 .replacingOccurrences(of: "@MTD", with: methodName)
                 .replacingOccurrences(of: "@LER", with: loc)
-                .replacingOccurrences(of: "@ER", with: error.localizadError)
+                .replacingOccurrences(of: "@ER", with: error.localizedError)
             
-            let error = WebasystError(localizadError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
+            let error = WebasystError(localizedError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
             
             return error
         case .decodingParameters(let domain):
@@ -67,9 +67,9 @@ struct WebasystError: Error, Equatable {
                 .replacingOccurrences(of: "@INSTL", with: installDescription)
                 .replacingOccurrences(of: "@MTD", with: methodName)
                 .replacingOccurrences(of: "@LER", with: loc)
-                .replacingOccurrences(of: "@ER", with: error.localizadError)
+                .replacingOccurrences(of: "@ER", with: error.localizedError)
             
-            let error = WebasystError(localizadError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
+            let error = WebasystError(localizedError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
             
             return error
         case .standart(let domain):
@@ -85,10 +85,10 @@ struct WebasystError: Error, Equatable {
             let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "error.default", comment: "Error description")
                 .replacingOccurrences(of: "@INSTL", with: installDescription)
                 .replacingOccurrences(of: "@MTD", with: methodName)
-                .replacingOccurrences(of: "@LER", with: error.localizadError)
+                .replacingOccurrences(of: "@LER", with: error.localizedError)
                 .replacingOccurrences(of: "@ER", with: "")
             
-            let error = WebasystError(localizadError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
+            let error = WebasystError(localizedError: errorDescription, statusCode: error.statusCode, errorValue: error.errorValue)
             
             return error
         }

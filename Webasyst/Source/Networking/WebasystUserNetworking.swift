@@ -28,7 +28,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 
                 let loc = WebasystApp.getDefaultLocalizedString(withKey: "preloadTimeout", comment: "Timeout for receiving a response from the server")
                 
-                let webasystError = WebasystError(localizadError: loc)
+                let webasystError = WebasystError(localizedError: loc)
                 
                 let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "preloadUserData")
                 let error = getError(errorType)
@@ -91,7 +91,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         } else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "connectionAlertMessage")
             
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             
             let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "preloadUserData")
             let error = getError(errorType)
@@ -203,7 +203,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                 } catch let error {
                     let loc = "\(error)"
-                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
                     let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "sendAppleIDEmailConfirmationCode")
                     let error = getError(errorType)
                     completion(.failure(error))
@@ -249,16 +249,16 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                 } catch let error {
                     let loc = "\(error)"
-                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
                     let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "downloadUserData")
                     let error = getError(errorType)
-                    print(error.localizadError)
+                    print(error.localizedError)
                     completion(false)
                 }
             case .failure(let error):
                 let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "downloadUserData")
                 let error = getError(errorType)
-                print(error.localizadError)
+                print(error.localizedError)
                 completion(false)
             }
         }
@@ -419,7 +419,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let url = buildWebasystUrl("/id/api/v1/installations/", parameters: [:]) else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.installList")
             
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             
             let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getInstallList")
             let error = getError(errorType)
@@ -451,7 +451,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     deleteNonActiveInstall(installList: installList)
                 } catch let error {
                     let loc = "\(error)"
-                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
                     let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "getInstallList")
                     let error = getError(errorType)
                     completion(.failure(error))
@@ -475,7 +475,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let url = buildWebasystUrl("/id/api/v1/auth/client/", parameters: [:]) else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.wrongUrl")
             
-            let webasystError = WebasystError(localizadError: loc)
+            let webasystError = WebasystError(localizedError: loc)
             
             let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getAccessTokenApi")
             let error = getError(errorType)
@@ -514,7 +514,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                 } catch let error {
                     let loc = "\(error)"
-                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
                     let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "getAccessTokenApi")
                     let error = getError(errorType)
                     completion(.failure(error))
@@ -751,9 +751,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                                     }
                                 }
                             case .failure(let error):
-                                let loc = WebasystApp.getDefaultLocalizedString(withKey: "failedToGetAccessTokenForCreatedAccount", comment: "Missing access token") + " " + error.localizadError
+                                let loc = WebasystApp.getDefaultLocalizedString(withKey: "failedToGetAccessTokenForCreatedAccount", comment: "Missing access token") + " " + error.localizedError
                                 
-                                let webasystError = WebasystError(localizadError: loc, statusCode: error.statusCode, errorValue: error.errorValue)
+                                let webasystError = WebasystError(localizedError: loc, statusCode: error.statusCode, errorValue: error.errorValue)
                                 
                                 let errorType = ErrorTypeModel(error: webasystError, type: .standart(domain: domain), methodName: "createWebasystAccount")
                                 let error = getError(errorType)
@@ -767,7 +767,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                 } catch let error {
                     let loc = "\(error)"
-                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
                     let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "createWebasystAccount")
                     let error = getError(errorType)
                     completion(.failure(error))
@@ -846,7 +846,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             case .failure(let error):
                 let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "singUpUser")
                 let error = getError(errorType)
-                print(error.localizadError)
+                print(error.localizedError)
                 completion(false)
             }
         }

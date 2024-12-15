@@ -44,7 +44,7 @@ final class AuthViewModel: AuthViewModelProtocol {
                 } else {
                     let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.token")
                     
-                    let webasystError = WebasystError(localizadError: loc)
+                    let webasystError = WebasystError(localizedError: loc)
                     
                     let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "successAuth")
                     let error = WebasystError.getError(errorType)

@@ -17,7 +17,7 @@ struct ErrorTypeModel {
     }
     
     init(type: ServerErrorDescriptionType, methodName: String) {
-        self.error = WebasystError(localizadError: "")
+        self.error = WebasystError(localizedError: "")
         self.type = type
         self.methodName = methodName
     }
