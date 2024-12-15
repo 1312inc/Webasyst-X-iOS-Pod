@@ -98,7 +98,7 @@
 "network.error.description" = "エラーの説明: %ERROR%.";
 "network.error.value" = "エラー '%ERROR%'。";
 "error.default.install" = " @INSTL";
-"error.default" = "'@MTD'を実行するときのエラー@INSTL：@LER @ER";
+"error.default" = "'@MTD'を実行するときのエラー@INSTL。@LER @ER";
 "error.unknown" = "ステータス@CDで'@MTD'を実行したときのエラー。サーバは理解できないデータを返した： '@DT'。";
 "error.wrongUrl" = "無効なリクエストアドレスです。";
 "error.installList" = "ユーザー設定のリストを取得できませんでした。";

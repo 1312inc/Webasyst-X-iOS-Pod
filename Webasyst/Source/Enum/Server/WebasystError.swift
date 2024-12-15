@@ -12,7 +12,7 @@ struct WebasystError: Error, Equatable {
     public let statusCode: Int?
     public let errorValue: String?
     
-    init(localizedError: String, statusCode: Int? = nil, errorValue: String? = nil) {
+    public init(localizedError: String, statusCode: Int? = nil, errorValue: String? = nil) {
         self.localizedError = localizedError
         self.statusCode = statusCode
         self.errorValue = errorValue

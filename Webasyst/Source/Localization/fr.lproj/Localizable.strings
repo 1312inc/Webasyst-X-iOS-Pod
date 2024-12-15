@@ -98,7 +98,7 @@
 "network.error.description" = "Description de l'erreur : %ERROR%.";
 "network.error.value" = "Erreur '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "Erreur@INSTL lors de l'exécution de '@MTD' : @LER @ER";
+"error.default" = "Erreur@INSTL lors de l'exécution de '@MTD'. @LER @ER";
 "error.unknown" = "Erreur lors de l'exécution de '@MTD' avec le statut @CD. Le serveur a renvoyé des données incompréhensibles : '@DT'.";
 "error.wrongUrl" = "Adresse de requête invalide.";
 "error.installList" = "Échec de la récupération de la liste des paramètres de l'utilisateur.";

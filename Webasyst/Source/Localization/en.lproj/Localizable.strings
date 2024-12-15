@@ -100,7 +100,7 @@
 "network.error.description" = "Error description: %ERROR%.";
 "network.error.value" = "Error ‘%ERROR%’.";
 "error.default.install" = " @INSTL";
-"error.default" = "Error@INSTL when executing ‘@MTD’: @LER @ER";
+"error.default" = "Error@INSTL when executing ‘@MTD’. @LER @ER";
 "error.unknown" = "Error when executing ‘@MTD’ with status @CD. The server returned incomprehensible data: ‘@DT’.";
 "error.wrongUrl" = "Invalid request address.";
 "error.installList" = "Failed to retrieve list of user settings.";

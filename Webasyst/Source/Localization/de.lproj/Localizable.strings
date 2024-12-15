@@ -98,7 +98,7 @@
 "network.error.description" = "Fehlerbeschreibung: %ERROR%.";
 "network.error.value" = "Fehler '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "Fehler@INSTL bei der Ausführung von '@MTD': @LER @ER";
+"error.default" = "Fehler@INSTL bei der Ausführung von '@MTD'. @LER @ER";
 "error.unknown" = "Fehler beim Ausfuehren von '@MTD' mit Status @CD. Der Server hat unverstaendliche Daten zurueckgegeben: '@DT'.";
 "error.wrongUrl" = "Ungültige Anfrageadresse.";
 "error.installList" = "Abruf einer Liste von Benutzereinstellungen fehlgeschlagen.";

@@ -98,7 +98,7 @@
 "network.error.description" = "Описание ошибки: %ERROR%.";
 "network.error.value" = "Ошибка '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "Ошибка@INSTL при выполнении '@MTD': @LER @ER";
+"error.default" = "Ошибка@INSTL при выполнении '@MTD'. @LER @ER";
 "error.unknown" = "Ошибка при выполнении '@MTD' со статусом @CD. Сервер вернул непонятные данные: '@DT'.";
 "error.wrongUrl" = "Некорректный адрес запроса.";
 "error.installList" = "Не удалось получить список пользовательских настроек.";

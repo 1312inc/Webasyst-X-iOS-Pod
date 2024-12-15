@@ -98,7 +98,7 @@
 "network.error.description" = "Descrizione dell'errore: %ERROR%.";
 "network.error.value" = "Errore '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "Errore@INSTL durante l'esecuzione di '@MTD': @LER @ER";
+"error.default" = "Errore@INSTL durante l'esecuzione di '@MTD'. @LER @ER";
 "error.unknown" = "Errore durante l'esecuzione di '@MTD' con lo stato @CD. Il server ha restituito dati incomprensibili: '@DT'.";
 "error.wrongUrl" = "Indirizzo di richiesta non valido.";
 "error.installList" = "Impossibile recuperare un elenco di impostazioni utente.";

@@ -100,7 +100,7 @@
 "network.error.description" = "وصف الخطأ: %ERROR%.";
 "network.error.value" = "الخطأ '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "خطأ @INSTL عند تنفيذ '@MTD': @LER @ER";
+"error.default" = "خطأ @INSTL عند تنفيذ '@MTD'. @LER @ER";
 "error.unknown" = "خطأ عند تنفيذ '@MTD' بالحالة @CD. قام الخادم بإرجاع بيانات غير مفهومة: '@DT'.";
 "error.wrongUrl" = "عنوان الطلب غير صالح.";
 "error.installList" = "فشل استرداد قائمة إعدادات المستخدم.";

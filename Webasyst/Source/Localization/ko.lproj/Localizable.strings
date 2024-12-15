@@ -98,7 +98,7 @@
 "network.error.description" = "오류 설명: %ERROR%.";
 "network.error.value" = "오류 '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "“@MTD” 실행 시 오류@INSTL: @LER @ER";
+"error.default" = "“@MTD” 실행 시 오류@INSTL. @LER @ER";
 "error.unknown" = "상태가 @CD인 '@MTD'를 실행할 때 오류가 발생했습니다. 서버가 이해할 수 없는 데이터를 반환했습니다: '@DT'.";
 "error.wrongUrl" = "잘못된 요청 주소입니다.";
 "error.installList" = "사용자 설정 목록을 검색하지 못했습니다.";

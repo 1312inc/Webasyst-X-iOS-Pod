@@ -98,7 +98,7 @@
 "network.error.description" = "错误描述： %ERROR%.";
 "network.error.value" = "错误“%ERROR%”。";
 "error.default.install" = " @INSTL";
-"error.default" = "执行 '@MTD' 时出现 @INSTL 错误： @LER @ER";
+"error.default" = "执行 '@MTD' 时出现 @INSTL 错误。 @LER @ER";
 "error.unknown" = "执行状态为 @CD 的'@MTD'时出错。服务器返回了无法理解的数据： @DT'.";
 "error.wrongUrl" = "请求地址无效。";
 "error.installList" = "检索用户设置列表失败。";

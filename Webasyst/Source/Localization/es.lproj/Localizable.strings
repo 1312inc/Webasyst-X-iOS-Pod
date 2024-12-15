@@ -98,7 +98,7 @@
 "network.error.description" = "Descripción del error: %ERROR%.";
 "network.error.value" = "Error '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "Error@INSTL al ejecutar «@MTD»: @LER @ER";
+"error.default" = "Error@INSTL al ejecutar «@MTD». @LER @ER";
 "error.unknown" = "Error al ejecutar «@MTD» con estado @CD. El servidor devolvió datos incomprensibles: @DT'.";
 "error.wrongUrl" = "Dirección de petición no válida.";
 "error.installList" = "Error al recuperar una lista de configuraciones de usuario.";

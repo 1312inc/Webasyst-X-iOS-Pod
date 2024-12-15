@@ -98,7 +98,7 @@
 "network.error.description" = "Descrição do erro: %ERROR%.";
 "network.error.value" = "Erro '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "Erro@INSTL aquando da execução de “@MTD”: @LER @ER";
+"error.default" = "Erro@INSTL aquando da execução de “@MTD”. @LER @ER";
 "error.unknown" = "Erro na execução de “@MTD” com o estado @CD. O servidor devolveu dados incompreensíveis: '@DT'.";
 "error.wrongUrl" = "Endereço de pedido inválido.";
 "error.installList" = "Falha na obtenção de uma lista de definições do utilizador.";

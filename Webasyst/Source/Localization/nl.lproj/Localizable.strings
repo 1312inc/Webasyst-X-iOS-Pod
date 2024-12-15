@@ -98,7 +98,7 @@
 "network.error.description" = "Foutbeschrijving: %ERROR%.";
 "network.error.value" = "Fout '%ERROR%'.";
 "error.default.install" = " @INSTL";
-"error.default" = "Fout@INSTL bij het uitvoeren van '@MTD': @LER @ER";
+"error.default" = "Fout@INSTL bij het uitvoeren van '@MTD'. @LER @ER";
 "error.unknown" = "Fout bij het uitvoeren van '@MTD' met status @CD. De server heeft onbegrijpelijke gegevens teruggestuurd: @DT'.";
 "error.wrongUrl" = "Ongeldig verzoekadres.";
 "error.installList" = "Faalde in het ophalen van een lijst met gebruikersinstellingen.";
