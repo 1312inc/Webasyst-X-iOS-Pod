@@ -11,7 +11,7 @@ final class AuthViewModel: AuthViewModelProtocol {
     
     private var networkingService: WebasystNetworking
     private weak var delegate: AuthCoordinatorDelegate?
-    private var webAsystNetworking = WebasystUserNetworking()
+    private var webasystNetworking = WebasystUserNetworking()
     
     var authRequest: URLRequest?
     
@@ -23,19 +23,33 @@ final class AuthViewModel: AuthViewModelProtocol {
     
     func successAuth(code: String, state: String) {
         networkingService.getAccessToken(code, stateString: state) { success in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                
                 if success {
-                    self.webAsystNetworking.preloadUserData { result in
+                    webasystNetworking.preloadUserData { [weak self] result in
+                        guard let self else { return }
+                        
                         switch result {
                         case .success(let status):
-                            self.delegate?.successAuth(status)
+                            delegate?.successAuth(status)
                             UserDefaults.standard.setValue(false, forKey: "firstLaunch")
                         case .failure(let error):
-                            self.delegate?.errorAuth(error)
+                            let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "successAuth")
+                            let error = WebasystError.getError(errorType)
+                            
+                            delegate?.errorAuth(error)
                         }
                     }
                 } else {
-                    self.delegate?.errorAuth("Unable to get access token")
+                    let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.token")
+                    
+                    let webasystError = WebasystError(localizadError: loc)
+                    
+                    let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "successAuth")
+                    let error = WebasystError.getError(errorType)
+                    
+                    delegate?.errorAuth(error)
                 }
             }
         }

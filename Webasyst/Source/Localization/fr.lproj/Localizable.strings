@@ -89,11 +89,27 @@
 "404Error" = "Impossible de trouver un compte Webasyst avec le domaine demandé.";
 "missingAuthToken" = "Jeté d'authentification manquant.";
 "unownedErrorWithStatusCode" = "Erreur inconnue avec un code de statut - %CODE%.";
-"unownedServerError" = "Le serveur a renvoyé des données incompréhensibles (%METHOD%) : '%DATA%'. Code de statut - %CODE%.";
 "unableToDecodeResponsedData" = "Impossible de décoder les données renvoyées par le serveur.";
 "unableToGetDecodedParameters" = "Impossible d'obtenir les paramètres décodés.";
 "failedToGetAccessTokenForCreatedAccount" = "Le compte a été créé avec succès, mais nous n'avons pas pu obtenir un jeton d'accès pour lui.";
 "preloadTimeout" = "Impossible d'obtenir une réponse du serveur.";
+
+"network.error.dataTask" = "Une erreur s'est produite lors de l'exécution de la demande : %ERROR%.";
+"network.error.description" = "Description de l'erreur : %ERROR%.";
+"network.error.value" = "Erreur '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "Erreur@INSTL lors de l'exécution de '@MTD' : @LER @ER";
+"error.unknown" = "Erreur lors de l'exécution de '@MTD' avec le statut @CD. Le serveur a renvoyé des données incompréhensibles : '@DT'.";
+"error.wrongUrl" = "Adresse de requête invalide.";
+"error.installList" = "Échec de la récupération de la liste des paramètres de l'utilisateur.";
+"error.token" = "Échec de la récupération du jeton d'accès.";
+"error.invalidRefreshToken" = "Jeton de mise à jour invalide.";
+
+"error.missedConfig" = "L'identifiant du client de l'application Webasyst n'est pas valide. Veuillez contacter le développeur de l'application.";
+"error.urlGeneration" = "Erreur lors de la génération de l'adresse de la demande.";
+"error.multipartFormDataGeneration" = "Erreur lors de la conversion des paramètres de la requête : @DESC.";
+"error.keychainSave" = "Échec de l'enregistrement des clés d'accès reçues.";
+
 // ------------------------------------
 
 // MARK: - Main module

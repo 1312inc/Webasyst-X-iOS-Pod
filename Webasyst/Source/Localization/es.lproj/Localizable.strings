@@ -89,11 +89,26 @@
 "404Error" = "No se pudo encontrar una cuenta de Webasyst con el dominio solicitado.";
 "missingAuthToken" = "Falta el token de acceso.";
 "unownedErrorWithStatusCode" = "Error desconocido con estado de respuesta: %CODE%.";
-"unownedServerError" = "El servidor devolvió datos incomprensibles (%METHOD%): '%DATA%'. Estado de respuesta: %CODE%.";
 "unableToDecodeResponsedData" = "No se pudo decodificar los datos que devolvió el servidor.";
 "unableToGetDecodedParameters" = "No se pudieron obtener los parámetros decodificados.";
 "failedToGetAccessTokenForCreatedAccount" = "La cuenta se creó correctamente, pero no se pudo obtener un token de acceso para ella.";
 "preloadTimeout" = "No se pudo obtener una respuesta del servidor.";
+
+"network.error.dataTask" = "Se ha producido un error al ejecutar la solicitud: «%ERROR%».";
+"network.error.description" = "Descripción del error: %ERROR%.";
+"network.error.value" = "Error '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "Error@INSTL al ejecutar «@MTD»: @LER @ER";
+"error.unknown" = "Error al ejecutar «@MTD» con estado @CD. El servidor devolvió datos incomprensibles: @DT'.";
+"error.wrongUrl" = "Dirección de petición no válida.";
+"error.installList" = "Error al recuperar una lista de configuraciones de usuario.";
+"error.token" = "Error al recuperar el token de acceso.";
+"error.invalidRefreshToken" = "Token de actualización no válido.";
+
+"error.missedConfig" = "El Id. de cliente de la aplicación Webasyst no es válido. Póngase en contacto con el desarrollador de la aplicación.";
+"error.urlGeneration" = "Error durante la generación de la dirección de la solicitud.";
+"error.multipartFormDataGeneration" = "Error al convertir los parámetros de la solicitud: @DESC.";
+"error.keychainSave" = "Error al guardar las claves de acceso recibidas.";
 
 // ------------------------------------
 

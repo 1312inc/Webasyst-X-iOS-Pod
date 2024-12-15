@@ -9,5 +9,5 @@ import Foundation
 
 protocol AuthCoordinatorDelegate: AnyObject {
     func successAuth(_ status: UserStatus)
-    func errorAuth(_ error: String)
+    func errorAuth(_ error: WebasystError)
 }

@@ -89,11 +89,26 @@
 "404Error" = "Das Webasyst-Konto konnte nicht anhand der angeforderten Domäne gefunden werden.";
 "missingAuthToken" = "Authentifizierungstoken fehlt.";
 "unownedErrorWithStatusCode" = "Unbekannter Fehler mit Statuscode - %CODE%.";
-"unownedServerError" = "Der Server hat unverständliche Daten zurückgegeben (%METHOD%): '%DATA%'. Statuscode: %CODE%.";
 "unableToDecodeResponsedData" = "Die vom Server zurückgegebenen Daten konnten nicht decodiert werden.";
 "unableToGetDecodedParameters" = "Die decodierten Parameter konnten nicht abgerufen werden.";
 "failedToGetAccessTokenForCreatedAccount" = "Das Konto wurde erfolgreich erstellt, jedoch konnte kein Zugriffstoken dafür abgerufen werden.";
 "preloadTimeout" = "Es konnte keine Antwort vom Server abgerufen werden.";
+
+"network.error.dataTask" = "Bei der Ausführung der Anfrage ist ein Fehler aufgetreten: %ERROR%.";
+"network.error.description" = "Fehlerbeschreibung: %ERROR%.";
+"network.error.value" = "Fehler '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "Fehler@INSTL bei der Ausführung von '@MTD': @LER @ER";
+"error.unknown" = "Fehler beim Ausfuehren von '@MTD' mit Status @CD. Der Server hat unverstaendliche Daten zurueckgegeben: '@DT'.";
+"error.wrongUrl" = "Ungültige Anfrageadresse.";
+"error.installList" = "Abruf einer Liste von Benutzereinstellungen fehlgeschlagen.";
+"error.token" = "Abrufen des Zugriffstokens fehlgeschlagen.";
+"error.invalidRefreshToken" = "Ungültiges Update-Token.";
+
+"error.missedConfig" = "Webasyst-Anwendungs-Client-ID ist ungültig. Bitte kontaktieren Sie den Anwendungsentwickler.";
+"error.urlGeneration" = "Fehler bei der Generierung der Anfrageadresse.";
+"error.multipartFormDataGeneration" = "Fehler bei der Konvertierung der Anfrageparameter: @DESC.";
+"error.keychainSave" = "Fehler beim Speichern der empfangenen Zugriffsschlüssel.";
 
 // MARK: - Main module
 

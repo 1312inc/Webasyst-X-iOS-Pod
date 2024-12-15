@@ -9,5 +9,5 @@ import Foundation
 
 public enum WebasystServerAnswer {
     case success(UserStatus)
-    case error(String)
+    case error(WebasystError)
 }

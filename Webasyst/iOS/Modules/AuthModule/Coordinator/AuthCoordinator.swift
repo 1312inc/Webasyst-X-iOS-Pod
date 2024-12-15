@@ -37,7 +37,7 @@ extension AuthCoordinator: AuthCoordinatorDelegate {
         }
     }
     
-    func errorAuth(_ error: String) {
+    func errorAuth(_ error: WebasystError) {
         DispatchQueue.main.async {
             self.action(.error(error))
         }

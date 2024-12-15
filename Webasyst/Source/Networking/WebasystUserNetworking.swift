@@ -18,13 +18,21 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     private let defaultImageUrl = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
     
-    func preloadUserData(_ completion: @escaping (Result<UserStatus, String>) -> ()) {
+    func preloadUserData(_ completion: @escaping (WebasystResult<UserStatus>) -> ()) {
         if self.networkingHelper.isConnectedToNetwork {
             var isCanceled: Bool = false
-            timeoutChecker.start {
+            timeoutChecker.start { [weak self] in
+                guard let self else { return }
+                
                 isCanceled = true
+                
                 let loc = WebasystApp.getDefaultLocalizedString(withKey: "preloadTimeout", comment: "Timeout for receiving a response from the server")
-                completion(.failure(loc))
+                
+                let webasystError = WebasystError(localizadError: loc)
+                
+                let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "preloadUserData")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
             queue.async { [weak self] in
                 guard let self = self, !isCanceled else { return }
@@ -81,8 +89,13 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 }
             }
         } else {
-            let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "connectionAlertMessage", comment: "")
-            completion(.failure(errorDescription))
+            let loc = WebasystApp.getDefaultLocalizedString(withKey: "connectionAlertMessage")
+            
+            let webasystError = WebasystError(localizadError: loc)
+            
+            let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "preloadUserData")
+            let error = getError(errorType)
+            completion(.failure(error))
         }
     }
     
@@ -144,7 +157,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     // MARK: - Send Apple ID email confirmation code
-    internal func sendAppleIDEmailConfirmationCode(_ code: String, accessToken: Data, _ completion: @escaping (Result<Bool, String>) -> ()) {
+    internal func sendAppleIDEmailConfirmationCode(_ code: String, accessToken: Data, _ completion: @escaping (WebasystResult<Bool>) -> ()) {
         
         let accessTokenString = String(decoding: accessToken, as: UTF8.self)
         
@@ -171,8 +184,11 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         createDataTaskSession(request) { [weak self] result in
             guard let self = self else { return }
+            
             switch result {
             case .success(let response):
+                let statusCode = response.statusCode
+                
                 do {
                     let authData = try JSONDecoder().decode(UserToken.self, from: response.data)
                     
@@ -185,15 +201,17 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
                         completion(.success(true))
                     }
-                } catch {
-                    let errorDescription = getErrorString(.decodingData(methodName: "sendAppleIDEmailConfirmationCode"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                } catch let error {
+                    let loc = "\(error)"
+                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "sendAppleIDEmailConfirmationCode")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "sendAppleIDEmailConfirmationCode"))
-                print(errorDescription)
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "sendAppleIDEmailConfirmationCode")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
@@ -216,8 +234,11 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         createDataTaskSession(request) { [weak self] result in
             guard let self = self else { return }
+            
             switch result {
             case .success(let response):
+                let statusCode = response.statusCode
+                
                 do {
                     let userData = try JSONDecoder().decode(UserData.self, from: response.data)
                     let condition = userData.firstname.isEmpty || userData.lastname.isEmpty
@@ -226,20 +247,24 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         guard let self = self else { return }
                         profileInstallService?.saveProfileData(userData, avatar: data)
                     }
-                } catch {
-                    let errorDescription = getErrorString(.decodingData(methodName: "downloadUserData"))
-                    print(errorDescription)
+                } catch let error {
+                    let loc = "\(error)"
+                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "downloadUserData")
+                    let error = getError(errorType)
+                    print(error.localizadError)
                     completion(false)
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "downloadUserData"))
-                print(errorDescription)
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "downloadUserData")
+                let error = getError(errorType)
+                print(error.localizadError)
                 completion(false)
             }
         }
     }
     
-    public func changeUserData(_ profile: ProfileData,_ completion: @escaping (Result<ProfileData, Error>) -> Void) {
+    public func changeUserData(_ profile: ProfileData,_ completion: @escaping (WebasystResult<ProfileData>) -> Void) {
         let accessToken = KeychainManager.getToken(.accessToken)
         
         var parameters: Dictionary<String,Any> = [
@@ -281,19 +306,19 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         completion(.success(profile))
                     }
                 } else {
-                    let errorDescription = getErrorString(.decodingParameters(methodName: "changeUserData"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "changeUserData")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "changeUserData"))
-                print(errorDescription)
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "changeUserData")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    public func deleteUserAvatar(_ completion: @escaping (Result<Bool, String>) -> ()) {
+    public func deleteUserAvatar(_ completion: @escaping (WebasystResult<Bool>) -> ()) {
         let accessToken = KeychainManager.getToken(.accessToken)
         
         let headers: Parameters = [
@@ -319,19 +344,19 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                         completion(.success(true))
                     }
                 default:
-                    let errorDescription = getErrorString(.unowned(response: response, methodName: "deleteUserAvatar"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .unowned(response: response), methodName: "deleteUserAvatar")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "deleteUserAvatar"))
-                print(errorDescription)
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "deleteUserAvatar")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    public func updateUserAvatar(_ image: UIImage, _ completion: @escaping (Result<Bool, String>) -> ()) {
+    public func updateUserAvatar(_ image: UIImage, _ completion: @escaping (WebasystResult<Bool>) -> ()) {
         let accessToken = KeychainManager.getToken(.accessToken)
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/userpic", parameters: [:]) else { return }
@@ -365,25 +390,25 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                             completion(.success(true))
                         }
                     } else {
-                        let errorDescription = getErrorString(.decodingParameters(methodName: "updateUserAvatar"))
-                        print(errorDescription)
-                        completion(.failure(errorDescription))
+                        let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "updateUserAvatar")
+                        let error = getError(errorType)
+                        completion(.failure(error))
                     }
                 default:
-                    let errorDescription = getErrorString(.unowned(response: response, methodName: "updateUserAvatar"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .unowned(response: response), methodName: "updateUserAvatar")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "updateUserAvatar"))
-                print(errorDescription)
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "updateUserAvatar")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
     //MARK: Get installation's list user
-    public func getInstallList(_ completion: @escaping (Result<[UserInstallCodable], String>) -> ()) {
+    public func getInstallList(_ completion: @escaping (WebasystResult<[UserInstallCodable]>) -> ()) {
         
         let accessToken = KeychainManager.getToken(.accessToken)
         
@@ -392,9 +417,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         ]
         
         guard let url = buildWebasystUrl("/id/api/v1/installations/", parameters: [:]) else {
-            let errorDescription = "Webasyst error (getInstallList): Failed to retrieve list of user settings"
-            print(errorDescription)
-            completion(.failure(errorDescription))
+            let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.installList")
+            
+            let webasystError = WebasystError(localizadError: loc)
+            
+            let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getInstallList")
+            let error = getError(errorType)
+            completion(.failure(error))
+            
             return
         }
         
@@ -406,8 +436,11 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         createDataTaskSession(request) { [weak self] result in
             guard let self = self else { return }
+            
             switch result {
             case .success(let response):
+                let statusCode = response.statusCode
+                
                 do {
                     let installList = try JSONDecoder().decode([UserInstallCodable].self, from: response.data)
                     let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser") ?? ""
@@ -416,25 +449,22 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     }
                     completion(.success(installList))
                     deleteNonActiveInstall(installList: installList)
-                } catch {
-                    let errorDescription = getErrorString(.decodingData(methodName: "getInstallList"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                } catch let error {
+                    let loc = "\(error)"
+                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "getInstallList")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                if error == WebasystApp.getDefaultLocalizedString(withKey: "missingAuthToken", comment: "The authentication token is missing.") {
-                    completion(.failure(error))
-                } else {
-                    let errorDescription = getErrorString(.standart(error: error, methodName: "getInstallList"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
-                }
-                
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "getInstallList")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func getAccessTokenApi(clientId: [String], _ completion: @escaping (Result<[String : Any], String>) -> ()) {
+    func getAccessTokenApi(clientId: [String], _ completion: @escaping (WebasystResult<[String : Any]>) -> ()) {
         
         let paramReqestApi: Dictionary<String, Any> = [
             "client_id": clientId
@@ -443,7 +473,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         let accessToken = KeychainManager.getToken(.accessToken)
         
         guard let url = buildWebasystUrl("/id/api/v1/auth/client/", parameters: [:]) else {
-            completion(.failure("Webasyst error (getAccessTokenApi): 'Wrong target url'."))
+            let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.wrongUrl")
+            
+            let webasystError = WebasystError(localizadError: loc)
+            
+            let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getAccessTokenApi")
+            let error = getError(errorType)
+            completion(.failure(error))
+            
             return
         }
         
@@ -462,30 +499,35 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         createDataTaskSession(request) { [weak self] result in
             guard let self = self else { return }
+            
             switch result {
             case .success(let response):
+                let statusCode = response.statusCode
+                
                 do {
                     if let json = try JSONSerialization.jsonObject(with: response.data) as? [String : Any] {
                         completion(.success(json))
                     } else {
-                        let errorDescription = getErrorString(.decodingParameters(methodName: "getAccessTokenApi"))
-                        print(errorDescription)
-                        completion(.failure(errorDescription))
+                        let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "getAccessTokenApi")
+                        let error = getError(errorType)
+                        completion(.failure(error))
                     }
-                } catch {
-                    let errorDescription = getErrorString(.decodingData(methodName: "getAccessTokenApi"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                } catch let error {
+                    let loc = "\(error)"
+                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "getAccessTokenApi")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "getAccessTokenApi"))
-                print(errorDescription)
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "getAccessTokenApi")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func getAccessTokenInstall(_ installList: [UserInstallCodable], accessCodes: [String : Any], _ completion: @escaping (Result<String, String>) -> ()) {
+    func getAccessTokenInstall(_ installList: [UserInstallCodable], accessCodes: [String : Any], _ completion: @escaping (WebasystResult<String>) -> ()) {
         
         guard let config = WebasystApp.config else { return }
         if let error = accessCodes["error_description"] as? String {
@@ -542,19 +584,19 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                             }
                         }
                     } else {
-                        let errorDescription = getErrorString(.decodingParametersWithInstall(installDomain: installList[index].domain, methodName: "getAccessTokenInstall"))
-                        print(errorDescription)
+                        let errorType = ErrorTypeModel(type: .decodingParameters(domain: installList[index].domain), methodName: "getAccessTokenInstall")
+                        let error = getError(errorType)
                         if index == installList.count - 1, !isCompleted {
                             isCompleted = true
-                            completion(.failure(errorDescription))
+                            completion(.failure(error))
                         }
                     }
                 case .failure(let error):
-                    let errorDescription = getErrorString(.standartWithInstall(error: error, installDomain: installList[index].domain, methodName: "getAccessTokenInstall"))
-                    print(errorDescription)
+                    let errorType = ErrorTypeModel(error: error, type: .standart(domain: installList[index].domain), methodName: "getAccessTokenInstall")
+                    let error = getError(errorType)
                     if index == installList.count - 1, !isCompleted {
                         isCompleted = true
-                        completion(.failure(errorDescription))
+                        completion(.failure(error))
                     }
                 }
             }
@@ -645,7 +687,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
     }
     
-    func createWebasystAccount(bundle: String, plainId: String, accountName: String?, _ completion: @escaping (Result<(id: String, url: String), String>) -> ()) {
+    func createWebasystAccount(bundle: String, plainId: String, accountName: String?, _ completion: @escaping (WebasystResult<(id: String, url: String)>) -> ()) {
         
         let accessToken = KeychainManager.getToken(.accessToken)
         
@@ -676,55 +718,69 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
         
         createDataTaskSession(request) { [weak self] result in
-            guard let self = self else { return }
+            guard let self else { return }
+            
             switch result {
             case .success(let response):
+                let statusCode = response.statusCode
+                
                 do {
                     if let dict = try JSONSerialization.jsonObject(with: response.data, options: .mutableContainers) as? [String : Any],
                        let id = dict["id"] as? String,
                        let url = dict["url"] as? String,
                        let domain = dict["domain"] as? String {
                         var newInstall: [UserInstallCodable] = []
+                        
                         getAccessTokenApi(clientId: [id]) { [weak self] result in
-                            guard let self = self else { return }
+                            guard let self else { return }
+                            
                             switch result {
                             case .success(let json):
                                 let install = UserInstallCodable(name: nil, domain: domain, id: id, accessToken: nil, url: url, image: nil)
                                 newInstall.append(install)
-                                getAccessTokenInstall(newInstall, accessCodes: json) { result in
+                                getAccessTokenInstall(newInstall, accessCodes: json) { [weak self] result in
+                                    guard let self else { return }
+                                    
                                     switch result {
                                     case .success:
                                         completion(.success((id: id, url: url)))
                                     case .failure(let error):
+                                        let errorType = ErrorTypeModel(error: error, type: .standart(domain: domain), methodName: "createWebasystAccount")
+                                        let error = getError(errorType)
                                         completion(.failure(error))
                                     }
                                 }
-                            case .failure:
-                                let loc = WebasystApp.getDefaultLocalizedString(withKey: "failedToGetAccessTokenForCreatedAccount", comment: "Missing access token")
-                                let errorDescription = "Webasyst error (createWebasystAccount): " + loc
-                                print(errorDescription)
-                                completion(.failure(errorDescription))
+                            case .failure(let error):
+                                let loc = WebasystApp.getDefaultLocalizedString(withKey: "failedToGetAccessTokenForCreatedAccount", comment: "Missing access token") + " " + error.localizadError
+                                
+                                let webasystError = WebasystError(localizadError: loc, statusCode: error.statusCode, errorValue: error.errorValue)
+                                
+                                let errorType = ErrorTypeModel(error: webasystError, type: .standart(domain: domain), methodName: "createWebasystAccount")
+                                let error = getError(errorType)
+                                completion(.failure(error))
                             }
                         }
                     } else {
-                        let errorDescription = getErrorString(.decodingParameters(methodName: "createWebasystAccount"))
-                        print(errorDescription)
-                        completion(.failure(errorDescription))
+                        let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "createWebasystAccount")
+                        let error = getError(errorType)
+                        completion(.failure(error))
                     }
-                } catch {
-                    let errorDescription = getErrorString(.decodingData(methodName: "createWebasystAccount"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                } catch let error {
+                    let loc = "\(error)"
+                    let webasystError = WebasystError(localizadError: loc, statusCode: statusCode)
+                    let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "createWebasystAccount")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "createWebasystAccount"))
-                print(errorDescription)
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "createWebasystAccount")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func renameWebasystAccount(clientId: String, domain: String, _ completion: @escaping (Result<Bool, String>) -> ()) {
+    func renameWebasystAccount(clientId: String, domain: String, _ completion: @escaping (WebasystResult<Bool>) -> ()) {
         
         let accessToken = KeychainManager.getToken(.accessToken)
         
@@ -758,14 +814,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 204:
                     completion(.success(true))
                 default:
-                    let errorDescription = getErrorString(.unowned(response: response, methodName: "renameWebasystAccount"))
-                    print(errorDescription)
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .unowned(response: response), methodName: "renameWebasystAccount")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "renameWebasystAccount"))
-                print(errorDescription)
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "renameWebasystAccount")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
@@ -788,14 +844,15 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             case .success:
                 completion(true)
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "singUpUser"))
-                print(errorDescription)
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "singUpUser")
+                let error = getError(errorType)
+                print(error.localizadError)
                 completion(false)
             }
         }
     }
     
-    func checkAppInstall(app: String, _ completion: @escaping (Result<String?, String>) -> Void) {
+    func checkAppInstall(app: String, _ completion: @escaping (WebasystResult<String?>) -> Void) {
         
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let install = profileInstallService?.getInstall(with: domain),
@@ -822,17 +879,19 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 if let _ = try? JSONSerialization.jsonObject(with: response.data, options: .fragmentsAllowed) as? Bool {
                     completion(.success(nil))
                 } else {
-                    let errorDescription = getErrorString(.decodingParameters(methodName: "checkAppInstall"))
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "checkAppInstall")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "checkAppInstall"))
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "checkAppInstall")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func checkInstallLicense(app: String, _ completion: @escaping (Result<String?, String>) -> Void) {
+    func checkInstallLicense(app: String, _ completion: @escaping (WebasystResult<String?>) -> Void) {
         
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
@@ -868,17 +927,19 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 if response.statusCode == 204 {
                     completion(.success(nil))
                 } else {
-                    let errorDescription = getErrorString(.unowned(response: response, methodName: "checkInstallLicense"))
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .unowned(response: response), methodName: "checkInstallLicense")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "checkInstallLicense"))
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "checkInstallLicense")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func mergeTwoAccounts(_ completion: @escaping (Result<String, Error>) -> Void) {
+    func mergeTwoAccounts(_ completion: @escaping (WebasystResult<String>) -> Void) {
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/mergecode", parameters: [:]) else { return }
         
@@ -902,17 +963,19 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                    let code = object["code"] as? String {
                     completion(.success(code))
                 } else {
-                    let errorDescription = getErrorString(.decodingParameters(methodName: "mergeTwoAccounts"))
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "mergeTwoAccounts")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "mergeTwoAccounts"))
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "mergeTwoAccounts")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func mergeResultCheck(_ completion: @escaping (Result<Bool, String>) -> Void) {
+    func mergeResultCheck(_ completion: @escaping (WebasystResult<Bool>) -> Void) {
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/mergeresult", parameters: [:]) else { return }
         
@@ -937,21 +1000,24 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if status == "success" {
                         completion(.success(true))
                     } else {
-                        let errorDescription = getErrorString(.decodingParameters(methodName: "mergeResultCheck"))
-                        completion(.failure(errorDescription))
+                        let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "mergeResultCheck")
+                        let error = getError(errorType)
+                        completion(.failure(error))
                     }
                 } else {
-                    let errorDescription = getErrorString(.decodingData(methodName: "mergeResultCheck"))
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .decodingData, methodName: "mergeResultCheck")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "mergeResultCheck"))
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "mergeResultCheck")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func deleteAccount(_ completion: @escaping (Result<Bool, String>) -> Void) {
+    func deleteAccount(_ completion: @escaping (WebasystResult<Bool>) -> Void) {
         guard let url = buildWebasystUrl("/id/api/v1/terminate", parameters: [:]) else { return }
         
         let accessToken = KeychainManager.getToken(.accessToken)
@@ -975,21 +1041,24 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if status {
                         completion(.success(true))
                     } else {
-                        let errorDescription = getErrorString(.decodingParameters(methodName: "deleteAccount"))
-                        completion(.failure(errorDescription))
+                        let errorType = ErrorTypeModel(type: .decodingParameters(), methodName: "deleteAccount")
+                        let error = getError(errorType)
+                        completion(.failure(error))
                     }
                 } else {
-                    let errorDescription = getErrorString(.decodingData(methodName: "deleteAccount"))
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .decodingData, methodName: "deleteAccount")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "deleteAccount"))
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "deleteAccount")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
-    func extendLicense(type: String, date: String, _ completion: @escaping (Result<String?, String>) -> Void) {
+    func extendLicense(type: String, date: String, _ completion: @escaping (WebasystResult<String?>) -> Void) {
         
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/cloud/extend/", parameters: [:]) else { return }
@@ -1023,12 +1092,14 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 204:
                     completion(.success(nil))
                 default:
-                    let errorDescription = getErrorString(.unowned(response: response, methodName: "extendLicense"))
-                    completion(.failure(errorDescription))
+                    let errorType = ErrorTypeModel(type: .unowned(response: response), methodName: "extendLicense")
+                    let error = getError(errorType)
+                    completion(.failure(error))
                 }
             case .failure(let error):
-                let errorDescription = getErrorString(.standart(error: error, methodName: "extendLicense"))
-                completion(.failure(errorDescription))
+                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "extendLicense")
+                let error = getError(errorType)
+                completion(.failure(error))
             }
         }
     }
@@ -1038,116 +1109,6 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
 
 private
 extension WebasystUserNetworking {
-    
-    struct ServerResponse {
-        let data: Data
-        let response: URLResponse
-        let statusCode: Int
-    }
-    
-    func createDataTaskSession(_ request: URLRequest, _ completion: @escaping (Result<ServerResponse, String>) -> ()) {
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let response = response as? HTTPURLResponse else {
-                let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "unownedStatusCode", comment: "Unowned server response status code")
-                completion(.failure(errorDescription))
-                return
-            }
-            
-            if let error = error {
-                completion(.failure("Responsed error: " + error.localizedDescription))
-                return
-            }
-            
-            guard let data = data else {
-                let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "emptyResponsedData", comment: "Empty responsed data")
-                completion(.failure(errorDescription))
-                return
-            }
-            
-            switch response.statusCode {
-            case 200...299:
-                let serverResponse = ServerResponse(data: data, response: response, statusCode: response.statusCode)
-                completion(.success(serverResponse))
-            case 400...504:
-                switch response.statusCode {
-                case 400...401:
-                    let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "missingAuthToken", comment: "The authentication token is missing.")
-                    completion(.failure(errorDescription))
-                case 404:
-                    let errorDescription = WebasystApp.getDefaultLocalizedString(withKey: "404Error", comment: "Server send 404 error")
-                    completion(.failure(errorDescription))
-                default:
-                    do {
-                        let errorModel = try JSONDecoder().decode(ErrorModel.self, from: data)
-                        
-                        var error: String?
-                        if let e = errorModel.errorDescription, !e.isEmpty {
-                            error = e
-                        } else if let e = errorModel.error {
-                            error = e
-                        }
-                        
-                        if let error = error {
-                            let loc = WebasystApp.getDefaultLocalizedString(withKey: "serverSentError", comment: "Server send error")
-                            let errorDescription = loc + "\(error)"
-                            completion(.failure(errorDescription))
-                        } else {
-                            let loc = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
-                            let errorDescription = loc.replacingOccurrences(of: "%CODE%", with: response.statusCode.description)
-                            completion(.failure(errorDescription))
-                        }
-                    } catch {
-                        let loc = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
-                        let errorDescription = loc.replacingOccurrences(of: "%CODE%", with: response.statusCode.description) + " " + error.localizedDescription
-                        completion(.failure(errorDescription))
-                    }
-                }
-            default:
-                let loc = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
-                let errorDescription = loc.replacingOccurrences(of: "%CODE%", with: response.statusCode.description)
-                completion(.failure(errorDescription))
-            }
-        }
-        .resume()
-    }
-    
-    enum ServerErrorDescriptionType {
-        case unowned(response: ServerResponse, methodName: String)
-        case decodingData(methodName: String)
-        case decodingParameters(methodName: String)
-        case decodingParametersWithInstall(installDomain: String, methodName: String)
-        case standart(error: String, methodName: String)
-        case standartWithInstall(error: String, installDomain: String, methodName: String)
-    }
-    
-    func getErrorString(_ type: ServerErrorDescriptionType) -> String {
-        switch type {
-        case .unowned(let response, let methodName):
-            let loc = WebasystApp.getDefaultLocalizedString(withKey: "unownedServerError", comment: "Unowned server error")
-            let dataStr = String(data: response.data, encoding: .utf8) ?? ""
-            let errorDescription = loc
-                .replacingOccurrences(of: "%METHOD%", with: methodName)
-                .replacingOccurrences(of: "%DATA%", with: dataStr)
-                .replacingOccurrences(of: "%CODE%", with: response.statusCode.description)
-            return errorDescription
-        case .decodingData(let methodName):
-            let loc = WebasystApp.getDefaultLocalizedString(withKey: "unableToDecodeResponsedData", comment: "Unable to decode server response")
-            let errorDescription = "Webasyst error (\(methodName)): " + loc
-            return errorDescription
-        case .decodingParameters(let methodName):
-            let loc = WebasystApp.getDefaultLocalizedString(withKey: "unableToGetDecodedParameters", comment: "Unable to get decoded parameters")
-            let errorDescription = "Webasyst error (\(methodName)): " + loc
-            return errorDescription
-        case .decodingParametersWithInstall(let installDomain, let methodName):
-            let loc = WebasystApp.getDefaultLocalizedString(withKey: "unableToGetDecodedParameters", comment: "Unable to get decoded parameters")
-            let errorDescription = "Webasyst error (\(methodName)): \(installDomain) – " + loc
-            return errorDescription
-        case .standart(let error, let methodName):
-            return "Webasyst error (\(methodName)): '\(error)'"
-        case .standartWithInstall(let error, let installDomain, let methodName):
-            return "Webasyst error (\(methodName)): \(installDomain) – '\(error)'"
-        }
-    }
     
     func createDefaultGradient() -> Data? {
         let gradientImage = UIImage.init(gradientColors: [self.hexStringToUIColor(hex: "#FF0078"),

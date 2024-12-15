@@ -97,7 +97,7 @@ public class WebasystApp {
     /// - Parameters:
     ///   - app: Application name.
     ///   - completion: The closure performed after the check returns a Bool value about whether the result was successful or not and a description of the error, if there was one.
-    public func checkInstallApp(app: String, completion: @escaping (Result<String?, String>) -> ()) {
+    public func checkInstallApp(app: String, completion: @escaping (WebasystResult<String?>) -> ()) {
         userNetworking.checkAppInstall(app: app, completion)
     }
     
@@ -105,7 +105,7 @@ public class WebasystApp {
     /// - Parameters:
     ///   - app: Application name.
     ///   - completion: The closure performed after the check returns a Bool value of whether the user is authorized or not.
-    public func checkLicense(app: String, completion: @escaping (Result<String?, String>) -> ()) {
+    public func checkLicense(app: String, completion: @escaping (WebasystResult<String?>) -> ()) {
         userNetworking.checkInstallLicense(app: app, completion)
     }
     
@@ -114,7 +114,7 @@ public class WebasystApp {
     ///   - type: Type of subscription plan.
     ///   - date: Subscription cut-off date.
     ///   - completion: The closure performed after the check returns a Bool value of whether the user is authorized or not.
-    public func extendLicense(type: String, date: String, completion: @escaping (Result<String?, String>) -> ()) {
+    public func extendLicense(type: String, date: String, completion: @escaping (WebasystResult<String?>) -> ()) {
         userNetworking.extendLicense(type: type, date: date, completion)
     }
     

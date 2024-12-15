@@ -89,11 +89,26 @@
 "404Error" = "Não foi possível encontrar a conta Webasyst pelo domínio solicitado.";
 "missingAuthToken" = "Token de acesso ausente.";
 "unownedErrorWithStatusCode" = "Erro desconhecido com status de resposta - %CODE%.";
-"unownedServerError" = "O servidor retornou dados inexplicáveis (%METHOD%): '%DATA%'. Status de resposta: %CODE%.";
 "unableToDecodeResponsedData" = "Não foi possível decodificar os dados retornados pelo servidor.";
 "unableToGetDecodedParameters" = "Não foi possível obter os parâmetros decodificados.";
 "failedToGetAccessTokenForCreatedAccount" = "A conta foi criada com sucesso, mas não foi possível obter o token de acesso para ela.";
 "preloadTimeout" = "Não foi possível obter resposta do servidor.";
+
+"network.error.dataTask" = "Ocorreu um erro durante a execução do pedido: “%ERROR%”.";
+"network.error.description" = "Descrição do erro: %ERROR%.";
+"network.error.value" = "Erro '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "Erro@INSTL aquando da execução de “@MTD”: @LER @ER";
+"error.unknown" = "Erro na execução de “@MTD” com o estado @CD. O servidor devolveu dados incompreensíveis: '@DT'.";
+"error.wrongUrl" = "Endereço de pedido inválido.";
+"error.installList" = "Falha na obtenção de uma lista de definições do utilizador.";
+"error.token" = "Falha ao recuperar o token de acesso.";
+"error.invalidRefreshToken" = "Token de atualização inválido.";
+
+"error.missedConfig" = "O ID do cliente da aplicação Webasyst é inválido. Contacte o programador da aplicação.";
+"error.urlGeneration" = "Erro durante a geração do endereço do pedido.";
+"error.multipartFormDataGeneration" = "Erro na conversão dos parâmetros do pedido: @DESC.";
+"error.keychainSave" = "Falha ao guardar as chaves de acesso recebidas.";
 
 // ------------------------------------
 

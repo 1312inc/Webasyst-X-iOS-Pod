@@ -89,11 +89,26 @@
 "404Error" = "Webasyst-account kon niet worden gevonden voor het opgegeven domein.";
 "missingAuthToken" = "Toegangstoken ontbreekt.";
 "unownedErrorWithStatusCode" = "Onbekende fout met statuscode - %CODE%.";
-"unownedServerError" = "De server heeft onbegrijpelijke gegevens geretourneerd (%METHOD%): '%DATA%'. Statuscode van het antwoord: %CODE%.";
 "unableToDecodeResponsedData" = "Kan de gegevens die door de server zijn geretourneerd niet decoderen.";
 "unableToGetDecodedParameters" = "Kan de gedecodeerde parameters niet ophalen.";
 "failedToGetAccessTokenForCreatedAccount" = "Het account is succesvol aangemaakt, maar het is niet gelukt om een toegangstoken te verkrijgen.";
 "preloadTimeout" = "Er is geen reactie van de server ontvangen.";
+
+"network.error.dataTask" = "Er is een fout opgetreden tijdens het uitvoeren van het verzoek: %ERROR%.";
+"network.error.description" = "Foutbeschrijving: %ERROR%.";
+"network.error.value" = "Fout '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "Fout@INSTL bij het uitvoeren van '@MTD': @LER @ER";
+"error.unknown" = "Fout bij het uitvoeren van '@MTD' met status @CD. De server heeft onbegrijpelijke gegevens teruggestuurd: @DT'.";
+"error.wrongUrl" = "Ongeldig verzoekadres.";
+"error.installList" = "Faalde in het ophalen van een lijst met gebruikersinstellingen.";
+"error.token" = "Toegangstoken is niet opgehaald.";
+"error.invalidRefreshToken" = "Ongeldig updatetoken.";
+
+"error.missedConfig" = "Webasyst applicatie client Id is ongeldig. Neem contact op met de applicatie-ontwikkelaar.";
+"error.urlGeneration" = "Fout tijdens genereren verzoekadres.";
+"error.multipartFormDataGeneration" = "Fout bij het converteren van verzoekparameters: @DESC.";
+"error.keychainSave" = "Ontvangen toegangssleutels niet opgeslagen.";
 
 // ------------------------------------
 

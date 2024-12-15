@@ -89,11 +89,27 @@
 "404Error" = "未找到请求的Webasyst帐户。";
 "missingAuthToken" = "缺少访问令牌。";
 "unownedErrorWithStatusCode" = "未知的响应状态错误 - %CODE%。";
-"unownedServerError" = "服务器返回了不明确的数据（%METHOD%）：'%DATA%'。响应状态：%CODE%。";
 "unableToDecodeResponsedData" = "无法解码服务器返回的数据。";
 "unableToGetDecodedParameters" = "无法获取解码的参数。";
 "failedToGetAccessTokenForCreatedAccount" = "帐户已成功创建，但无法获取访问令牌。";
 "preloadTimeout" = "无法获取服务器响应。";
+
+"network.error.dataTask" = "执行请求时发生错误： %ERROR%。";
+"network.error.description" = "错误描述： %ERROR%.";
+"network.error.value" = "错误“%ERROR%”。";
+"error.default.install" = " @INSTL";
+"error.default" = "执行 '@MTD' 时出现 @INSTL 错误： @LER @ER";
+"error.unknown" = "执行状态为 @CD 的'@MTD'时出错。服务器返回了无法理解的数据： @DT'.";
+"error.wrongUrl" = "请求地址无效。";
+"error.installList" = "检索用户设置列表失败。";
+"error.token" = "检索访问令牌失败。";
+"error.invalidRefreshToken" = "更新令牌无效。";
+
+"error.missedConfig" = "Webasyst 应用程序客户端 Id 无效。请联系应用程序开发人员。";
+"error.urlGeneration" = "请求地址生成过程中出错。";
+"error.multipartFormDataGeneration" = "转换请求参数时出错： @DESC.";
+"error.keychainSave" = "保存收到的访问密钥失败。";
+
 // ------------------------------------
 
 // MARK: - Main module

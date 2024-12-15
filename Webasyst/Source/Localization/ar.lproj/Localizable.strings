@@ -91,11 +91,26 @@
 "404Error" = "تعذر العثور على حساب Webasyst باستخدام النطاق المطلوب.";
 "missingAuthToken" = "نقص رمز المصادقة.";
 "unownedErrorWithStatusCode" = "خطأ غير معروف مع حالة الاستجابة - %CODE%.";
-"unownedServerError" = "الخادم أرجع بيانات غير واضحة (%METHOD%): '%DATA%'. حالة الاستجابة: %CODE%.";
 "unableToDecodeResponsedData" = "تعذر فك تشفير البيانات التي أرجعها الخادم.";
 "unableToGetDecodedParameters" = "تعذر الحصول على المعلمات المفككة.";
 "failedToGetAccessTokenForCreatedAccount" = "تم إنشاء الحساب بنجاح، ولكن تعذر الحصول على رمز المصادقة الوصول إليه.";
 "preloadTimeout" = "تعذر الحصول على استجابة من الخادم.";
+
+"network.error.dataTask" = "حدث خطأ أثناء تنفيذ الطلب: %ERROR%.";
+"network.error.description" = "وصف الخطأ: %ERROR%.";
+"network.error.value" = "الخطأ '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "خطأ @INSTL عند تنفيذ '@MTD': @LER @ER";
+"error.unknown" = "خطأ عند تنفيذ '@MTD' بالحالة @CD. قام الخادم بإرجاع بيانات غير مفهومة: '@DT'.";
+"error.wrongUrl" = "عنوان الطلب غير صالح.";
+"error.installList" = "فشل استرداد قائمة إعدادات المستخدم.";
+"error.token" = "فشل استرداد رمز الوصول المميز.";
+"error.invalidRefreshToken" = "رمز التحديث غير صالح.";
+
+"error.missedConfig" = "معرف عميل تطبيق Webasyst غير صالح. الرجاء الاتصال بمطور التطبيق.";
+"error.urlGeneration" = "خطأ أثناء إنشاء عنوان الطلب.";
+"error.multipartFormDataGeneration" = "خطأ عند تحويل معلمات الطلب: @DESC.";
+"error.keychainSave" = "فشل في حفظ مفاتيح الوصول المستلمة.";
 
 // ------------------------------------
 

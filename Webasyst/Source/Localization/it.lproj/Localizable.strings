@@ -89,11 +89,26 @@
 "404Error" = "Impossibile trovare un account Webasyst con il dominio richiesto.";
 "missingAuthToken" = "Token di accesso mancante.";
 "unownedErrorWithStatusCode" = "Errore sconosciuto con stato di risposta - %CODE%.";
-"unownedServerError" = "Il server ha restituito dati non chiari (%METHOD%): '%DATA%'. Stato di risposta: %CODE%.";
 "unableToDecodeResponsedData" = "Impossibile decodificare i dati restituiti dal server.";
 "unableToGetDecodedParameters" = "Impossibile ottenere i parametri decodificati.";
 "failedToGetAccessTokenForCreatedAccount" = "L'account è stato creato con successo, ma non è stato possibile ottenere il token di accesso per esso.";
 "preloadTimeout" = "Nessuna risposta dal server, timeout.";
+
+"network.error.dataTask" = "Si è verificato un errore durante l'esecuzione della richiesta: %ERROR%.";
+"network.error.description" = "Descrizione dell'errore: %ERROR%.";
+"network.error.value" = "Errore '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "Errore@INSTL durante l'esecuzione di '@MTD': @LER @ER";
+"error.unknown" = "Errore durante l'esecuzione di '@MTD' con lo stato @CD. Il server ha restituito dati incomprensibili: '@DT'.";
+"error.wrongUrl" = "Indirizzo di richiesta non valido.";
+"error.installList" = "Impossibile recuperare un elenco di impostazioni utente.";
+"error.token" = "Impossibile recuperare il token di accesso.";
+"error.invalidRefreshToken" = "Token di aggiornamento non valido.";
+
+"error.missedConfig" = "L'ID del client dell'applicazione Webasyst non è valido. Contattare lo sviluppatore dell'applicazione.";
+"error.urlGeneration" = "Errore durante la generazione dell'indirizzo della richiesta.";
+"error.multipartFormDataGeneration" = "Errore durante la conversione dei parametri della richiesta: @DESC.";
+"error.keychainSave" = "Errore nel salvataggio delle chiavi di accesso ricevute.";
 
 // ------------------------------------
 

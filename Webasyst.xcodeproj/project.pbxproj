@@ -8,7 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		E05B1BAA2A91F20F0051081B /* WebasystApp watchOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05B1BA92A91F20F0051081B /* WebasystApp watchOS.swift */; };
+		E0648A982D0ED0F700C0F263 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648A972D0ED0F700C0F263 /* ServerResponse.swift */; };
+		E0648A992D0ED0F700C0F263 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648A972D0ED0F700C0F263 /* ServerResponse.swift */; };
+		E0648A9B2D0ED10600C0F263 /* ServerErrorDescriptionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648A9A2D0ED10600C0F263 /* ServerErrorDescriptionType.swift */; };
+		E0648A9C2D0ED10600C0F263 /* ServerErrorDescriptionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648A9A2D0ED10600C0F263 /* ServerErrorDescriptionType.swift */; };
+		E0648A9E2D0ED11400C0F263 /* ErrorTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648A9D2D0ED11400C0F263 /* ErrorTypeModel.swift */; };
+		E0648A9F2D0ED11400C0F263 /* ErrorTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648A9D2D0ED11400C0F263 /* ErrorTypeModel.swift */; };
+		E0648AA12D0ED12600C0F263 /* WebasystError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648AA02D0ED12600C0F263 /* WebasystError.swift */; };
+		E0648AA22D0ED12600C0F263 /* WebasystError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0648AA02D0ED12600C0F263 /* WebasystError.swift */; };
 		E065EEFE2B69C1FC00003408 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E065EEFD2B69C1FC00003408 /* ErrorModel.swift */; };
+		E06BD0D82D099BF300FC6D21 /* WebasystResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06BD0D72D099BF300FC6D21 /* WebasystResult.swift */; };
+		E06BD0D92D099BF300FC6D21 /* WebasystResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06BD0D72D099BF300FC6D21 /* WebasystResult.swift */; };
 		E096FBE02CD178BD00D6324D /* KeychainEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E096FBDF2CD178BD00D6324D /* KeychainEnum.swift */; };
 		E096FBE12CD178BD00D6324D /* KeychainEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E096FBDF2CD178BD00D6324D /* KeychainEnum.swift */; };
 		E0A388952CF8DA7B00E95F59 /* CheckingType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A388942CF8DA7B00E95F59 /* CheckingType.swift */; };
@@ -106,7 +116,12 @@
 		E02DE4512B62FF6500D0A143 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E02DE4522B62FF7300D0A143 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E05B1BA92A91F20F0051081B /* WebasystApp watchOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebasystApp watchOS.swift"; sourceTree = "<group>"; };
+		E0648A972D0ED0F700C0F263 /* ServerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerResponse.swift; sourceTree = "<group>"; };
+		E0648A9A2D0ED10600C0F263 /* ServerErrorDescriptionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorDescriptionType.swift; sourceTree = "<group>"; };
+		E0648A9D2D0ED11400C0F263 /* ErrorTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTypeModel.swift; sourceTree = "<group>"; };
+		E0648AA02D0ED12600C0F263 /* WebasystError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystError.swift; sourceTree = "<group>"; };
 		E065EEFD2B69C1FC00003408 /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
+		E06BD0D72D099BF300FC6D21 /* WebasystResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebasystResult.swift; sourceTree = "<group>"; };
 		E096FBDF2CD178BD00D6324D /* KeychainEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainEnum.swift; sourceTree = "<group>"; };
 		E0A388942CF8DA7B00E95F59 /* CheckingType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckingType.swift; sourceTree = "<group>"; };
 		E0BCCB132A8ADBDB00673287 /* Webasyst.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Webasyst.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,6 +206,18 @@
 				E05B1BA92A91F20F0051081B /* WebasystApp watchOS.swift */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		E0648A962D0ED0E400C0F263 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				E06BD0D72D099BF300FC6D21 /* WebasystResult.swift */,
+				E0648A972D0ED0F700C0F263 /* ServerResponse.swift */,
+				E0648A9A2D0ED10600C0F263 /* ServerErrorDescriptionType.swift */,
+				E0648A9D2D0ED11400C0F263 /* ErrorTypeModel.swift */,
+				E0648AA02D0ED12600C0F263 /* WebasystError.swift */,
+			);
+			path = Server;
 			sourceTree = "<group>";
 		};
 		E0BCCB092A8ADBDB00673287 = {
@@ -301,6 +328,7 @@
 		E0BCCB402A8ADD7600673287 /* Enum */ = {
 			isa = PBXGroup;
 			children = (
+				E0648A962D0ED0E400C0F263 /* Server */,
 				E0BCCB412A8ADD7600673287 /* AuthAppleIDResult.swift */,
 				E0BCCB422A8ADD7600673287 /* UserStatus.swift */,
 				E0BCCB432A8ADD7600673287 /* AuthResult.swift */,
@@ -667,6 +695,7 @@
 				E0BCCB672A8ADD7600673287 /* SettingsListModel.swift in Sources */,
 				E0BCCB6D2A8ADD7600673287 /* UserStatus.swift in Sources */,
 				E0BCCB792A8ADD7600673287 /* TokenType.swift in Sources */,
+				E06BD0D82D099BF300FC6D21 /* WebasystResult.swift in Sources */,
 				E0C1EBAC2AC79B0A001D267B /* AuthViewModelProtocol.swift in Sources */,
 				E0BCCBB62A8ADD8100673287 /* AuthCoordinator.swift in Sources */,
 				E0C1EBA62AC79A8F001D267B /* CoordinatorProtocol.swift in Sources */,
@@ -677,9 +706,11 @@
 				E0BCCB9F2A8ADD7600673287 /* KeychainService.swift in Sources */,
 				E0BCCB9D2A8ADD7600673287 /* UserDefaultsKeys.swift in Sources */,
 				E0BCCB892A8ADD7600673287 /* Installs.swift in Sources */,
+				E0648AA22D0ED12600C0F263 /* WebasystError.swift in Sources */,
 				E0BCCB772A8ADD7600673287 /* AuthType.swift in Sources */,
 				E0BCCB952A8ADD7600673287 /* NetworkingHelper.swift in Sources */,
 				E0C1EBA32AC79A5B001D267B /* WebasystServerAnswer.swift in Sources */,
+				E0648A9B2D0ED10600C0F263 /* ServerErrorDescriptionType.swift in Sources */,
 				E096FBE12CD178BD00D6324D /* KeychainEnum.swift in Sources */,
 				E0BCCB812A8ADD7600673287 /* UserToken.swift in Sources */,
 				E0BCCB8F2A8ADD7600673287 /* WebasystApp.swift in Sources */,
@@ -697,11 +728,13 @@
 				E0BCCB6B2A8ADD7600673287 /* AuthAppleIDResult.swift in Sources */,
 				E0BCCB852A8ADD7600673287 /* UserData.swift in Sources */,
 				E0BCCB912A8ADD7600673287 /* WebasystNetworkingManager.swift in Sources */,
+				E0648A982D0ED0F700C0F263 /* ServerResponse.swift in Sources */,
 				E0BCCB752A8ADD7600673287 /* AccountCreatingResult.swift in Sources */,
 				E0BCCB992A8ADD7600673287 /* URLRequest.swift in Sources */,
 				E0BCCBB32A8ADD8100673287 /* WebasystApp iOS.swift in Sources */,
 				E0BCCB8D2A8ADD7600673287 /* Config.swift in Sources */,
 				E0BCCBB42A8ADD8100673287 /* WebasystNetworking iOS.swift in Sources */,
+				E0648A9E2D0ED11400C0F263 /* ErrorTypeModel.swift in Sources */,
 				E0C1EBAE2AC7AD4E001D267B /* Notification.Name.swift in Sources */,
 				E0BCCBB52A8ADD8100673287 /* AuthViewModel.swift in Sources */,
 				E0BCCB652A8ADD7600673287 /* WebasystDataModel.swift in Sources */,
@@ -718,12 +751,14 @@
 				E0BCCB882A8ADD7600673287 /* CreateNewAccount.swift in Sources */,
 				E0BCCB682A8ADD7600673287 /* SettingsListModel.swift in Sources */,
 				E0BCCB6E2A8ADD7600673287 /* UserStatus.swift in Sources */,
+				E0648A992D0ED0F700C0F263 /* ServerResponse.swift in Sources */,
 				E0BCCB7A2A8ADD7600673287 /* TokenType.swift in Sources */,
 				E0BCCB702A8ADD7600673287 /* AuthResult.swift in Sources */,
 				E0BCCB6A2A8ADD7600673287 /* WebasystAppDataModel.xcdatamodeld in Sources */,
 				E0BCCB9C2A8ADD7600673287 /* UIImage.swift in Sources */,
 				E0BCCB742A8ADD7600673287 /* AuthCodeType.swift in Sources */,
 				E0BCCBA02A8ADD7600673287 /* KeychainService.swift in Sources */,
+				E0648A9F2D0ED11400C0F263 /* ErrorTypeModel.swift in Sources */,
 				E0BCCB9E2A8ADD7600673287 /* UserDefaultsKeys.swift in Sources */,
 				E0BCCB8A2A8ADD7600673287 /* Installs.swift in Sources */,
 				E0BCCB782A8ADD7600673287 /* AuthType.swift in Sources */,
@@ -734,6 +769,7 @@
 				E0BCCB7E2A8ADD7600673287 /* InstallInfo.swift in Sources */,
 				E0BCCB802A8ADD7600673287 /* Preferences.swift in Sources */,
 				E0A388952CF8DA7B00E95F59 /* CheckingType.swift in Sources */,
+				E0648AA12D0ED12600C0F263 /* WebasystError.swift in Sources */,
 				E05B1BAA2A91F20F0051081B /* WebasystApp watchOS.swift in Sources */,
 				E0BCCB942A8ADD7600673287 /* WebasystNetworking.swift in Sources */,
 				E0BCCB722A8ADD7600673287 /* ImageType.swift in Sources */,
@@ -741,7 +777,9 @@
 				E0BCCB6C2A8ADD7600673287 /* AuthAppleIDResult.swift in Sources */,
 				E0BCCB862A8ADD7600673287 /* UserData.swift in Sources */,
 				E0BCCB922A8ADD7600673287 /* WebasystNetworkingManager.swift in Sources */,
+				E0648A9C2D0ED10600C0F263 /* ServerErrorDescriptionType.swift in Sources */,
 				E0BCCB762A8ADD7600673287 /* AccountCreatingResult.swift in Sources */,
+				E06BD0D92D099BF300FC6D21 /* WebasystResult.swift in Sources */,
 				E0BCCB9A2A8ADD7600673287 /* URLRequest.swift in Sources */,
 				E0BCCB8E2A8ADD7600673287 /* Config.swift in Sources */,
 				E0BCCB662A8ADD7600673287 /* WebasystDataModel.swift in Sources */,

@@ -89,11 +89,28 @@
 "404Error" = "The Webasyst account was not found for the requested domain.";
 "missingAuthToken" = "The authentication token is missing.";
 "unownedErrorWithStatusCode" = "Unowned error with response status code – %CODE%.";
-"unownedServerError" = "The server returned incomprehensible data (%METHOD%): '%DATA%'. Response status: %CODE%.";
 "unableToDecodeResponsedData" = "The data returned by the server could not be decoded.";
 "unableToGetDecodedParameters" = "Unable to get decoded parameters.";
 "failedToGetAccessTokenForCreatedAccount" = "The account was successfully created, but it was not possible to get an access token for it.";
 "preloadTimeout" = "Failed to get a response from the server.";
+"error.wrongUrl" = "Wrong target url";
+"error.installList" = "Failed to retrieve list of user settings";
+
+"network.error.dataTask" = "An error occurred while executing the request: %ERROR%.";
+"network.error.description" = "Error description: %ERROR%.";
+"network.error.value" = "Error ‘%ERROR%’.";
+"error.default.install" = " @INSTL";
+"error.default" = "Error@INSTL when executing ‘@MTD’: @LER @ER";
+"error.unknown" = "Error when executing ‘@MTD’ with status @CD. The server returned incomprehensible data: ‘@DT’.";
+"error.wrongUrl" = "Invalid request address.";
+"error.installList" = "Failed to retrieve list of user settings.";
+"error.token" = "Failed to retrieve access token.";
+"error.invalidRefreshToken" = "Invalid update token.";
+
+"error.missedConfig" = "Webasyst application client Id is invalid. Please contact the application developer.";
+"error.urlGeneration" = "Error during request address generation.";
+"error.multipartFormDataGeneration" = "Error when converting request parameters: @DESC.";
+"error.keychainSave" = "Failed to save received access keys.";
 
 // ------------------------------------
 

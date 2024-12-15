@@ -40,7 +40,7 @@ extension WebasystApp {
     ///   - code: Parameter responsible for merging accounts, which is obtained from the 'mergeTwoAccs' method.
     ///   - navigationController: UINavigationController to display the OAuth webasyst modal window.
     ///   - action: Closure to perform an action after authorization with status of user.
-    func oAuthLogin(with merge: Bool = false, with code: String = "", navigationController: UINavigationController, action: @escaping (_ result: Result<UserStatus, String>) -> ()) {
+    func oAuthLogin(with merge: Bool = false, with code: String = "", navigationController: UINavigationController, action: @escaping (_ result: WebasystResult<UserStatus>) -> ()) {
         coordinator = AuthCoordinator(navigationController) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -82,7 +82,7 @@ extension WebasystApp {
                             result(.completed(status))
                         case .failure(let error):
                             checkMissingAuthTokenError(error)
-                            result(.completed(.error(message: error)))
+                            result(.completed(.error(error)))
                         }
                     }
                 case .needEmailConfirmation(accessToken: let accessToken):
@@ -116,15 +116,15 @@ extension WebasystApp {
                     }
                     result(.needEmailConfirmation(authData.userEmail, confirmHandler))
                 }
-            case .error(let description):
-                result(.completed(.error(message: description)))
+            case .error(let error):
+                result(.completed(.error(error)))
             }
         }
     }
     
     /// Merge result check
     /// - Parameter completion: The closure performed after the check returns a Bool value about whether the result was successful or not and a description of the error, if there was one.
-    func mergeResultCheck(completion: @escaping (Result<Bool, String>) -> Void) {
+    func mergeResultCheck(completion: @escaping (WebasystResult<Bool>) -> Void) {
         userNetworking.mergeResultCheck(completion)
     }
     
@@ -249,7 +249,7 @@ extension WebasystApp {
     
     /// User authentication check on Webasyst server
     /// - Parameter completion: Updating the user token, and checking authorization. Returns user status in the application.
-    func checkUserAuth(completion: @escaping (Result<UserStatus, String>) -> ()) {
+    func checkUserAuth(completion: @escaping (WebasystResult<UserStatus>) -> ()) {
         networking.refreshAccessToken { [weak self] result in
             guard let self = self else { return }
             if result {
@@ -262,20 +262,27 @@ extension WebasystApp {
                 }
             } else {
                 logOutUser()
-                completion(.failure("Not success refresh token."))
+                
+                let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.invalidRefreshToken", comment: "Invalid refresh token")
+                
+                let webasystError = WebasystError(localizadError: loc)
+                
+                let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "checkUserAuth")
+                let error = WebasystError.getError(errorType)
+                completion(.failure(error))
             }
         }
     }
     
     /// A new free WAID contact connected to the opposite application can oppose another existing WAID contact
     /// - Parameter completion: Result with code to merge or error.
-    func mergeTwoAccs(completion: @escaping (Result<String, Error>) -> Void) {
+    func mergeTwoAccs(completion: @escaping (WebasystResult<String>) -> Void) {
         userNetworking.mergeTwoAccounts(completion)
     }
     
     /// The method sends a request to delete the current account and returns the result
     /// - Parameter completion: Account deletion result or error.
-    func deleteAccount(completion: @escaping (Result<Bool, String>) -> ()) {
+    func deleteAccount(completion: @escaping (WebasystResult<Bool>) -> ()) {
         userNetworking.deleteAccount(completion)
     }
     
@@ -289,13 +296,13 @@ extension WebasystApp {
     /// - Parameters:
     ///   - image: Image to update.
     ///   - success: Closure performed after executing the method. Result value which can be successfully or errorable.
-    func updateUserImage(_ image: UIImage, success: @escaping (Result<Bool, String>) -> Void) {
+    func updateUserImage(_ image: UIImage, success: @escaping (WebasystResult<Bool>) -> Void) {
         userNetworking.updateUserAvatar(image, success)
     }
     
     /// Delete current user image
     /// - Parameter success: Closure performed after executing the method. Result value which can be successfully or errorable.
-    func deleteUserImage(success: @escaping (Result<Bool, String>) -> Void) {
+    func deleteUserImage(success: @escaping (WebasystResult<Bool>) -> Void) {
         userNetworking.deleteUserAvatar(success)
     }
     
@@ -303,7 +310,7 @@ extension WebasystApp {
     /// - Parameters:
     ///   - profile: Pass the current data model with user information.
     ///   - success: Closure performed after executing the method. Result value which can be successfully or errorable.
-    func changeCurrentUserData(profile: ProfileData, success: @escaping (Result<ProfileData,Error>) -> Void) {
+    func changeCurrentUserData(profile: ProfileData, success: @escaping (WebasystResult<ProfileData>) -> Void) {
         userNetworking.changeUserData(profile, success)
     }
     
@@ -363,8 +370,9 @@ extension WebasystApp {
 private
 extension WebasystApp {
     
-    func checkMissingAuthTokenError(_ error: String) {
-        if error == WebasystApp.getDefaultLocalizedString(withKey: "missingAuthToken", comment: "The authentication token is missing.") {
+    func checkMissingAuthTokenError(_ error: WebasystError) {
+        let missingTokenLoc = WebasystApp.getDefaultLocalizedString(withKey: "missingAuthToken", comment: "The authentication token is missing.")
+        if error.localizadError.contains(missingTokenLoc) {
             logOutUser()
         }
     }

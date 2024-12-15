@@ -9,6 +9,6 @@ import Foundation
 
 public enum AccountCreatingResult {
     case successfullyCreated(clientId: String, url: String)
-    case successfullyCreatedButNotRenamed(clientId: String, url: String, renameError: String)
-    case notCreated(error: String?)
+    case successfullyCreatedButNotRenamed(clientId: String, url: String, renameError: WebasystError)
+    case notCreated(error: WebasystError?)
 }

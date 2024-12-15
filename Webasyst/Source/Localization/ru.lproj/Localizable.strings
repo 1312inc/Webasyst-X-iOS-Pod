@@ -89,11 +89,26 @@
 "404Error" = "Не удалось найти аккаунт Webasyst по запрошенному домену.";
 "missingAuthToken" = "Отсутствует токен доступа.";
 "unownedErrorWithStatusCode" = "Неизвестная ошибка со статусом ответа – %CODE%.";
-"unownedServerError" = "Сервер вернул непонятные данные (%METHOD%): '%DATA%'. Статус ответа: %CODE%.";
 "unableToDecodeResponsedData" = "Не удалось расшифровать данные, которые вернул сервер.";
 "unableToGetDecodedParameters" = "Не удалось получить расшифрованные параметры.";
 "failedToGetAccessTokenForCreatedAccount" = "Аккаунт был успешно создан, однако для него не удалось получить токен доступа.";
 "preloadTimeout" = "Не удалось получить ответ от сервера.";
+
+"network.error.dataTask" = "При выполнении запроса произошла ошибка: %ERROR%.";
+"network.error.description" = "Описание ошибки: %ERROR%.";
+"network.error.value" = "Ошибка '%ERROR%'.";
+"error.default.install" = " @INSTL";
+"error.default" = "Ошибка@INSTL при выполнении '@MTD': @LER @ER";
+"error.unknown" = "Ошибка при выполнении '@MTD' со статусом @CD. Сервер вернул непонятные данные: '@DT'.";
+"error.wrongUrl" = "Некорректный адрес запроса.";
+"error.installList" = "Не удалось получить список пользовательских настроек.";
+"error.token" = "Не удалось получить токен доступа.";
+"error.invalidRefreshToken" = "Недействительный токен обновления.";
+
+"error.missedConfig" = "Id клиента приложения Webasyst ID недействителен. Пожалуйста, свяжитесь с разработчиком приложения.";
+"error.urlGeneration" = "Ошибка при генерации адреса запроса.";
+"error.multipartFormDataGeneration" = "Ошибка при конвертации параметров запроса: @DESC.";
+"error.keychainSave" = "Не удалось сохранить полученные ключи доступа.";
 
 // ------------------------------------
 

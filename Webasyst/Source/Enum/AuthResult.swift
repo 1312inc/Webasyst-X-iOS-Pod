@@ -43,5 +43,5 @@ public enum AuthResult: Equatable {
     case request_timeout_limit
     case sent_notification_fail
     case server_error
-    case undefined(error: String)
+    case undefined(error: WebasystError)
 }

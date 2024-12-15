@@ -15,5 +15,5 @@ public enum UserStatus {
     case authorized
     case networkError(String)
     case nonAuthorized
-    case error(message: String)
+    case error(_ error: WebasystError)
 }
