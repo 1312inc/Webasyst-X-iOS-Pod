@@ -9,5 +9,6 @@ import Foundation
 
 enum UserDefaultsKeys: String {
     case firstLaunch
+    case isLoggedIn
     case selectDomainUser
 }

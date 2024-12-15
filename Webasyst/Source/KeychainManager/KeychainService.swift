@@ -21,6 +21,10 @@ final class KeychainManager {
     // MARK: Methods
     
     static func checkRestorationSuccess() -> Bool {
+        let isLoggedIn = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+        
+        guard !isLoggedIn else { return false }
+        
         if let localRefreshTokenData = getKeychainData(from: .refreshToken, type: .local), !localRefreshTokenData.isEmpty {
             return false
         } else {
@@ -50,6 +54,11 @@ final class KeychainManager {
     }
     
     static func save(_ key: KeychainEnum, data: Data) -> OSStatus {
+        let isLoggedIn = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+        if !isLoggedIn, key == .refreshToken && !data.isEmpty {
+            UserDefaults.standard.setValue(true, forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+        }
+        
         let status = saveKeychainData(key, data: data, type: .local)
         _ = saveKeychainData(key, data: data, type: .group)
         
