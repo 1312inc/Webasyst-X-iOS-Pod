@@ -23,14 +23,22 @@ final class KeychainManager {
     static func checkRestorationSuccess() -> Bool {
         let isLoggedIn = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
         
-        guard !isLoggedIn else { return false }
+        guard !isLoggedIn else {
+            clearPastData()
+            
+            return false
+        }
         
         if let localRefreshTokenData = getKeychainData(from: .refreshToken, type: .local), !localRefreshTokenData.isEmpty {
+            clearPastData()
+            
             return false
         } else {
             let transferSuccess = checkTransferKeychainDataSuccess()
             
             if !transferSuccess {
+                clearPastData()
+                
                 if let groupRefreshTokenData = getKeychainData(from: .refreshToken, type: .group) {
                     let status = saveKeychainData(.refreshToken, data: groupRefreshTokenData, type: .local)
                     
@@ -143,14 +151,16 @@ extension KeychainManager {
         }
     }
     
+    static func clearPastData() {
+        if let pastData = getKeychainData(from: .refreshToken, type: .past), !pastData.isEmpty {
+            deleteKeychainData([.past])
+        }
+    }
+    
     static func checkTransferKeychainDataSuccess() -> Bool {
         guard let pastRefreshToken = getKeychainData(from: .refreshToken, type: .past), !pastRefreshToken.isEmpty else {
             return false
         }
-        
-        let groupRefreshToken = getKeychainData(from: .refreshToken, type: .group)
-        
-        guard groupRefreshToken?.isEmpty ?? true else { return false }
         
         let status = saveKeychainData(.refreshToken, data: pastRefreshToken, type: .local)
         
@@ -161,6 +171,8 @@ extension KeychainManager {
                 _ = saveKeychainData(.accessToken, data: pastAccessToken, type: .local)
                 _ = saveKeychainData(.accessToken, data: pastAccessToken, type: .group)
             }
+            
+            deleteKeychainData([.past])
         }
         
         return status == noErr
@@ -172,18 +184,29 @@ extension KeychainManager {
     // MARK: Support
     
     static func generateKeychainQuery(key: KeychainEnum, data: Data? = nil, type: KeychainDataType, forDelete delete: Bool = false) -> [String : Any] {
-        var keychainQuery: [String : Any] =
-        [
-            kSecClass as String         : kSecClassGenericPassword,
-            kSecAttrAccount as String   : key.rawValue
-        ]
+        var keychainQuery: [String : Any]
+        
+        switch type {
+        case .group, .local:
+            keychainQuery =
+            [
+                kSecClass as String         : kSecClassGenericPassword,
+                kSecAttrAccount as String   : "auth_tokens_v2_\(type)"
+            ]
+        case .past:
+            keychainQuery =
+            [
+                kSecClass as String         : kSecClassGenericPassword,
+                kSecAttrAccount as String   : key.rawValue
+            ]
+        }
         
         switch type {
         case .group:
             keychainQuery[kSecAttrAccessGroup as String] = accessGroup
-            keychainQuery[kSecAttrService as String] = "group"
+            keychainQuery[kSecAttrService as String] = key.rawValue
         case .local:
-            keychainQuery[kSecAttrService as String] = "local"
+            keychainQuery[kSecAttrService as String] = key.rawValue
         case .past:
             break
         }
