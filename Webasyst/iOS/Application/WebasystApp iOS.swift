@@ -356,12 +356,17 @@ extension WebasystApp {
         
         KeychainManager.deleteAll()
         
+        let isLoggedIn = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+        
         if let domain = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: domain)
             UserDefaults.standard.synchronize()
         }
         
         UserDefaults.standard.set(true, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+        if isLoggedIn {
+            UserDefaults.standard.setValue(true, forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+        }
         
         NotificationCenter.default.post(name: .webasystDidLoggedOut, object: nil)
     }

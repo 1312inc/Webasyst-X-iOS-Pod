@@ -68,8 +68,6 @@ final class KeychainManager {
     static func getData(from key: KeychainEnum) -> Data? {
         if let localTokenData = getKeychainData(from: key, type: .local) {
             return localTokenData
-        } else if let groupTokenData = getKeychainData(from: key, type: .group) {
-            return groupTokenData
         } else {
             return nil
         }
