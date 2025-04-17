@@ -687,7 +687,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         }
     }
     
-    func createWebasystAccount(bundle: String, plainId: String, accountName: String?, _ completion: @escaping (WebasystResult<(id: String, url: String)>) -> ()) {
+    func createWebasystAccount(bundle: String, plainId: String, accountDomain: String?, accountName: String?, _ completion: @escaping (WebasystResult<(id: String, url: String)>) -> ()) {
         
         let accessToken = KeychainManager.getToken(.accessToken)
         
@@ -699,6 +699,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "bundle": bundle,
             "plan_id": plainId
         ]
+        
+        if let accountDomain = accountDomain {
+            parametersRequest["userdomain"] = accountDomain
+        }
         
         if let accountName = accountName {
             parametersRequest["account_name"] = accountName

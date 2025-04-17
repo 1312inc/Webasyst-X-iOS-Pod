@@ -322,22 +322,10 @@ extension WebasystApp {
     ///    - accountName: Name of the account being created.
     ///    - completion: Contains a result of creating and renaming of new account. Reutrns client id and url of new account if successed.
     func createWebasystAccount(bundle: String = "teamwork", plainId: String = "X-1312-TEAMWORK-FREE", accountDomain: String? = nil, accountName: String? = nil, _ completion: @escaping (AccountCreatingResult) -> ()) {
-        userNetworking.createWebasystAccount(bundle: bundle, plainId: plainId, accountName: accountName) { [weak self] result in
-            guard let self = self else { return }
+        userNetworking.createWebasystAccount(bundle: bundle, plainId: plainId, accountDomain: accountDomain, accountName: accountName) { result in
             switch result {
             case .success(let parameters):
-                if let accountDomain = accountDomain {
-                    userNetworking.renameWebasystAccount(clientId: parameters.id, domain: accountDomain) { result in
-                        switch result {
-                        case .success:
-                            completion(.successfullyCreated(clientId: parameters.id, url: parameters.url))
-                        case .failure(let error):
-                            completion(.successfullyCreatedButNotRenamed(clientId: parameters.id, url: parameters.url, renameError: error))
-                        }
-                    }
-                } else {
-                    completion(.successfullyCreated(clientId: parameters.id, url: parameters.url))
-                }
+                completion(.successfullyCreated(clientId: parameters.id, url: parameters.url))
             case .failure(let error):
                 completion(.notCreated(error: error))
             }
