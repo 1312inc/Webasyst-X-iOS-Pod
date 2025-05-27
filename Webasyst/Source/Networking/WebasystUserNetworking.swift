@@ -13,14 +13,17 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private let webasystNetworkingService = WebasystNetworking()
     private let networkingHelper = NetworkingHelper()
     private let timeoutChecker = WebasystTimeoutChecker()
-    private let config = WebasystApp.config
     private let demoToken = "5f9db4d32d9a586c2daca4b45de23eb8"
-    private lazy var queue = DispatchQueue(label: "\(config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
+    private lazy var queue = DispatchQueue(label: "\(WebasystApp.config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     private let defaultImageUrl = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
     
     func preloadUserData(_ completion: @escaping (WebasystResult<UserStatus>) -> ()) {
         if self.networkingHelper.isConnectedToNetwork {
+            
+            let timeoutChecker = WebasystTimeoutChecker()
+            
             var isCanceled: Bool = false
+            
             timeoutChecker.start { [weak self] in
                 guard let self else { return }
                 
@@ -34,23 +37,34 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 let error = getError(errorType)
                 completion(.failure(error))
             }
+            
             queue.async { [weak self] in
                 guard let self = self, !isCanceled else { return }
+                
                 downloadUserData { [weak self] condition in
                     guard let self = self, !isCanceled else { return }
+                    
                     getInstallList { [weak self] result in
                         guard let self = self, !isCanceled else { return }
+                        
                         switch result {
                         case .success(let installs):
                             let clientIDs = installs.map { $0.id }
+                            
                             getAccessTokenApi(clientId: clientIDs) { [weak self] result in
                                 guard let self = self, !isCanceled else { return }
+                                
                                 UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                                
                                 switch result {
                                 case .success(let accessTokens):
-                                    getAccessTokenInstall(installs, accessCodes: accessTokens) { [weak self] result in
-                                        guard let self = self else { return }
-                                        if isCanceled { return } else { timeoutChecker.stop() }
+                                    getAccessTokenInstall(installs, accessCodes: accessTokens) { result in
+                                        if isCanceled {
+                                            return
+                                        } else {
+                                            timeoutChecker.stop()
+                                        }
+                                        
                                         switch result {
                                         case .success:
                                             if installs.isEmpty || condition {
@@ -60,6 +74,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                                                     completion(.success(.authorizedButNoneInstalls))
                                                 } else if condition && installs.isEmpty {
                                                     completion(.success(.authorizedButNoneInstallsAndProfileIsEmpty))
+                                                } else {
+                                                    completion(.success(.authorized))
                                                 }
                                             } else {
                                                 completion(.success(.authorized))
@@ -100,7 +116,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     internal func restoreTokensFromGroup(_ completion: @escaping (Bool) -> ()) {
-        guard let config = self.config else { return }
+        guard let config = WebasystApp.config else { return }
         
         let accessToken = KeychainManager.getToken(.accessToken)
         

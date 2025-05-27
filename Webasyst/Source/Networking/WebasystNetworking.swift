@@ -11,7 +11,6 @@ public typealias Parameters = [String: String]
 
 internal class WebasystNetworking: WebasystNetworkingManager {
     
-    private var config = WebasystApp.config
     private static var disposablePasswordAuth: String?
     private var queue = DispatchQueue(label: "webAsyst.networking", qos: .background)
     /// Generating a temporary password for user authentication
@@ -28,7 +27,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// - Returns: Returns authorization request
     internal func buildAuthRequest(_ code: String) -> URLRequest? {
         
-        guard let config = self.config else {
+        guard let config = WebasystApp.config else {
             print(NSError(domain: "Webasyst error(method: buildAuthRequest): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             return nil
         }
@@ -63,7 +62,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// - Returns: Status of code sent to the user by email or text message, see AuthResult documentation for a detailed description of statuses
     internal func getAuthCode(_ value: String, type: AuthType, success: @escaping (AuthResult) -> ()) {
         
-        guard let config = self.config else {
+        guard let config = WebasystApp.config else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.missedConfig")
             let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "getAuthCode")
@@ -207,7 +206,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     ///    - completion: success flag and optional error description
     internal func oAuthAppleID(authData: AuthAppleIDData, completion: @escaping (AppleIDResponse) -> ()) {
         
-        guard let config = self.config else {
+        guard let config = WebasystApp.config else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.missedConfig")
             let webasystError = WebasystError(localizedError: loc)
             let errorModel = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "oAuthAppleID")
@@ -323,7 +322,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// - Returns: Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain
     internal func sendConfirmCode(for type: AuthCodeType, _ code: String, success: @escaping (Bool) -> ()) {
         
-        guard let config = self.config else {
+        guard let config = WebasystApp.config else {
             print(NSError(domain: "Webasyst error(method: sendConfirmCode): Webasyst ID app Client Id is invalid. Please contact the app developer.", code: 400, userInfo: nil))
             success(false)
             return
@@ -435,7 +434,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     func getAccessToken(_ authCode: String, stateString: String, completion: @escaping (Bool) -> Void) {
         
         guard let disposablePassword = WebasystNetworking.disposablePasswordAuth else { return }
-        guard let config = self.config else { return }
+        guard let config = WebasystApp.config else { return }
         
         let paramRequest: Parameters = [
             "grant_type": "authorization_code",
@@ -493,7 +492,7 @@ internal class WebasystNetworking: WebasystNetworkingManager {
     /// - Parameter completion: Short-circuiting after work methods
     /// - Returns: Returns the boolean value of token update success
     internal func refreshAccessToken(completion: @escaping (Bool) -> ()) {
-        guard let config = self.config else { return }
+        guard let config = WebasystApp.config else { return }
         
         let refreshToken = KeychainManager.getToken(.refreshToken)
         

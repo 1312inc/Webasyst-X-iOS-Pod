@@ -9,15 +9,13 @@ import Foundation
 
 public class WebasystNetworkingManager {
     
-    private var config = WebasystApp.config
-    
     /// Build URL Webasyst Auth
     /// - Parameters:
     ///   - path: query path excluding domain
     ///   - parameters: Request url parameters
     /// - Returns: optional URL
     public func buildWebasystUrl(_ path: String, parameters: Parameters) -> URL? {
-        if let config = self.config {
+        if let config = WebasystApp.config {
             var urlComponents: URL? {
                 var component = URLComponents()
                 component.scheme = "https"
