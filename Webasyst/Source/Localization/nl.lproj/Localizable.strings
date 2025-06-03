@@ -84,6 +84,7 @@
 // ---------------- Server errors --------------------
 
 "preparedAccountNotExists" = "Oeps, het lijkt erop dat Webasyst Cloud momenteel overbelast is. We konden geen account aanmaken. Probeer het opnieuw binnen 30 minuten.";
+"domainIsInUse" = "Dit domein is bezet, gebruik een andere.";
 "unownedStatusCode" = "Onbekende statuscode ontvangen.";
 "emptyResponsedData" = "Antwoord van de server bevat geen gegevens.";
 "404Error" = "Webasyst-account kon niet worden gevonden voor het opgegeven domein.";

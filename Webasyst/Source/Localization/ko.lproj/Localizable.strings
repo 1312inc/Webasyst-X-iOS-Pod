@@ -84,6 +84,7 @@
 // ---------------- Server errors --------------------
 
 "preparedAccountNotExists" = "죄송합니다. 현재 Webasyst Cloud에 과부하가 걸린 것 같습니다. 계정을 만들 수 없습니다. 30분 후에 다시 시도해 주세요.";
+"domainIsInUse" = "이 도메인이 점유되어 있고 다른 도메인을 사용하십시오.";
 "unownedStatusCode" = "알 수 없는 상태 코드입니다.";
 "emptyResponsedData" = "서버 응답에 데이터가 없습니다.";
 "404Error" = "요청한 도메인에 해당하는 Webasyst 계정을 찾을 수 없습니다.";

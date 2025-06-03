@@ -84,6 +84,7 @@
 // ---------------- Server errors --------------------
 
 "preparedAccountNotExists" = "Oups, il semble que Webasyst Cloud soit surchargé en ce moment. Nous n'avons pas pu créer de compte. Veuillez réessayer dans 30 minutes.";
+"domainIsInUse" = "Ce domaine est occupé, utilisez un autre.";
 "unownedStatusCode" = "Code de statut inconnu.";
 "emptyResponsedData" = "La réponse du serveur ne contient pas de données.";
 "404Error" = "Impossible de trouver un compte Webasyst avec le domaine demandé.";
