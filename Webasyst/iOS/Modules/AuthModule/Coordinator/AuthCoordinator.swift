@@ -24,8 +24,23 @@ public class AuthCoordinator: Coordinator, AuthCoordinatorProtocol {
                                           delegate: self,
                                           with: code)
         authViewController.viewModel = authViewModel
-        authViewController.modalPresentationCapturesStatusBarAppearance = true
-        self.navigationController.present(authViewController, animated: true, completion: nil)
+        
+        let navigationController = UINavigationController(rootViewController: authViewController)
+        
+        navigationController.modalPresentationCapturesStatusBarAppearance = true
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        let closeItem: UIBarButtonItem
+        
+        if #available(iOS 14.0, *) {
+            closeItem = UIBarButtonItem(systemItem: .close, primaryAction: UIAction { [weak self] _ in self?.close() })
+        } else {
+            closeItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(close))
+        }
+        
+        authViewController.navigationItem.setRightBarButton(closeItem, animated: true)
+        
+        self.navigationController.present(navigationController, animated: true, completion: nil)
     }
 }
 
@@ -41,5 +56,13 @@ extension AuthCoordinator: AuthCoordinatorDelegate {
         DispatchQueue.main.async {
             self.action(.error(error))
         }
+    }
+}
+
+@objc private
+extension AuthCoordinator {
+    
+    func close() {
+        navigationController.dismiss(animated: true)
     }
 }
