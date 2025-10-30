@@ -134,7 +134,7 @@
 "QRLogin" = "使用 QR 码登录";
 "QRAdd" = "使用 QR 码登录";
 "aboutWebAsystID" = "什么是Webasyst ID？";
-"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+"webasystURL" = "https://www.webasyst.com/webasyst-id-how-to/";
 
 // MARK: - Phone authorization screen
 
@@ -232,5 +232,5 @@
 "payWallRegulations" = "订阅从您的iTunes帐户扣除并自动续订。取消订阅可在当前周期结束前的至少24小时内在iOS的iTunes帐户设置中进行。订阅费用将在当前周期结束后的24小时内扣除。";
 "termsAndPrivacy" = "数据处理";
 "payWallRestore" = "恢复";
-"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
 "restorePurchases" = "购买已成功恢复！";

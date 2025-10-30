@@ -134,7 +134,7 @@
 "QRLogin" = "Iniciar sesión con código QR";
 "QRAdd" = "Agregar con código QR";
 "aboutWebAsystID" = "¿Qué es Webasyst ID?";
-"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+"webasystURL" = "https://www.webasyst.com/webasyst-id-how-to/";
 
 // MARK: - Phone authorization screen
 
@@ -232,5 +232,5 @@
 "payWallRegulations" = "La suscripción se realiza desde su cuenta de iTunes y se renueva automáticamente. La cancelación de la suscripción se realiza en la configuración principal de iOS en la configuración de la cuenta de iTunes al menos 24 horas antes del final del período actual. El costo de la suscripción se cargará dentro de las 24 horas posteriores al final del período.";
 "termsAndPrivacy" = "Procesamiento de datos";
 "payWallRestore" = "Restaurar";
-"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
 "restorePurchases" = "Compras restauradas con éxito!";

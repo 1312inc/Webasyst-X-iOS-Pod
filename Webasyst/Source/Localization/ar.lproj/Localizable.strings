@@ -136,7 +136,7 @@
 "QRLogin" = "تسجيل الدخول باستخدام رمز الاستجابة السريعة (QR)";
 "QRAdd" = "إضافة باستخدام رمز الاستجابة السريعة (QR)";
 "aboutWebAsystID" = "ما هو هوية Webasyst؟";
-"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+"webasystURL" = "https://www.webasyst.com/webasyst-id-how-to/";
 
 // MARK: - Phone authorization screen
 
@@ -234,6 +234,6 @@
 "payWallRegulations" = "يتم الاشتراك من حساب iTunes الخاص بك ويتم تجديده تلقائيًا. يمكن إلغاء الاشتراك من إعدادات iTunes الرئيسية في حسابك في iOS، وذلك قبل مرور 24 ساعة على انتهاء الفترة الحالية. سيتم خصم تكلفة الاشتراك خلال 24 ساعة من انتهاء الفترة التجريبية.";
 "termsAndPrivacy" = "معالجة البيانات";
 "payWallRestore" = "استعادة";
-"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
 "restorePurchases" = "تم استعادة الشراء بنجاح!";
 

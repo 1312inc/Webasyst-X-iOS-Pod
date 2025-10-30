@@ -134,7 +134,7 @@
 "QRLogin" = "Se connecter via QR Code";
 "QRAdd" = "Ajouter via QR Code";
 "aboutWebAsystID" = "Qu'est-ce que Webasyst ID ?";
-"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+"webasystURL" = "https://www.webasyst.com/webasyst-id-how-to/";
 
 // MARK: - Phone authorization screen
 
@@ -231,5 +231,5 @@
 "payWallRegulations" = "L'abonnement est prélevé depuis votre compte iTunes et est renouvelé automatiquement. L'annulation de l'abonnement peut être effectuée dans les paramètres du compte iTunes d'iOS au moins 24 heures avant la fin de la période en cours. Le coût de l'abonnement sera débité dans les 24 heures suivant la fin de la période d'essai.";
 "termsAndPrivacy" = "Traitement des données";
 "payWallRestore" = "Restaurer";
-"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
 "restorePurchases" = "Achats restaurés avec succès !";

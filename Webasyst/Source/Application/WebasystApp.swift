@@ -44,14 +44,11 @@ public class WebasystApp {
             let xml = FileManager.default.contents(atPath: path),
             let preferences = try? PropertyListDecoder().decode(Preferences.self, from: xml) {
             
-            let scope: String
-            if preferences.scope.contains("webasyst") {
-                scope = preferences.scope
-            } else {
-                scope = "\(preferences.scope).webasyst"
-            }
+            let clientId = preferences.clientId
+            let scope = preferences.scope.contains("webasyst") ? preferences.scope : "\(preferences.scope).webasyst"
+            let host = getLocalizedDomain(preferences.host)
             
-            WebasystApp.config = WebasystConfig(clientId: preferences.clientId, host: preferences.host, scope: scope)
+            WebasystApp.config = WebasystConfig(clientId: clientId, host: host, scope: scope)
         } else {
             print(NSError(domain: "Webasyst error(method: configure): Webasyst configuration error, check if there is a Webasyst.plist file in the root of the project", code: 500, userInfo: nil))
         }
@@ -59,6 +56,31 @@ public class WebasystApp {
         if let deviceID = deviceID {
             UserDefaults.standard.set(deviceID, forKey: "deviceID")
         }
+    }
+    
+    internal func getLocalizedDomain(_ host: String = "") -> String { Self.getLocalizedDomain(host) }
+    
+    internal static func getLocalizedDomain(_ host: String = "") -> String {
+        let host = host.isEmpty ? config?.host ?? "" : host
+            
+        let isRU: Bool = {
+            if #available(iOS 16.0, *), #available(watchOS 9.0, *) {
+                return Locale.current.region?.identifier.uppercased() == "RU"
+            } else {
+                return (Locale.current.regionCode?.uppercased() == "RU")
+            }
+        }()
+        
+        return host == "www.webasyst.com" && isRU ? replaceTLD(host, from: "com", to: "ru") : host
+    }
+    
+    private static func replaceTLD(_ host: String, from: String, to: String) -> String {
+        var labels = host.split(separator: ".").map(String.init)
+        guard labels.count >= 2 else { return host }
+        if labels.last!.lowercased() == from.lowercased() {
+            labels[labels.count - 1] = to
+        }
+        return labels.joined(separator: ".")
     }
     
     /// - Returns: Url for local storage.

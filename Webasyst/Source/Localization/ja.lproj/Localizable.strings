@@ -134,7 +134,7 @@
 "QRLogin" = "QRコードでログイン";
 "QRAdd" = "QRコードで追加";
 "aboutWebAsystID" = "Webasyst IDとは？";
-"webasystURL" = "https://www.webasyst.ru/webasyst-id-how-to/";
+"webasystURL" = "https://www.webasyst.com/webasyst-id-how-to/";
 
 // MARK: - Phone authorization screen
 
@@ -232,6 +232,6 @@
 "payWallRegulations" = "サブスクリプションはiTunesアカウントから請求され、自動更新されます。現在の期間が終了する24時間以上前に、iTunesアカウントの設定でサブスクリプションをキャンセルしない限り、サブスクリプションは自動的に更新されます。";
 "termsAndPrivacy" = "データ処理";
 "payWallRestore" = "復元";
-"privatePrivacy" = "https://www.webasyst.ru/legal/terms/";
+"privatePrivacy" = "https://www.webasyst.com/legal/terms/";
 "restorePurchases" = "購入が正常に復元されました！";
 
