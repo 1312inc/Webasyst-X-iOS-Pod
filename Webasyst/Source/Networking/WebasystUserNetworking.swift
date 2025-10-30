@@ -15,7 +15,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     private let timeoutChecker = WebasystTimeoutChecker()
     private let demoToken = "5f9db4d32d9a586c2daca4b45de23eb8"
     private lazy var queue = DispatchQueue(label: "\(WebasystApp.config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
-    private let defaultImageUrl = "https://www.webasyst.com/wa-content/img/userpic96.jpg"
+    private let defaultImageUrl = "https://\(WebasystApp.getLocalizedDomain())/wa-content/img/userpic96.jpg"
     
     func preloadUserData(_ completion: @escaping (WebasystResult<UserStatus>) -> ()) {
         if self.networkingHelper.isConnectedToNetwork {

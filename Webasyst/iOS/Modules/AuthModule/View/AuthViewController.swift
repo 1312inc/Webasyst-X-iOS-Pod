@@ -44,7 +44,7 @@ class AuthViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let host = navigationAction.request.url?.host {
-            if host.contains("www.webasyst.com") || host.contains("www.google.com") {
+            if host.contains("www.webasyst.com") || host.contains("www.webasyst.ru") || host.contains("www.google.com") {
                 decisionHandler(.allow)
                 return
             }
