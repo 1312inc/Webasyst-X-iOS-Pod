@@ -1,3 +1,5 @@
+import Foundation
+
 //
 //  ServerResponse.swift
 //  Webasyst

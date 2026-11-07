@@ -68,14 +68,12 @@ extension WebasystApp {
     ///    - authData: Authorization data sent by the Apple ID authorization controller.
     ///    - result: Closure with result of authorization.
     func oAuthAppleID(authData: AuthAppleIDData, result: @escaping (_ result: AuthAppleIDResult) -> ()) {
-        networking.oAuthAppleID(authData: authData) { [weak self] status in
-            guard let self = self else { return }
+        networking.oAuthAppleID(authData: authData) { [self] status in
             switch status {
             case .success(let type):
                 switch type {
                 case .succeess:
-                    userNetworking.preloadUserData { [weak self] res in
-                        guard let self = self else { return }
+                    userNetworking.preloadUserData { [self] res in
                         switch res {
                         case .success(let status):
                             UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
@@ -86,32 +84,37 @@ extension WebasystApp {
                         }
                     }
                 case .needEmailConfirmation(accessToken: let accessToken):
-                    let confirmHandler: (AuthAppleIDResult.EmailConfirmation) -> () = { [weak self] confirmation in
-                        guard let self = self else { return }
-                        switch confirmation.result {
-                        case .code(let code):
-                            userNetworking.sendAppleIDEmailConfirmationCode(code, accessToken: accessToken) { [weak self] result in
-                                guard let self = self else { return }
-                                switch result {
-                                case .success:
-                                    userNetworking.preloadUserData { [weak self] res in
-                                        guard let self = self else { return }
-                                        switch res {
-                                        case .success:
-                                            UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
-                                            confirmation.successHandler(true, nil)
-                                        case .failure(let error):
-                                            checkMissingAuthTokenError(error)
-                                            confirmation.successHandler(false, error)
-                                        }
-                                    }
-                                case .failure(let error):
-                                    confirmation.successHandler(false, error)
-                                }
+                    let confirmationGeneration = WebasystAuthSession.shared.generation
+                    let confirmHandler: (AuthAppleIDResult.EmailConfirmation) -> () = { [self] confirmation in
+                        WebasystAuthSession.onMain {
+                            guard WebasystAuthSession.shared.isCurrent(confirmationGeneration) else {
+                                confirmation.successHandler(false,
+                                    WebasystAuthFailure.make(.superseded, generation: confirmationGeneration).error)
+                                return
                             }
-                        case .logout:
-                            logOutUser()
-                            confirmation.successHandler(true, nil)
+                            switch confirmation.result {
+                            case .code(let code):
+                                userNetworking.sendAppleIDEmailConfirmationCode(code, accessToken: accessToken) { [self] result in
+                                    switch result {
+                                    case .success:
+                                        userNetworking.preloadUserData { [self] res in
+                                            switch res {
+                                            case .success:
+                                                UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+                                                confirmation.successHandler(true, nil)
+                                            case .failure(let error):
+                                                checkMissingAuthTokenError(error)
+                                                confirmation.successHandler(false, error)
+                                            }
+                                        }
+                                    case .failure(let error):
+                                        confirmation.successHandler(false, error)
+                                    }
+                                }
+                            case .logout:
+                                logOutUser()
+                                confirmation.successHandler(true, nil)
+                            }
                         }
                     }
                     result(.needEmailConfirmation(authData.userEmail, confirmHandler))
@@ -143,22 +146,15 @@ extension WebasystApp {
     ///   - code: Code received by user by e-mail or text message or qr content.
     ///   - success: Closure performed after the method has been executed. Bool value whether the server has accepted the code, if true then the tokens are saved in the Keychain.
     func sendConfirmCode(for type: AuthCodeType = .phone, _ code: String, success: @escaping (Bool) -> ()) {
-        networking.sendConfirmCode(for: type, code) { [weak self] result in
-            guard let self = self else { return }
-            if result {
-                userNetworking.preloadUserData { [weak self] result in
-                    guard let self = self else { return }
-                    switch result {
-                    case .success:
-                        UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
-                        success(true)
-                    case .failure(let error):
-                        checkMissingAuthTokenError(error)
-                        success(false)
-                    }
+        networking.sendConfirmCode(for: type, code) { result in
+            guard result else { success(false); return }
+            self.userNetworking.preloadUserData { result in
+                switch result {
+                case .success:
+                    UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+                    success(true)
+                case .failure: success(false)
                 }
-            } else {
-                success(false)
             }
         }
     }
@@ -166,83 +162,71 @@ extension WebasystApp {
     /// User authentication check on Webasyst server
     /// - Parameter completion: The closure performed after the check returns a Bool value of whether the user is authorized or not.
     func defaultChecking(completion: @escaping (CheckingType) -> ()) {
-        let restorationSuccess = KeychainManager.checkRestorationSuccess()
-        
-        if restorationSuccess {
-            userNetworking.restoreTokensFromGroup { [weak self] success in
-                guard let self else { return }
-                
-                if success {
-                    userNetworking.preloadUserData { [weak self] result in
-                        guard let self else { return }
-                        
+        WebasystAuthSession.onMain {
+            let auth = WebasystAuthSession.shared
+            let stamp = auth.generation
+            let defaults = UserDefaults.standard
+            let firstLaunch = defaults.object(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool
+            let knownLogin = defaults.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue) || firstLaunch == false
+            switch KeychainManager.prepareRestoration() {
+            case .failure:
+                completion(knownLogin && firstLaunch != true ? .authorized : .notAuthorized)
+                return
+            case .success(true):
+                self.userNetworking.restoreTokensFromGroup { success in
+                    guard success else { completion(.notRestoredAuthorizaton); return }
+                    self.userNetworking.preloadUserData { result in
                         switch result {
                         case .success:
-                            UserDefaults.standard.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+                            defaults.setValue(false, forKey: UserDefaultsKeys.firstLaunch.rawValue)
                             completion(.restoredAuthorization)
-                        case .failure:
-                            completion(.notRestoredAuthorizaton)
-                            logOutUser()
+                        case .failure: completion(.notRestoredAuthorizaton)
                         }
                     }
-                } else {
-                    completion(.notRestoredAuthorizaton)
-                    logOutUser()
                 }
+                return
+            case .success(false): break
             }
-        } else {
-            if let condition = UserDefaults.standard.value(forKey: UserDefaultsKeys.firstLaunch.rawValue) as? Bool {
-                let domain = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectDomainUser.rawValue)
-                
-                let installs = getAllUserInstall()
-                
-                if installs != nil, installs != [], domain == nil {
-                    completion(.notAuthorized)
-                    logOutUser()
-                }
-                
-                if !KeychainManager.getToken(.accessToken).isEmpty {
-                    if condition {
-                        completion(.notAuthorized)
-                        logOutUser()
-                    } else {
-                        completion(.authorized)
-                    }
-                } else {
-                    completion(.notAuthorized)
-                    logOutUser()
-                }
-            } else {
-                completion(.notAuthorized)
-                logOutUser()
+            guard firstLaunch != true else { completion(.notAuthorized); return }
+            let access = KeychainManager.readToken(.accessToken)
+            let refresh = KeychainManager.readToken(.refreshToken)
+            if case .failure = access {
+                completion(knownLogin ? .authorized : .notAuthorized)
+                return
             }
-            
-            networking.refreshAccessToken { [weak self] success in
-                guard let self else { return }
-                
-                if success {
-                    userNetworking.preloadUserData { [weak self] result in
-                        guard let self else { return }
-                        
-                        if case .failure(let error) = result {
-                            checkMissingAuthTokenError(error)
-                        }
-                    }
-                } else {
-                    logOutUser()
+            if case .failure = refresh {
+                completion(knownLogin ? .authorized : .notAuthorized)
+                return
+            }
+            let hasAccess: Bool
+            let hasRefresh: Bool
+            if case .success(let token) = access { hasAccess = !(token ?? "").isEmpty } else { hasAccess = false }
+            if case .success(let token) = refresh { hasRefresh = !(token ?? "").isEmpty } else { hasRefresh = false }
+            guard hasAccess || hasRefresh else { completion(.notAuthorized); return }
+            // Preserve the immediate cached-start contract of existing applications.
+            completion(.authorized)
+            guard hasRefresh, auth.isCurrent(stamp) else { return }
+            self.networking.refreshAccessTokenResult { result in
+                switch result {
+                case .success:
+                    guard auth.isCurrent(stamp) else { return }
+                    self.userNetworking.preloadUserData { _ in }
+                case .failure(let failure): self.handleRefreshFailure(failure)
                 }
             }
         }
     }
     
     /// Force update WAID access token
-    /// - Parameter completion: The result of updating the access token. If the update failed, the user will log out.
+    /// - Parameter completion: Whether the token was refreshed. Temporary failures retain the session.
+    /// Only a confirmed rejection of the current refresh credential signs the user out.
     func refreshAccessToken(_ completion: @escaping (Bool) -> ()) {
-        networking.refreshAccessToken { [weak self] success in
-            guard let self = self else { return }
-            completion(success)
-            if !success {
-                logOutUser()
+        networking.refreshAccessTokenResult { result in
+            switch result {
+            case .success: completion(true)
+            case .failure(let failure):
+                self.handleRefreshFailure(failure)
+                completion(false)
             }
         }
     }
@@ -250,26 +234,13 @@ extension WebasystApp {
     /// User authentication check on Webasyst server
     /// - Parameter completion: Updating the user token, and checking authorization. Returns user status in the application.
     func checkUserAuth(completion: @escaping (WebasystResult<UserStatus>) -> ()) {
-        networking.refreshAccessToken { [weak self] result in
-            guard let self = self else { return }
-            if result {
-                userNetworking.preloadUserData { [weak self] result in
-                    guard let self = self else { return }
-                    if case .failure(let error) = result {
-                        checkMissingAuthTokenError(error)
-                    }
-                    completion(result)
-                }
-            } else {
-                logOutUser()
-                
-                let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.invalidRefreshToken", comment: "Invalid refresh token")
-                
-                let webasystError = WebasystError(localizedError: loc)
-                
-                let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "checkUserAuth")
-                let error = WebasystError.getError(errorType)
-                completion(.failure(error))
+        networking.refreshAccessTokenResult { result in
+            switch result {
+            case .success:
+                self.userNetworking.preloadUserData(completion)
+            case .failure(let failure):
+                self.handleRefreshFailure(failure)
+                completion(.failure(failure.error))
             }
         }
     }
@@ -337,26 +308,7 @@ extension WebasystApp {
     /// After logging out NotificationCenter posts a message Notification.Name.webasystDidLoggedOut.
     /// - Parameter completion: Boolean value of deauthorization success.
     func logOutUser() {
-        userNetworking.singUpUser { _ in }
-        
-        profileInstallService?.resetInstallList()
-        profileInstallService?.deleteProfileData()
-        
-        KeychainManager.deleteAll()
-        
-        let isLoggedIn = UserDefaults.standard.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
-        
-        if let domain = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: domain)
-            UserDefaults.standard.synchronize()
-        }
-        
-        UserDefaults.standard.set(true, forKey: UserDefaultsKeys.firstLaunch.rawValue)
-        if isLoggedIn {
-            UserDefaults.standard.setValue(true, forKey: UserDefaultsKeys.isLoggedIn.rawValue)
-        }
-        
-        NotificationCenter.default.post(name: .webasystDidLoggedOut, object: nil)
+        performLogout(manual: true)
     }
 }
 
@@ -364,9 +316,30 @@ private
 extension WebasystApp {
     
     func checkMissingAuthTokenError(_ error: WebasystError) {
-        let missingTokenLoc = WebasystApp.getDefaultLocalizedString(withKey: "missingAuthToken", comment: "The authentication token is missing.")
-        if error.localizedError.contains(missingTokenLoc) {
-            logOutUser()
+        // An access-token failure is not evidence that the refresh credential has been revoked.
+        guard error.statusCode == 401 else { return }
+        let failure = WebasystAuthFailure(kind: .server, error: error,
+            generation: WebasystAuthSession.shared.generation)
+        WebasystAuthDiagnostics.record("protectedRequest", outcome: "unauthorized", failure: failure)
+    }
+
+    func handleRefreshFailure(_ failure: WebasystAuthFailure) {
+        guard failure.kind == .rejected else { return }
+        performLogout(manual: false, expected: failure.generation)
+    }
+
+    func performLogout(manual: Bool, expected: UInt64? = nil) {
+        WebasystAuthSession.shared.invalidate(expected: expected) {
+            if manual { self.userNetworking.singUpUser { _ in } }
+            self.profileInstallService?.resetInstallList()
+            self.profileInstallService?.deleteProfileData()
+            let defaults = UserDefaults.standard
+            let wasLoggedIn = defaults.bool(forKey: UserDefaultsKeys.isLoggedIn.rawValue)
+            if let domain = Bundle.main.bundleIdentifier { defaults.removePersistentDomain(forName: domain) }
+            defaults.set(true, forKey: UserDefaultsKeys.firstLaunch.rawValue)
+            if wasLoggedIn { defaults.set(true, forKey: UserDefaultsKeys.isLoggedIn.rawValue) }
+            if manual { KeychainManager.deleteAll() } else { KeychainManager.deleteLocal() }
+            NotificationCenter.default.post(name: .webasystDidLoggedOut, object: nil)
         }
     }
 }

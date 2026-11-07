@@ -8,6 +8,7 @@
 import Foundation
 
 public class WebasystNetworkingManager {
+    internal static var session = URLSession.shared
     
     /// Build URL Webasyst Auth
     /// - Parameters:
@@ -30,7 +31,7 @@ public class WebasystNetworkingManager {
                 }
                 return component.url
             }
-            return urlComponents!.absoluteURL
+            return urlComponents?.absoluteURL
         }
         return nil
     }
@@ -42,7 +43,7 @@ public class WebasystNetworkingManager {
     ///   - url: Url image
     ///   - completion: Short-circuiting after an image has been loaded
     private func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+        Self.session.dataTask(with: url, completionHandler: completion).resume()
     }
     
     /// The method of loading an image
@@ -51,42 +52,55 @@ public class WebasystNetworkingManager {
     ///   - completion: Closing performed after loading the image
     /// - Returns: Data format image
     internal func downloadImage(_ imagePath: String, completion: @escaping (Data) -> ()) {
-        getData(from: URL(string: imagePath)!) { data, response, error in
-            guard let data = data, error == nil else { return }
+        guard let url = URL(string: imagePath), url.scheme == "https" || url.scheme == "http" else {
+            completion(Data())
+            return
+        }
+        let generation = WebasystAuthSession.shared.generation
+        getData(from: url) { data, response, error in
             DispatchQueue.main.async() {
-                completion(data)
+                guard WebasystAuthSession.shared.isCurrent(generation) else { completion(Data()); return }
+                completion(error == nil ? data ?? Data() : Data())
             }
         }
     }
     
-    internal func createDataTaskSession(_ request: URLRequest, _ completion: @escaping (WebasystResult<ServerResponse>) -> ()) {
-        URLSession.shared.dataTask(with: request) { data, response, error in
+    internal func createDataTaskSession(_ request: URLRequest, generation: UInt64,
+                                       _ completion: @escaping (WebasystResult<ServerResponse>) -> ()) {
+        let deliver: (WebasystResult<ServerResponse>) -> Void = { result in
+            DispatchQueue.main.async {
+                guard WebasystAuthSession.shared.isCurrent(generation) else {
+                    completion(.failure(WebasystAuthFailure.make(.superseded, generation: generation).error))
+                    return
+                }
+                completion(result)
+            }
+        }
+        Self.session.dataTask(with: request) { data, response, error in
+            if let error = error as NSError? {
+                let status = (response as? HTTPURLResponse)?.statusCode
+                let failure = WebasystAuthFailure.make(.transport, generation: generation, status: status,
+                    code: error.code, domain: error.domain)
+                WebasystAuthDiagnostics.record("request", outcome: "failed", failure: failure)
+                deliver(.failure(failure.error))
+                return
+            }
             guard let response = response as? HTTPURLResponse else {
                 let localizedError = WebasystApp.getDefaultLocalizedString(withKey: "unownedStatusCode", comment: "Unowned server response status code")
                 let error = WebasystError(localizedError: localizedError)
                 
-                completion(.failure(error))
+                deliver(.failure(error))
                 
                 return
             }
             
             let statusCode = response.statusCode
             
-            if let error = error {
-                let localizedErrorString = WebasystApp.getDefaultLocalizedString(withKey: "network.error.dataTask")
-                let localizedError = localizedErrorString.replacingOccurrences(of: "%ERROR%", with: error.localizedDescription)
-                let error = WebasystError(localizedError: localizedError, statusCode: statusCode)
-                
-                completion(.failure(error))
-                
-                return
-            }
-            
             guard let data = data else {
                 let localizedError = WebasystApp.getDefaultLocalizedString(withKey: "emptyResponsedData", comment: "Empty responsed data")
                 let error = WebasystError(localizedError: localizedError, statusCode: statusCode)
                 
-                completion(.failure(error))
+                deliver(.failure(error))
                 
                 return
             }
@@ -94,7 +108,7 @@ public class WebasystNetworkingManager {
             switch statusCode {
             case 200...299:
                 let serverResponse = ServerResponse(data: data, response: response, statusCode: response.statusCode)
-                completion(.success(serverResponse))
+                deliver(.success(serverResponse))
             case 400...504:
                 do {
                     let errorModel = try JSONDecoder().decode(ErrorModel.self, from: data)
@@ -104,31 +118,31 @@ public class WebasystNetworkingManager {
                         let localizedError = WebasystApp.getDefaultLocalizedString(withKey: "missingAuthToken", comment: "The authentication token is missing.")
                         let error = WebasystError(localizedError: localizedError, statusCode: statusCode, errorValue: errorModel.error)
                         
-                        completion(.failure(error))
+                        deliver(.failure(error))
                     case 404:
                         let localizedError = WebasystApp.getDefaultLocalizedString(withKey: "404Error", comment: "Server send 404 error")
                         let error = WebasystError(localizedError: localizedError, statusCode: statusCode, errorValue: errorModel.error)
                         
-                        completion(.failure(error))
+                        deliver(.failure(error))
                     default:
                         if let error = errorModel.errorDescription, !error.isEmpty {
                             let localizedErrorString = WebasystApp.getDefaultLocalizedString(withKey: "network.error.description")
                             let localizedError = localizedErrorString.replacingOccurrences(of: "%ERROR%", with: error)
                             let error = WebasystError(localizedError: localizedError, statusCode: statusCode, errorValue: errorModel.error)
                             
-                            completion(.failure(error))
+                            deliver(.failure(error))
                         } else if let error = errorModel.error, !error.isEmpty {
                             let localizedErrorString = WebasystApp.getDefaultLocalizedString(withKey: "network.error.value")
                             let localizedError = localizedErrorString.replacingOccurrences(of: "%ERROR%", with: error)
                             let error = WebasystError(localizedError: localizedError, statusCode: statusCode, errorValue: error)
                             
-                            completion(.failure(error))
+                            deliver(.failure(error))
                         } else {
                             let localizedErrorString = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
                             let localizedError = localizedErrorString.replacingOccurrences(of: "%CODE%", with: statusCode.description)
                             let error = WebasystError(localizedError: localizedError, statusCode: statusCode, errorValue: errorModel.error)
                             
-                            completion(.failure(error))
+                            deliver(.failure(error))
                         }
                     }
                 } catch let error {
@@ -136,14 +150,14 @@ public class WebasystNetworkingManager {
                     let localizedError = localizedErrorString.replacingOccurrences(of: "%CODE%", with: statusCode.description) + " " + error.localizedDescription
                     let error = WebasystError(localizedError: localizedError, statusCode: statusCode)
                     
-                    completion(.failure(error))
+                    deliver(.failure(error))
                 }
             default:
                 let localizedErrorString = WebasystApp.getDefaultLocalizedString(withKey: "unownedErrorWithStatusCode", comment: "Unowned error with response status code")
                 let localizedError = localizedErrorString.replacingOccurrences(of: "%CODE%", with: statusCode.description)
                 let error = WebasystError(localizedError: localizedError, statusCode: statusCode)
                 
-                completion(.failure(error))
+                deliver(.failure(error))
             }
         }
         .resume()

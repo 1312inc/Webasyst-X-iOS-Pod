@@ -25,7 +25,7 @@ extension URLRequest {
             }
             return "multipart/form-data; charset=\(charset); boundary=\(boundary)"
         }()
-        addValue(contentType, forHTTPHeaderField: "Content-Type")
+        setValue(contentType, forHTTPHeaderField: "Content-Type")
 
         httpBody = try {
             var body = Data()

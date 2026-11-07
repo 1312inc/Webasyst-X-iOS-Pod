@@ -22,11 +22,12 @@ final class AuthViewModel: AuthViewModelProtocol {
     }
     
     func successAuth(code: String, state: String) {
-        networkingService.getAccessToken(code, stateString: state) { success in
+        networkingService.getAccessTokenResult(code, stateString: state) { result in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 
-                if success {
+                switch result {
+                case .success:
                     webasystNetworking.preloadUserData { [weak self] result in
                         guard let self else { return }
                         
@@ -41,12 +42,8 @@ final class AuthViewModel: AuthViewModelProtocol {
                             delegate?.errorAuth(error)
                         }
                     }
-                } else {
-                    let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.token")
-                    
-                    let webasystError = WebasystError(localizedError: loc)
-                    
-                    let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "successAuth")
+                case .failure(let failure):
+                    let errorType = ErrorTypeModel(error: failure.error, type: .standart(), methodName: "successAuth")
                     let error = WebasystError.getError(errorType)
                     
                     delegate?.errorAuth(error)

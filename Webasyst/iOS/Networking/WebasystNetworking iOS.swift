@@ -10,6 +10,6 @@ import UIKit
 extension WebasystNetworking {
     
     func getDeviceId() -> String {
-        UIDevice.current.identifierForVendor!.uuidString
+        UIDevice.current.identifierForVendor?.uuidString ?? ""
     }
 }

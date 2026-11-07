@@ -1,3 +1,5 @@
+import Foundation
+
 /**
  Open class for working with Webasyst
   
@@ -22,7 +24,8 @@ public class WebasystApp {
     
     // MARK: Parameters
     
-    static private(set) var config: WebasystConfig?
+    private static var configuration: WebasystConfig?
+    internal static var config: WebasystConfig? { WebasystAuthSession.onMain { configuration } }
     
     let profileInstallService = WebasystDataModel()
     let networking = WebasystNetworking()
@@ -48,7 +51,7 @@ public class WebasystApp {
             let scope = preferences.scope.contains("webasyst") ? preferences.scope : "\(preferences.scope).webasyst"
             let host = getLocalizedDomain(preferences.host)
             
-            WebasystApp.config = WebasystConfig(clientId: clientId, host: host, scope: scope)
+            Self.setConfiguration(WebasystConfig(clientId: clientId, host: host, scope: scope))
         } else {
             print(NSError(domain: "Webasyst error(method: configure): Webasyst configuration error, check if there is a Webasyst.plist file in the root of the project", code: 500, userInfo: nil))
         }
@@ -58,6 +61,14 @@ public class WebasystApp {
         }
     }
     
+    internal static func setConfiguration(_ value: WebasystConfig?) {
+        WebasystAuthSession.onMain {
+            let changed = configuration?.clientId != value?.clientId || configuration?.host != value?.host
+            configuration = value
+            if changed { WebasystAuthSession.shared.beginAuthorization(preservePending: false) }
+        }
+    }
+
     internal func getLocalizedDomain(_ host: String = "") -> String { Self.getLocalizedDomain(host) }
     
     internal static func getLocalizedDomain(_ host: String = "") -> String {

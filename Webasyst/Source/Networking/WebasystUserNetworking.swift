@@ -11,230 +11,117 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     private let profileInstallService = WebasystDataModel()
     private let webasystNetworkingService = WebasystNetworking()
-    private let networkingHelper = NetworkingHelper()
-    private let timeoutChecker = WebasystTimeoutChecker()
     private let demoToken = "5f9db4d32d9a586c2daca4b45de23eb8"
     private lazy var queue = DispatchQueue(label: "\(WebasystApp.config?.bundleId ?? "com.webasyst.x").WebasystUserNetworkingService", qos: .userInitiated)
     private let defaultImageUrl = "https://\(WebasystApp.getLocalizedDomain())/wa-content/img/userpic96.jpg"
     
     func preloadUserData(_ completion: @escaping (WebasystResult<UserStatus>) -> ()) {
-        if self.networkingHelper.isConnectedToNetwork {
-            
-            let timeoutChecker = WebasystTimeoutChecker()
-            
-            var isCanceled: Bool = false
-            
-            timeoutChecker.start { [weak self] in
-                guard let self else { return }
-                
-                isCanceled = true
-                
-                let loc = WebasystApp.getDefaultLocalizedString(withKey: "preloadTimeout", comment: "Timeout for receiving a response from the server")
-                
-                let webasystError = WebasystError(localizedError: loc)
-                
-                let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "preloadUserData")
-                let error = getError(errorType)
-                completion(.failure(error))
+        WebasystAuthSession.onMain {
+            let generation = WebasystAuthSession.shared.generation
+            let gate = WebasystCompletion(completion)
+            let timeout = DispatchWorkItem {
+                let key = WebasystApp.getDefaultLocalizedString(withKey: "preloadTimeout")
+                gate.call(.failure(WebasystError(localizedError: key,
+                    underlyingErrorDomain: NSURLErrorDomain, underlyingErrorCode: NSURLErrorTimedOut)))
             }
-            
-            queue.async { [weak self] in
-                guard let self = self, !isCanceled else { return }
-                
-                downloadUserData { [weak self] condition in
-                    guard let self = self, !isCanceled else { return }
-                    
-                    getInstallList { [weak self] result in
-                        guard let self = self, !isCanceled else { return }
-                        
-                        switch result {
-                        case .success(let installs):
-                            let clientIDs = installs.map { $0.id }
-                            
-                            getAccessTokenApi(clientId: clientIDs) { [weak self] result in
-                                guard let self = self, !isCanceled else { return }
-                                
-                                UserDefaults.standard.setValue(false, forKey: "firstLaunch")
-                                
-                                switch result {
-                                case .success(let accessTokens):
-                                    getAccessTokenInstall(installs, accessCodes: accessTokens) { result in
-                                        if isCanceled {
-                                            return
-                                        } else {
-                                            timeoutChecker.stop()
-                                        }
-                                        
-                                        switch result {
-                                        case .success:
-                                            if installs.isEmpty || condition {
-                                                if condition && !installs.isEmpty {
-                                                    completion(.success(.authorizedButProfileIsEmpty))
-                                                } else if !condition && installs.isEmpty {
-                                                    completion(.success(.authorizedButNoneInstalls))
-                                                } else if condition && installs.isEmpty {
-                                                    completion(.success(.authorizedButNoneInstallsAndProfileIsEmpty))
-                                                } else {
-                                                    completion(.success(.authorized))
-                                                }
-                                            } else {
-                                                completion(.success(.authorized))
-                                            }
-                                        case .failure:
-                                            if condition {
-                                                completion(.success(.authorizedButNoneInstallsAndProfileIsEmpty))
-                                            } else {
-                                                completion(.success(.authorizedButNoneInstalls))
-                                            }
-                                        }
-                                    }
-                                case .failure:
-                                    timeoutChecker.stop()
-                                    if condition {
-                                        completion(.success(.authorizedButNoneInstallsAndProfileIsEmpty))
-                                    } else {
-                                        completion(.success(.authorizedButNoneInstalls))
+            let complete: (WebasystResult<UserStatus>) -> Void = { result in
+                timeout.cancel()
+                gate.call(result)
+            }
+            let current: () -> Bool = {
+                guard !gate.isCompleted else { return false }
+                guard WebasystAuthSession.shared.isCurrent(generation) else {
+                    complete(.failure(WebasystAuthFailure.make(.superseded, generation: generation).error))
+                    return false
+                }
+                return true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 15, execute: timeout)
+            self.downloadUserData { profileIsEmpty in
+                guard current() else { return }
+                self.getInstallList { result in
+                    guard current() else { return }
+                    switch result {
+                    case .failure(let error): complete(.failure(error))
+                    case .success(let installs):
+                        let noInstalls: UserStatus = profileIsEmpty ? .authorizedButNoneInstallsAndProfileIsEmpty : .authorizedButNoneInstalls
+                        guard !installs.isEmpty else { complete(.success(noInstalls)); return }
+                        self.getAccessTokenApi(clientId: installs.map { $0.id }) { codes in
+                            guard current() else { return }
+                            switch codes {
+                            case .failure: complete(.success(noInstalls))
+                            case .success(let codes):
+                                self.getAccessTokenInstall(installs, accessCodes: codes) { saved in
+                                    guard current() else { return }
+                                    switch saved {
+                                    case .failure: complete(.success(noInstalls))
+                                    case .success:
+                                        UserDefaults.standard.setValue(false, forKey: "firstLaunch")
+                                        complete(.success(profileIsEmpty ? .authorizedButProfileIsEmpty : .authorized))
                                     }
                                 }
                             }
-                        case .failure(let error):
-                            timeoutChecker.stop()
-                            completion(.failure(error))
                         }
                     }
                 }
             }
-        } else {
-            let loc = WebasystApp.getDefaultLocalizedString(withKey: "connectionAlertMessage")
-            
-            let webasystError = WebasystError(localizedError: loc)
-            
-            let errorType = ErrorTypeModel(error: webasystError, type: .standart(), methodName: "preloadUserData")
-            let error = getError(errorType)
-            completion(.failure(error))
         }
     }
     
     internal func restoreTokensFromGroup(_ completion: @escaping (Bool) -> ()) {
-        guard let config = WebasystApp.config else { return }
-        
-        let accessToken = KeychainManager.getToken(.accessToken)
-        
-        let headers: Parameters = [
-            "Authorization": accessToken
-        ]
-        
-        let paramsRequest: Parameters = [
-            "client_id": config.clientId
-        ]
-        
-        guard let url = buildWebasystUrl("/id/api/v1/auth/cross-app/", parameters: [:]) else { return }
-        
+        let auth = WebasystAuthSession.shared
+        let generation = auth.beginAuthorization()
+        guard let config = WebasystApp.config,
+              let url = buildWebasystUrl("/id/api/v1/auth/cross-app/", parameters: [:]),
+              case .success(let token?) = KeychainManager.readToken(.accessToken, scope: .group),
+              !token.isEmpty else { completion(false); return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
-        for (key, value) in headers {
-            request.addValue(value, forHTTPHeaderField: key)
-        }
-        
-        if let encodedData = try? JSONSerialization.data(withJSONObject: paramsRequest, options: .fragmentsAllowed) {
-            request.httpBody = encodedData
-        }
-        
-        queue.async {
-            URLSession.shared.dataTask(with: request) { (data, response, error) in
-                if let httpResponse = response as? HTTPURLResponse {
-                    switch httpResponse.statusCode {
-                    case 200...299:
-                        if let data = data {
-                            do {
-                                let authData = try JSONDecoder().decode(UserToken.self, from: data)
-                                
-                                let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
-                                let refreshTokenData = Data(authData.refresh_token.utf8)
-                                
-                                let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
-                                let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
-                                
-                                if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
-                                    completion(true)
-                                }
-                            } catch {
-                                completion(false)
-                                print(NSError(domain: "Webasyst error: decode error (restoreTokensFromGroup) \n\(error).", code: 400, userInfo: nil))
-                            }
-                        }
-                    default:
-                        completion(false)
-                    }
-                }
-            }.resume()
+        request.setValue(token, forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        do { request.httpBody = try JSONSerialization.data(withJSONObject: ["client_id": config.clientId]) }
+        catch { completion(false); return }
+        auth.requestTokens(request, generation: generation, operation: "crossApp") { result in
+            switch result {
+            case .success(let tokens):
+                if case .success = auth.accept(tokens, generation: generation) { completion(true) }
+                else { completion(false) }
+            case .failure: completion(false)
+            }
         }
     }
     
     // MARK: - Send Apple ID email confirmation code
     internal func sendAppleIDEmailConfirmationCode(_ code: String, accessToken: Data, _ completion: @escaping (WebasystResult<Bool>) -> ()) {
-        
-        let accessTokenString = String(decoding: accessToken, as: UTF8.self)
-        
-        let headers: Parameters = [
-            "Authorization": accessTokenString
-        ]
-        
-        let parametersRequest: Parameters = [
-            "code": code
-        ]
-        
-        guard let url = buildWebasystUrl("/id/api/v1/apple/confirm/", parameters: [:]) else { return }
+        let auth = WebasystAuthSession.shared
+        let generation = auth.generation
+        guard let url = buildWebasystUrl("/id/api/v1/apple/confirm/", parameters: [:]) else {
+            completion(.failure(WebasystAuthFailure.make(.configuration, generation: generation).error))
+            return
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
-        for (key, value) in headers {
-            request.addValue(value, forHTTPHeaderField: key)
-        }
-        
-        if let encodedData = try? JSONSerialization.data(withJSONObject: parametersRequest,
-                                                         options: .fragmentsAllowed) {
-            request.httpBody = encodedData
-        }
-        
-        createDataTaskSession(request) { [weak self] result in
-            guard let self = self else { return }
-            
+        request.setValue(String(decoding: accessToken, as: UTF8.self), forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        do { request.httpBody = try JSONSerialization.data(withJSONObject: ["code": code]) }
+        catch { completion(.failure(WebasystAuthFailure.make(.configuration, generation: generation).error)); return }
+        auth.requestTokens(request, generation: generation, operation: "appleEmail") { result in
             switch result {
-            case .success(let response):
-                let statusCode = response.statusCode
-                
-                do {
-                    let authData = try JSONDecoder().decode(UserToken.self, from: response.data)
-                    
-                    let accessTokenData = Data("Bearer \(authData.access_token)".utf8)
-                    let refreshTokenData = Data(authData.refresh_token.utf8)
-                    
-                    let accessTokenSuccess = KeychainManager.save(.accessToken, data: accessTokenData)
-                    let refreshTokenSuccess = KeychainManager.save(.refreshToken, data: refreshTokenData)
-                    
-                    if accessTokenSuccess == 0 && refreshTokenSuccess == 0 {
-                        completion(.success(true))
-                    }
-                } catch let error {
-                    let loc = "\(error)"
-                    let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
-                    let errorType = ErrorTypeModel(error: webasystError, type: .decodingData, methodName: "sendAppleIDEmailConfirmationCode")
-                    let error = getError(errorType)
-                    completion(.failure(error))
+            case .success(let tokens):
+                switch auth.accept(tokens, generation: generation) {
+                case .success: completion(.success(true))
+                case .failure(let failure): completion(.failure(failure.error))
                 }
-            case .failure(let error):
-                let errorType = ErrorTypeModel(error: error, type: .standart(), methodName: "sendAppleIDEmailConfirmationCode")
-                let error = getError(errorType)
-                completion(.failure(error))
+            case .failure(let failure): completion(.failure(failure.error))
             }
         }
     }
     
     //MARK: Download user data
     internal func downloadUserData(_ completion: @escaping (Bool) -> Void) {
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let headers: Parameters = [
             "Authorization": accessToken
@@ -248,7 +135,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -261,7 +148,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     completion(condition)
                     WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
                         guard let self = self else { return }
-                        profileInstallService?.saveProfileData(userData, avatar: data)
+                        WebasystAuthSession.shared.ifCurrent(generation) {
+                            self.profileInstallService?.saveProfileData(userData, avatar: data)
+                        }
                     }
                 } catch let error {
                     let loc = "\(error)"
@@ -281,7 +170,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     public func changeUserData(_ profile: ProfileData,_ completion: @escaping (WebasystResult<ProfileData>) -> Void) {
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         var parameters: Dictionary<String,Any> = [
             "firstname": profile.firstname,
@@ -311,13 +202,17 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
                 if let userData = try? JSONDecoder().decode(UserData.self, from: response.data) {
                     WebasystNetworkingManager().downloadImage(userData.userpic_original_crop) { [weak self] data in
                         guard let self = self else { return }
+                        guard WebasystAuthSession.shared.isCurrent(generation) else {
+                            completion(.failure(WebasystAuthFailure.make(.superseded, generation: generation).error))
+                            return
+                        }
                         profileInstallService?.saveProfileData(userData, avatar: data)
                         completion(.success(profile))
                     }
@@ -335,7 +230,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     public func deleteUserAvatar(_ completion: @escaping (WebasystResult<Bool>) -> ()) {
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let headers: Parameters = [
             "Authorization": accessToken
@@ -348,7 +245,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -356,6 +253,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                 case 204:
                     WebasystNetworkingManager().downloadImage(defaultImageUrl) { [weak self] data in
                         guard let self = self else { return }
+                        guard WebasystAuthSession.shared.isCurrent(generation) else {
+                            completion(.failure(WebasystAuthFailure.make(.superseded, generation: generation).error))
+                            return
+                        }
                         profileInstallService?.saveNewAvatar(data)
                         completion(.success(true))
                     }
@@ -373,7 +274,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     public func updateUserAvatar(_ image: UIImage, _ completion: @escaping (WebasystResult<Bool>) -> ()) {
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/userpic", parameters: [:]) else { return }
         var request = URLRequest(url: url)
@@ -392,7 +295,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -402,6 +305,10 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                        let original_image = json["userpic_original_crop"] as? String {
                         WebasystNetworkingManager().downloadImage(original_image) { [weak self] data in
                             guard let self = self else { return }
+                            guard WebasystAuthSession.shared.isCurrent(generation) else {
+                                completion(.failure(WebasystAuthFailure.make(.superseded, generation: generation).error))
+                                return
+                            }
                             profileInstallService?.saveNewAvatar(data)
                             completion(.success(true))
                         }
@@ -426,7 +333,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     //MARK: Get installation's list user
     public func getInstallList(_ completion: @escaping (WebasystResult<[UserInstallCodable]>) -> ()) {
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let headers: Parameters = [
             "Authorization": accessToken
@@ -450,7 +359,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -463,8 +372,8 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                     if let install = installList.first?.id, activeInstall.isEmpty || !installList.contains(where: { $0.id == activeInstall }) {
                         UserDefaults.standard.setValue(install, forKey: "selectDomainUser")
                     }
-                    completion(.success(installList))
                     deleteNonActiveInstall(installList: installList)
+                    completion(.success(installList))
                 } catch let error {
                     let loc = "\(error)"
                     let webasystError = WebasystError(localizedError: loc, statusCode: statusCode)
@@ -486,7 +395,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             "client_id": clientId
         ]
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         guard let url = buildWebasystUrl("/id/api/v1/auth/client/", parameters: [:]) else {
             let loc = WebasystApp.getDefaultLocalizedString(withKey: "error.wrongUrl")
@@ -513,7 +424,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             print("Webasyst error (getAccessTokenApi): '\(error.localizedDescription)'.")
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -544,75 +455,65 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     func getAccessTokenInstall(_ installList: [UserInstallCodable], accessCodes: [String : Any], _ completion: @escaping (WebasystResult<String>) -> ()) {
-        
-        guard let config = WebasystApp.config else { return }
-        if let error = accessCodes["error_description"] as? String {
-            print("Webasyst error (getAccessTokenInstall): Access codes not founded – '\(error)'.")
-            return
-        }
-        
-        var isCompleted: Bool = false
-        
-        for index in 0..<installList.count {
-            let code = accessCodes[installList[index].id] as! String
-            
-            let replaceScope = config.scope
-            
-            let parameters: Parameters = [
-                "code" : code,
-                "scope": String(replaceScope.map {
-                    $0 == "." ? "," : $0
-                }),
-                "client_id": config.bundleId
-            ]
-            
-            guard let url = URL(string: "\(String(describing: installList[index].url))/api.php/token-headless") else {
-                print("Webasyst error (getAccessTokenInstall): Url install error.")
-                break
+        WebasystAuthSession.onMain {
+            let generation = WebasystAuthSession.shared.generation
+            let gate = WebasystCompletion(completion)
+            guard let config = WebasystApp.config else {
+                gate.call(.failure(WebasystAuthFailure.make(.configuration, generation: generation).error))
+                return
             }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            
-            do {
-                try request.setMultipartFormData(parameters, encoding: String.Encoding.utf8)
-            } catch {
-                print("Webasyst error (getAccessTokenInstall): \(error.localizedDescription).")
+            guard accessCodes["error_description"] == nil else {
+                gate.call(.failure(WebasystAuthFailure.make(.server, generation: generation).error))
+                return
             }
-            
-            createDataTaskSession(request) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let response):
-                    if let json = try? JSONSerialization.jsonObject(with: response.data) as? [String : String],
-                        let accessToken = json["access_token"] {
-                        let install = UserInstallCodable(name: "", domain: installList[index].domain, id: installList[index].id, accessToken: accessToken, url: installList[index].url, cloudPlanId: installList[index].cloudPlanId, cloudExpireDate: installList[index].cloudExpireDate, cloudTrial: installList[index].cloudTrial)
-                        
-                        if let activeInstall = UserDefaults.standard.string(forKey: "selectDomainUser"),
-                           WebasystApp().getUserInstall(activeInstall) == nil {
+            guard !installList.isEmpty else { gate.call(.success("")); return }
+            var remaining = installList.count
+            let finishOne: (WebasystResult<String>) -> Void = { result in
+                remaining -= 1
+                if case .success = result { gate.call(result) }
+                else if remaining == 0 { gate.call(result) }
+            }
+            for install in installList {
+                guard let code = accessCodes[install.id] as? String,
+                      let url = URL(string: "\(install.url)/api.php/token-headless"),
+                      url.scheme == "https" || url.scheme == "http" else {
+                    finishOne(.failure(WebasystAuthFailure.make(.decoding, generation: generation).error))
+                    continue
+                }
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                do {
+                    try request.setMultipartFormData(["code": code,
+                        "scope": config.scope.replacingOccurrences(of: ".", with: ","),
+                        "client_id": config.bundleId], encoding: .utf8)
+                } catch {
+                    finishOne(.failure(WebasystAuthFailure.make(.configuration, generation: generation).error))
+                    continue
+                }
+                self.createDataTaskSession(request, generation: generation) { result in
+                    guard WebasystAuthSession.shared.isCurrent(generation) else {
+                        finishOne(.failure(WebasystAuthFailure.make(.superseded, generation: generation).error))
+                        return
+                    }
+                    switch result {
+                    case .failure(let error): finishOne(.failure(error))
+                    case .success(let response):
+                        guard let json = try? JSONSerialization.jsonObject(with: response.data) as? [String: String],
+                              let accessToken = json["access_token"], !accessToken.isEmpty else {
+                            finishOne(.failure(WebasystAuthFailure.make(.decoding, generation: generation).error))
+                            return
+                        }
+                        let value = UserInstallCodable(name: "", domain: install.domain, id: install.id,
+                            accessToken: accessToken, url: install.url, cloudPlanId: install.cloudPlanId,
+                            cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
+                        if let active = UserDefaults.standard.string(forKey: "selectDomainUser"),
+                           WebasystApp().getUserInstall(active) == nil {
                             UserDefaults.standard.setValue(install.id, forKey: "selectDomainUser")
                         }
-                        
-                        getInstallInfo(install) { _ in
-                            if !isCompleted {
-                                isCompleted = true
-                                completion(.success(accessToken))
-                            }
+                        self.getInstallInfo(value) { success in
+                            if success { finishOne(.success(accessToken)) }
+                            else { finishOne(.failure(WebasystAuthFailure.make(.superseded, generation: generation).error)) }
                         }
-                    } else {
-                        let errorType = ErrorTypeModel(type: .decodingParameters(domain: installList[index].domain), methodName: "getAccessTokenInstall")
-                        let error = getError(errorType)
-                        if index == installList.count - 1, !isCompleted {
-                            isCompleted = true
-                            completion(.failure(error))
-                        }
-                    }
-                case .failure(let error):
-                    let errorType = ErrorTypeModel(error: error, type: .standart(domain: installList[index].domain), methodName: "getAccessTokenInstall")
-                    let error = getError(errorType)
-                    if index == installList.count - 1, !isCompleted {
-                        isCompleted = true
-                        completion(.failure(error))
                     }
                 }
             }
@@ -620,92 +521,55 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     func getInstallInfo(_ install: UserInstallCodable, loadSucces: @escaping (Bool) -> ()) {
-        
+        let generation = WebasystAuthSession.shared.generation
+        let gate = WebasystCompletion(loadSucces)
         guard let url = URL(string: "\(install.url)/api.php/webasyst.getInfo?access_token=\(install.accessToken ?? "")&format=json") else {
-            let errorDescription = "Webasyst error (getInstallInfo): Failed to generate a url when getting installation information."
-            print(errorDescription)
-            loadSucces(false)
+            gate.call(false)
             return
         }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        createDataTaskSession(request) { result in
-            switch result {
-            case .success(let response):
-                let data = response.data
-                do {
-                    let info = try JSONDecoder().decode(InstallInfo.self, from: data)
-                    
-                    guard let logoMode = info.logo else {
-                        let imageData = self.createDefaultGradient()
-                        let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
-                        self.profileInstallService?.saveInstall(newInstall)
-                        self.profileInstallService?.createNew()
-                        loadSucces(true)
-                        return
-                    }
-                    
-                    switch logoMode.mode {
-                    case .image:
-                        do {
-                            let imageInfo = try JSONDecoder().decode(LogoImage.self, from: data)
-                            self.downloadImage(imageInfo.logo?.image.thumbs.first?.value.url ?? "") { imageData in
-                                let saveInstall = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: true, logoText: "", logoTextColor: "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
-                                self.profileInstallService?.saveInstall(saveInstall)
-                                self.profileInstallService?.createNew()
-                                loadSucces(true)
-                            }
-                        } catch let error {
-                            let errorDescription = "Webasyst error (getInstallInfo): \(info.name) \(error.localizedDescription)."
-                            print(errorDescription)
-                        }
-                    case .gradient:
-                        do {
-                            let imageInfo = try JSONDecoder().decode(LogoGradient.self, from: data)
-                            
-                            let imageData = self.createGradient(from: imageInfo.logo?.gradient.from ?? "#FF0078", to: imageInfo.logo?.gradient.to ?? "#FF5900")
-                            let install = UserInstall(name: info.name, domain: install.domain, id: install.id, accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
-                            
-                            self.profileInstallService?.saveInstall(install)
-                            self.profileInstallService?.createNew()
-                            loadSucces(true)
-                        } catch {
-                            let errorDescription = "Webasyst error (getInstallInfo): \(info.name) \(error.localizedDescription)."
-                            print(errorDescription)
-                        }
-                    case .unknown:
-                        let imageData = self.createDefaultGradient()
-                        
-                        let newInstall = UserInstall(name: info.name, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: info.logo?.text.value ?? "", logoTextColor: info.logo?.text.color ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
-                        
-                        self.profileInstallService?.saveInstall(newInstall)
-                        self.profileInstallService?.createNew()
-                        loadSucces(true)
-                    }
-                } catch {
-                    let imageData = self.createDefaultGradient()
-                    let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: "", logoTextColor: "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
-                    self.profileInstallService?.saveInstall(newInstall)
-                    loadSucces(true)
-                    let errorDescription = "Webasyst warning (getInstallInfo): \(install.domain) unable to decode model – '\(error.localizedDescription)'."
-                    print(errorDescription)
+        let save: (InstallInfo?, Data?, Bool) -> Void = { info, image, imageLogo in
+            let saved = WebasystAuthSession.shared.ifCurrent(generation) {
+                let value = UserInstall(name: info?.name ?? install.domain, domain: install.domain,
+                    id: install.id, accessToken: install.accessToken, url: install.url,
+                    image: image, imageLogo: imageLogo, logoText: imageLogo ? "" : info?.logo?.text.value ?? "",
+                    logoTextColor: imageLogo ? "" : info?.logo?.text.color ?? "",
+                    cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
+                self.profileInstallService?.saveInstall(value)
+                self.profileInstallService?.createNew()
+            }
+            gate.call(saved)
+        }
+        createDataTaskSession(URLRequest(url: url), generation: generation) { result in
+            guard WebasystAuthSession.shared.isCurrent(generation) else { gate.call(false); return }
+            guard case .success(let response) = result,
+                  let info = try? JSONDecoder().decode(InstallInfo.self, from: response.data) else {
+                save(nil, self.createDefaultGradient(), false)
+                return
+            }
+            switch info.logo?.mode {
+            case .image?:
+                guard let logo = try? JSONDecoder().decode(LogoImage.self, from: response.data) else {
+                    save(info, self.createDefaultGradient(), false)
+                    return
                 }
-            case .failure(let error):
-                let imageData = self.createDefaultGradient()
-                let newInstall = UserInstall(name: install.domain, domain: install.domain , id: install.id , accessToken: install.accessToken, url: install.url, image: imageData, imageLogo: false, logoText: "", logoTextColor: "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
-                self.profileInstallService?.saveInstall(newInstall)
-                loadSucces(true)
-                let errorDescription = "Webasyst error (getInstallInfo): '\(error)'."
-                print(errorDescription)
+                self.downloadImage(logo.logo?.image.thumbs.first?.value.url ?? "") { image in
+                    save(info, image.isEmpty ? self.createDefaultGradient() : image, !image.isEmpty)
+                }
+            case .gradient?:
+                let logo = try? JSONDecoder().decode(LogoGradient.self, from: response.data)
+                let image = self.createGradient(from: logo?.logo?.gradient.from ?? "#FF0078",
+                                                to: logo?.logo?.gradient.to ?? "#FF5900")
+                save(info, image, false)
+            default: save(info, self.createDefaultGradient(), false)
             }
         }
     }
     
     func createWebasystAccount(bundle: String, plainId: String, accountDomain: String?, accountName: String?, _ completion: @escaping (WebasystResult<(id: String, url: String)>) -> ()) {
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let headers: Parameters = [
             "Authorization": accessToken
@@ -737,7 +601,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.httpBody = encodedData
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self else { return }
             
             switch result {
@@ -802,7 +666,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     
     func renameWebasystAccount(clientId: String, domain: String, _ completion: @escaping (WebasystResult<Bool>) -> ()) {
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let headers: Parameters = [
             "Authorization": accessToken
@@ -826,7 +692,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.httpBody = encodedData
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -847,7 +713,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     func singUpUser(_ completion: @escaping (Bool) -> ()) {
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let headerRequest: Parameters = [
             "Authorization": accessToken
@@ -858,7 +726,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         request.httpMethod = "DELETE"
         request.addValue(headerRequest.first?.value ?? "", forHTTPHeaderField: headerRequest.first?.key ?? "")
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:
@@ -873,6 +741,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     }
     
     func checkAppInstall(app: String, _ completion: @escaping (WebasystResult<String?>) -> Void) {
+        let generation = WebasystAuthSession.shared.generation
         
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let install = profileInstallService?.getInstall(with: domain),
@@ -892,7 +761,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -916,7 +785,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/licenses/force/", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let parameters: Parameters = [
             "Authorization": accessToken
@@ -940,7 +811,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -963,7 +834,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/mergecode", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let parameters: Parameters = [
             "Authorization": accessToken
@@ -975,7 +848,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -999,7 +872,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         
         guard let url = buildWebasystUrl("/id/api/v1/profile/mergeresult", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let parameters: Parameters = [
             "Authorization": accessToken
@@ -1011,7 +886,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -1040,7 +915,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
     func deleteAccount(_ completion: @escaping (WebasystResult<Bool>) -> Void) {
         guard let url = buildWebasystUrl("/id/api/v1/terminate", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let parameters: Parameters = [
             "Authorization": accessToken
@@ -1052,7 +929,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -1083,7 +960,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let domain = UserDefaults.standard.string(forKey: "selectDomainUser"),
               let url = buildWebasystUrl("/id/api/v1/cloud/extend/", parameters: [:]) else { return }
         
-        let accessToken = KeychainManager.getToken(.accessToken)
+        let credentials = WebasystAuthSession.shared.accessCredentials
+        let generation = credentials.generation
+        let accessToken = credentials.token
         
         let parameters: Parameters = [
             "Authorization": accessToken
@@ -1104,7 +983,7 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
             request.addValue(value, forHTTPHeaderField: key)
         }
         
-        createDataTaskSession(request) { [weak self] result in
+        createDataTaskSession(request, generation: generation) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
