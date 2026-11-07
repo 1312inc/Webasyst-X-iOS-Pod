@@ -73,7 +73,11 @@ class WebasystDataModel {
     }
     
     deinit {
-        managedObjectContext?.reset()
+        if let context = managedObjectContext {
+            context.performAndWait {
+                context.reset()
+            }
+        }
         managedObjectContext = nil
     }
 }
@@ -133,24 +137,22 @@ extension WebasystDataModel {
     /// - Parameter clientId: install clientId.
     /// - Returns: Returns the installation in UserInstall format.
     func getInstall(with clientId: String) -> UserInstall? {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-        
         guard let context = managedObjectContext else { return nil }
+        var userInstall: UserInstall?
         
-        do {
-            guard let result = try context.fetch(request) as? [InstallList] else {
-                return nil
+        context.performAndWait {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
+
+            do {
+                guard let result = try context.fetch(request) as? [InstallList] else { return }
+                if let install = result.first(where: { $0.clientId ?? "" == clientId }) {
+                    userInstall = UserInstall(name: install.name ?? "", domain: install.domain ?? "", id: install.clientId ?? "", accessToken: install.accessToken ?? "", url: install.url ?? "", image: install.image, imageLogo: install.imageLogo, logoText: install.logoText ?? "", logoTextColor: install.logoColorText ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
+                }
+            } catch let error {
+                print(NSError(domain: "Webasyst database error (method: getInstall): \(error.localizedDescription)", code: 501, userInfo: nil))
             }
-            if let install = result.first(where: { $0.clientId ?? "" == clientId }) {
-                let install = UserInstall(name: install.name ?? "", domain: install.domain ?? "", id: install.clientId ?? "", accessToken: install.accessToken ?? "", url: install.url ?? "", image: install.image, imageLogo: install.imageLogo, logoText: install.logoText ?? "", logoTextColor: install.logoColorText ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
-                return install
-            } else {
-                return nil
-            }
-        } catch let error {
-            print(NSError(domain: "Webasyst database error (method: getInstall): \(error.localizedDescription)", code: 501, userInfo: nil))
-            return nil
         }
+        return userInstall
     }
     
     /// Getting a list of all user install
@@ -160,22 +162,23 @@ extension WebasystDataModel {
             return nil
         }
         
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
+        var userInstalls: [UserInstall]?
         
-        do {
-            guard let data = try context.fetch(fetchRequest) as? [InstallList] else {
-                return nil
-            }
+        context.performAndWait {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
             
-            var userInstall: [UserInstall] = []
-            for task in data {
-                userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo, logoText: task.logoText ?? "", logoTextColor: task.logoColorText ?? "", cloudPlanId: task.cloudPlanId, cloudExpireDate: task.cloudExpireDate, cloudTrial: task.cloudTrial))
+            do {
+                guard let data = try context.fetch(fetchRequest) as? [InstallList] else { return }
+                var userInstall: [UserInstall] = []
+                for task in data {
+                    userInstall.append(UserInstall(name: task.name ?? "", domain: task.domain ?? "", id: task.clientId ?? "", accessToken: task.accessToken ?? "", url: task.url ?? "", image: task.image, imageLogo: task.imageLogo, logoText: task.logoText ?? "", logoTextColor: task.logoColorText ?? "", cloudPlanId: task.cloudPlanId, cloudExpireDate: task.cloudExpireDate, cloudTrial: task.cloudTrial))
+                }
+                userInstalls = userInstall
+            } catch let error {
+                print(NSError(domain: "Webasyst database error (method: getInstallList): \(error.localizedDescription)", code: 501, userInfo: nil))
             }
-            return userInstall
-        } catch let error {
-            print(NSError(domain: "Webasyst database error (method: getInstallList): \(error.localizedDescription)", code: 501, userInfo: nil))
-            return nil
         }
+        return userInstalls
     }
     
     /// Deleting a user installation
@@ -316,22 +319,19 @@ extension WebasystDataModel {
     /// - Returns: User data in ProfileData format.
     func getProfile() -> ProfileData? {
         guard let context = managedObjectContext else { return nil }
+        var profileData: ProfileData?
         
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
-        
-        do {
-            guard let result = try context.fetch(request) as? [Profile] else { return nil }
+        context.performAndWait {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: profileEntityName)
             
-            if !result.isEmpty {
-                let profileData = ProfileData(name: result.first?.fullName ?? "", firstname: result.first?.firstName ?? "", lastname: result.first?.lastName ?? "", middlename: result.first?.middleName ?? "", email: result.first?.email ?? "", phone: result.first?.phone ?? "", userpic_original_crop: result.first?.userPic)
-                return profileData
-            } else {
-                return nil
+            do {
+                guard let result = try context.fetch(request) as? [Profile], let profile = result.first else { return }
+                profileData = ProfileData(name: profile.fullName ?? "", firstname: profile.firstName ?? "", lastname: profile.lastName ?? "", middlename: profile.middleName ?? "", email: profile.email ?? "", phone: profile.phone ?? "", userpic_original_crop: profile.userPic)
+            } catch {
+                print(NSError(domain: "Webasyst Database error(method: getProfile): \(error.localizedDescription)", code: 502, userInfo: nil))
             }
-        } catch {
-            print(NSError(domain: "Webasyst Database error(method: getProfile): \(error.localizedDescription)", code: 502, userInfo: nil))
-            return nil
         }
+        return profileData
     }
     
     /// Deleting user data

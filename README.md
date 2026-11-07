@@ -28,6 +28,20 @@ And execute it in the terminal while in the project folder
 pod install
 ```
 
+## Local profile and installation storage
+
+The local Core Data storage keeps its existing main-queue context. Reads, writes,
+conversion to `UserInstall` / `ProfileData`, and context reset execute on its queue. The
+existing storage methods remain synchronous and may be called from either the
+main queue or a background queue. Background callers wait for the context queue;
+they must not be synchronously awaited by the main thread. No managed objects
+leave the context queue.
+The SQLite location and model are unchanged; no data migration is required.
+
+This applies to local storage, and does not change the callback queues of network
+or authentication methods. Native queue and existing-database regression checks
+are in [Tests/CoreDataQueue](Tests/CoreDataQueue).
+
 ## Library configuration
 
 The library requires an initial setup. The following steps are needed:
