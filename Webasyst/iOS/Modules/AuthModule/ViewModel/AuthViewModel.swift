@@ -22,7 +22,7 @@ final class AuthViewModel: AuthViewModelProtocol {
     }
     
     func successAuth(code: String, state: String) {
-        networkingService.getAccessTokenResult(code, stateString: state) { result in
+        networkingService.getAccessTokenResult(code, stateString: state) { [weak self] result in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 
