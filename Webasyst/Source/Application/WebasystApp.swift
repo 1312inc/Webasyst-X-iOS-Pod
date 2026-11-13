@@ -154,7 +154,56 @@ public class WebasystApp {
     /// Getting user install list
     /// - Returns: List of all user installations in UserInstall format.
     public func getAllUserInstall() -> [UserInstall]? {
-        profileInstallService?.getInstallList()
+        WebasystAuthSession.onMain {
+            let excluded = WebasystAuthSession.shared.installations.excludedInstallations
+            return profileInstallService?.getInstallList()?.filter {
+                !excluded.contains($0.id) && $0.accessToken?.isEmpty == false
+            }
+        }
+    }
+
+    /// The latest successful WAID catalog in the current session. Nil means it has not been loaded.
+    /// Entries contain display metadata, including for installations whose access token is unavailable.
+    public func getInstallationCatalog() -> [WebasystInstallationCatalogEntry]? {
+        WebasystAuthSession.onMain {
+            let state = WebasystAuthSession.shared.installations
+            return state.catalog?.map {
+                WebasystInstallationCatalogEntry(metadata: $0, isCheckingAccess: state.exchanges[$0.id] != nil)
+            }
+        }
+    }
+
+    /// Invalidates a saved installation token after that exact token was rejected by a protected API.
+    /// The catalog entry and selected ID remain available for an explicit retry.
+    @discardableResult
+    public func invalidateInstallationAccess(id: String, rejectedToken: String) -> Bool {
+        WebasystAuthSession.onMain {
+            guard !rejectedToken.isEmpty,
+                  var installation = profileInstallService?.getInstall(with: id),
+                  installation.accessToken == rejectedToken else { return false }
+            installation.accessToken = nil
+            guard profileInstallService?.saveInstall(installation) == true else { return false }
+            WebasystAuthSession.shared.installations.notifyChanged()
+            return true
+        }
+    }
+
+    /// Gets a fresh code and token for one listed installation, joining an existing exchange if needed.
+    /// Saves the token on success and leaves the active installation selection to the caller.
+    public func retryInstallationAccess(id: String, completion: @escaping (WebasystResult<UserInstall>) -> Void) {
+        WebasystAuthSession.onMain {
+            let auth = WebasystAuthSession.shared
+            guard let install = auth.installations.catalog?.first(where: { $0.id == id }) else {
+                completion(.failure(WebasystAuthFailure.make(.superseded, generation: auth.generation).error))
+                return
+            }
+            userNetworking.refreshInstallationAccess([install], manual: true) { result in
+                switch result {
+                case .success(let install): completion(.success(install))
+                case .failure(let error), .codeRequestFailed(let error): completion(.failure(error))
+                }
+            }
+        }
     }
     
     /// Updating and Getting user install list from server
@@ -164,21 +213,13 @@ public class WebasystApp {
             guard let self = self else { return }
             switch res {
             case .success(let installs):
-                if installs.count == 0 {
+                guard !installs.isEmpty else {
                     result(installs)
-                } else {
-                    let clientIDs = installs.map { $0.id }
-                    userNetworking.getAccessTokenApi(clientId: clientIDs) { [weak self] res in
-                        guard let self = self else { return }
-                        switch res {
-                        case .success(let accessToken):
-                            userNetworking.getAccessTokenInstall(installs, accessCodes: accessToken) { _ in
-                                result(installs)
-                            }
-                        case .failure:
-                            result(nil)
-                        }
-                    }
+                    return
+                }
+                userNetworking.refreshInstallationAccess(installs) { outcome in
+                    if case .codeRequestFailed = outcome { result(nil) }
+                    else { result(installs) }
                 }
             case .failure:
                 result(nil)
@@ -190,11 +231,12 @@ public class WebasystApp {
     /// - Parameter clientId: clientId setting.
     /// - Returns: Installation in User Install format.
     public func getUserInstall(_ clientId: String) -> UserInstall? {
-        let installRequest = profileInstallService?.getInstall(with: clientId)
-        guard let install = installRequest else {
-            return nil
+        WebasystAuthSession.onMain {
+            guard !WebasystAuthSession.shared.installations.excludedInstallations.contains(clientId),
+                  let install = profileInstallService?.getInstall(with: clientId),
+                  install.accessToken?.isEmpty == false else { return nil }
+            return install
         }
-        return install
     }
     
     /// Returns user profile data

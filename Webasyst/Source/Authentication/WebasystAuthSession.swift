@@ -26,6 +26,7 @@ final class WebasystAuthSession {
     private var version: UInt64 = 0
     private var refresh: Refresh?
     private var pendingTokens: (generation: UInt64, pair: WebasystTokenPair)?
+    private(set) var installations = WebasystInstallationState()
 
     static func onMain<Value>(_ action: () -> Value) -> Value {
         if Thread.isMainThread { return action() }
@@ -58,6 +59,7 @@ final class WebasystAuthSession {
     func beginAuthorization(preservePending: Bool = true) -> UInt64 {
         Self.onMain {
             version &+= 1
+            installations = WebasystInstallationState()
             let current = version
             if preservePending, let pending = pendingTokens { pendingTokens = (current, pending.pair) }
             else { pendingTokens = nil }
@@ -67,6 +69,7 @@ final class WebasystAuthSession {
             if let previous {
                 previous.callbacks.forEach { $0(.failure(.make(.superseded, generation: previous.generation))) }
             }
+            if version == current { installations.notifyChanged() }
             return current
         }
     }
@@ -77,6 +80,7 @@ final class WebasystAuthSession {
         Self.onMain {
             guard expected == nil || expected == version else { return false }
             version &+= 1
+            installations = WebasystInstallationState()
             pendingTokens = nil
             let previous = refresh
             refresh = nil
@@ -85,6 +89,7 @@ final class WebasystAuthSession {
             if let previous {
                 previous.callbacks.forEach { $0(.failure(.make(.superseded, generation: previous.generation))) }
             }
+            installations.notifyChanged()
             return true
         }
     }

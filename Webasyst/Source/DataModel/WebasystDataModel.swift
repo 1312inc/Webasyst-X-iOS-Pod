@@ -88,16 +88,17 @@ extension WebasystDataModel {
     /// Saving a user installation
     /// - Parameters:
     ///   - userInstall: Installation information in UserInstall format (Warning! If the installation already exists in the database its data will be updated).
-    func saveInstall(_ userInstall: UserInstall) {
+    @discardableResult
+    func saveInstall(_ userInstall: UserInstall) -> Bool {
         enqueue { [weak self] context in
-            guard let self = self else { return }
+            guard let self = self else { return false }
             
             let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
             
             do {
                 guard let result = try context.fetch(request) as? [InstallList] else {
                     print(NSError(domain: "Webasyst error: InstallList request error", code: 501, userInfo: nil))
-                    return
+                    return false
                 }
                 if !result.contains(where: { $0.clientId ?? "" == userInstall.id }) {
                     let install = NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList
@@ -127,8 +128,10 @@ extension WebasystDataModel {
                     result[index].cloudExpireDate = userInstall.cloudExpireDate
                     result[index].cloudTrial = userInstall.cloudTrial ?? false
                 }
+                return true
             } catch {
                 print(NSError(domain: "Webasyst Database error(method: saveInstall): \(error.localizedDescription)", code: 502, userInfo: nil))
+                return false
             }
         }
     }
@@ -223,17 +226,27 @@ extension WebasystDataModel {
     
     /// Adding block to queue to saving the database context.
     func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
-        guard let context = self.managedObjectContext else { return }
-        context.performAndWait{ [weak self, weak context] in
-            guard self != nil, let context = context else { return }
+        _ = enqueue { context in
             block(context)
+            return true
+        }
+    }
+
+    private func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Bool) -> Bool {
+        guard let context = managedObjectContext else { return false }
+        var saved = false
+        context.performAndWait {
+            guard block(context) else { return }
             do {
                 try context.save()
+                saved = true
             } catch {
+                context.rollback()
                 let nserror = error as NSError
                 print(NSError(domain: "Webasyst Database error(method: save): Unresolved error \(nserror), \(nserror.userInfo)", code: 500, userInfo: nil))
             }
         }
+        return saved
     }
 }
 
