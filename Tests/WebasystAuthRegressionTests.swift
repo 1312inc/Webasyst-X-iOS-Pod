@@ -158,6 +158,41 @@ final class WebasystAuthRegressionTests: AuthTestCase {
         XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "current")
     }
 
+    func testCatalogRetainsBrandingAfterTokenInvalidationForTheSameURL() throws {
+        seed()
+        let app = WebasystApp()
+        let image = Data([1, 2, 3])
+        for id in ["retained", "moved"] {
+            let installation = UserInstall(name: "Store \(id)", domain: "shop.example.invalid", id: id,
+                accessToken: "fixture-install-token", url: "https://shop.example.invalid/\(id)",
+                image: image, imageLogo: false, logoText: "S", logoTextColor: "#FFFFFF")
+            XCTAssertTrue(app.profileInstallService?.saveInstall(installation) == true)
+            XCTAssertTrue(app.invalidateInstallationAccess(id: id, rejectedToken: "fixture-install-token"))
+        }
+        let catalog = Data(#"""
+            [{"id":"retained","domain":"shop.example.invalid","url":"https://shop.example.invalid/retained"},
+             {"id":"moved","domain":"shop.example.invalid","url":"https://shop.example.invalid/new"}]
+            """#.utf8)
+        let loaded = expectation(description: "catalog loaded")
+        AuthURLProtocol.handler = { $0.reply(body: catalog) }
+        app.userNetworking.getInstallList { _ in loaded.fulfill() }
+        wait(for: [loaded], timeout: 5)
+
+        let entries = try XCTUnwrap(app.getInstallationCatalog())
+        let retained = try XCTUnwrap(entries.first { $0.metadata.id == "retained" })
+        XCTAssertEqual(retained.metadata.name, "Store retained")
+        XCTAssertEqual(retained.metadata.image, image)
+        XCTAssertEqual(retained.logoText, "S")
+        XCTAssertEqual(retained.logoTextColor, "#FFFFFF")
+        XCTAssertNil(retained.metadata.accessToken)
+        XCTAssertNil(app.getUserInstall("retained"))
+
+        let moved = try XCTUnwrap(entries.first { $0.metadata.id == "moved" })
+        XCTAssertNil(moved.metadata.name)
+        XCTAssertNil(moved.metadata.image)
+        XCTAssertNil(moved.logoText)
+    }
+
     func testRemovedInstallationCannotBeRestoredByInFlightRetry() throws {
         seed()
         let app = WebasystApp()

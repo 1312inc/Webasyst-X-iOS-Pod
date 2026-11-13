@@ -40,6 +40,8 @@ public struct UserInstallCodable: Decodable {
 public struct WebasystInstallationCatalogEntry {
     public let metadata: UserInstallCodable
     public let isCheckingAccess: Bool
+    public let logoText: String?
+    public let logoTextColor: String?
 }
 
 public extension Notification.Name {

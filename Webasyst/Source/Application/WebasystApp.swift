@@ -167,8 +167,23 @@ public class WebasystApp {
     public func getInstallationCatalog() -> [WebasystInstallationCatalogEntry]? {
         WebasystAuthSession.onMain {
             let state = WebasystAuthSession.shared.installations
-            return state.catalog?.map {
-                WebasystInstallationCatalogEntry(metadata: $0, isCheckingAccess: state.exchanges[$0.id] != nil)
+            guard let catalog = state.catalog else { return nil }
+            let savedInstalls = profileInstallService?.getInstallList() ?? []
+            let savedByID = Dictionary(savedInstalls.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+            return catalog.map { entry in
+                var metadata = entry
+                let previous = savedByID[entry.id]
+                let saved = previous?.url == entry.url ? previous : nil
+                if let name = saved?.name, !name.isEmpty, name != metadata.domain {
+                    metadata.name = name
+                }
+                metadata.image = saved?.image ?? metadata.image
+                let hasTextLogo = saved?.imageLogo == false && saved?.image != nil
+                return WebasystInstallationCatalogEntry(
+                    metadata: metadata, isCheckingAccess: state.exchanges[entry.id] != nil,
+                    logoText: hasTextLogo ? saved?.logoText : nil,
+                    logoTextColor: hasTextLogo ? saved?.logoTextColor : nil
+                )
             }
         }
     }
