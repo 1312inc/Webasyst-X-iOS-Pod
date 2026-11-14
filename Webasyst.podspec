@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
     s.name             = 'Webasyst'
-    s.version          = '1.12.4'
+    s.version          = '1.12.5'
     s.summary          = 'Webasyst ID auth & token refresh & API calls'
     s.description      = <<-DESC
     This library has been created to make working with Webasyst easier. The library allows you to authorise a user via a WAID server, get user settings and get tokens to work with them. The library has its own database to work with and requires no additional Core Data connection to the project.
