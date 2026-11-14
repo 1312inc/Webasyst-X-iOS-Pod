@@ -3,6 +3,343 @@ import Security
 @testable import Webasyst
 
 final class WebasystAuthRegressionTests: AuthTestCase {
+    func testCatalogKeepsDeniedStoreAndPublishesSlowStoreWithoutWaitingForMetadata() throws {
+        seed()
+        let app = WebasystApp()
+        let catalog = Data(#"""
+            [{"id":"denied","domain":"denied.example.invalid","url":"https://denied.example.invalid","name":"Denied"},
+             {"id":"ready","domain":"ready.example.invalid","url":"https://ready.example.invalid"},
+             {"id":"slow","domain":"slow.example.invalid","url":"https://slow.example.invalid"}]
+            """#.utf8)
+        let codes = Data(#"{"denied":"code1","ready":"code2","slow":"code3"}"#.utf8)
+        let token = Data(#"{"access_token":"fixture-install-token"}"#.utf8)
+        let batch = expectation(description: "first available installation")
+        let slowRequest = expectation(description: "slow exchange held")
+        let slowAvailable = expectation(description: "late token published")
+        let metadata = expectation(description: "both metadata requests failed independently")
+        metadata.expectedFulfillmentCount = 2
+        var slow: AuthURLProtocol?
+        var observedSlow = false
+        var completionCount = 0
+        observe(.webasystInstallationsDidChange) { _ in
+            if !observedSlow, app.getUserInstall("slow") != nil {
+                observedSlow = true
+                slowAvailable.fulfill()
+            }
+        }
+        AuthURLProtocol.handler = { stub in
+            switch (stub.request.url?.host, self.normalizedPath(stub)) {
+            case ("auth.example.invalid", "id/api/v1/installations"):
+                stub.reply(body: catalog)
+            case ("auth.example.invalid", "id/api/v1/auth/client"):
+                XCTAssertEqual(app.getInstallationCatalog()?.map { $0.metadata.id }, ["denied", "ready", "slow"])
+                XCTAssertNil(UserDefaults.standard.string(forKey: "selectDomainUser"))
+                stub.reply(body: codes)
+            case ("denied.example.invalid", "api.php/token-headless"):
+                stub.reply(status: 403, body: Data("<html>Forbidden</html>".utf8))
+            case ("ready.example.invalid", "api.php/token-headless"):
+                stub.reply(body: token)
+            case ("slow.example.invalid", "api.php/token-headless"):
+                slow = stub
+                slowRequest.fulfill()
+            case (_, "api.php/webasyst.getInfo"):
+                // Logo and name are optional. A slow or failing response must not block access.
+                stub.reply(status: 503)
+                metadata.fulfill()
+            default:
+                XCTFail("Unexpected fixture request")
+                stub.fail(URLError(.unsupportedURL))
+            }
+        }
+        app.updateUserInstalls { result in
+            completionCount += 1
+            XCTAssertEqual(result?.map(\.id), ["denied", "ready", "slow"])
+            XCTAssertEqual(app.getAllUserInstall()?.map(\.id), ["ready"])
+            XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "ready")
+            batch.fulfill()
+        }
+        wait(for: [batch, slowRequest], timeout: 5)
+        XCTAssertEqual(app.getInstallationCatalog()?.last?.isCheckingAccess, true)
+        try XCTUnwrap(slow).reply(body: token)
+        wait(for: [slowAvailable, metadata], timeout: 5)
+        XCTAssertEqual(app.getAllUserInstall()?.map(\.id).sorted(), ["ready", "slow"])
+        XCTAssertEqual(app.getInstallationCatalog()?.first?.metadata.name, "Denied")
+        XCTAssertNil(app.getUserInstall("denied"))
+        XCTAssertEqual(completionCount, 1)
+    }
+
+    func testRetryTargetsOneStoreJoinsExchangeAndKeepsActiveStore() throws {
+        seed()
+        let app = WebasystApp()
+        let currentURL = "https://current.example.invalid"
+        XCTAssertTrue(app.profileInstallService?.saveInstall(UserInstall(name: "Current", domain: "current.example.invalid",
+            id: "current", accessToken: "cached-token", url: currentURL, logoText: "", logoTextColor: "")) == true)
+        UserDefaults.standard.set("current", forKey: "selectDomainUser")
+        let catalog = Data(#"""
+            [{"id":"current","domain":"current.example.invalid","url":"https://current.example.invalid"},
+             {"id":"target","domain":"target.example.invalid","url":"https://target.example.invalid"}]
+            """#.utf8)
+        let loaded = expectation(description: "catalog")
+        AuthURLProtocol.handler = { $0.reply(body: catalog) }
+        app.userNetworking.getInstallList { result in
+            guard case .success = result else { return XCTFail("Catalog must load") }
+            loaded.fulfill()
+        }
+        wait(for: [loaded], timeout: 5)
+
+        let tokenRequest = expectation(description: "one token exchange")
+        let failed = expectation(description: "both callers see the rejection")
+        failed.expectedFulfillmentCount = 2
+        var exchange: AuthURLProtocol?
+        var codeRequests = 0
+        AuthURLProtocol.handler = { stub in
+            switch (stub.request.url?.host, self.normalizedPath(stub)) {
+            case ("auth.example.invalid", "id/api/v1/auth/client"):
+                codeRequests += 1
+                XCTAssertTrue(stub.request.value(forHTTPHeaderField: "Authorization")?.hasPrefix("Bearer ") == true)
+                stub.reply(body: Data(#"{"target":"fresh-code"}"#.utf8))
+            case ("target.example.invalid", "api.php/token-headless"):
+                exchange = stub
+                tokenRequest.fulfill()
+            case ("target.example.invalid", "api.php/webasyst.getInfo"):
+                stub.reply(body: Data(#"{"name":"Recovered"}"#.utf8))
+            default:
+                XCTFail("Retry must not refresh other installations")
+                stub.fail(URLError(.unsupportedURL))
+            }
+        }
+        let failure: (WebasystResult<UserInstall>) -> Void = { result in
+            guard case .failure(let error) = result else { return XCTFail("Expected failure") }
+            XCTAssertEqual(error.statusCode, 403)
+            XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "current")
+            failed.fulfill()
+        }
+        app.retryInstallationAccess(id: "target", completion: failure)
+        WebasystApp().retryInstallationAccess(id: "target", completion: failure)
+        wait(for: [tokenRequest], timeout: 5)
+        try XCTUnwrap(exchange).reply(status: 403, body: Data("<html>Forbidden</html>".utf8))
+        wait(for: [failed], timeout: 5)
+        XCTAssertEqual(codeRequests, 1)
+        XCTAssertNil(app.getUserInstall("target"))
+
+        let recovered = expectation(description: "next retry succeeded")
+        let metadata = expectation(description: "metadata request sent")
+        AuthURLProtocol.handler = { stub in
+            switch self.normalizedPath(stub) {
+            case "id/api/v1/auth/client":
+                codeRequests += 1
+                stub.reply(body: Data(#"{"target":"second-code"}"#.utf8))
+            case "api.php/token-headless":
+                stub.reply(body: Data(#"{"access_token":"new-token","expires_in":3600}"#.utf8))
+            case "api.php/webasyst.getInfo":
+                stub.reply(body: Data(#"{"name":"Recovered"}"#.utf8))
+                metadata.fulfill()
+            default:
+                XCTFail("Unexpected retry request")
+                stub.fail(URLError(.unsupportedURL))
+            }
+        }
+        app.retryInstallationAccess(id: "target") { result in
+            guard case .success(let install) = result else { return XCTFail("Expected recovery") }
+            XCTAssertEqual(install.accessToken, "new-token")
+            XCTAssertEqual(app.getUserInstall("target")?.accessToken, "new-token")
+            XCTAssertEqual(app.getUserInstall("current")?.accessToken, "cached-token")
+            XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "current")
+            recovered.fulfill()
+        }
+        wait(for: [recovered, metadata], timeout: 5)
+        XCTAssertEqual(codeRequests, 2)
+        XCTAssertFalse(app.invalidateInstallationAccess(id: "target", rejectedToken: "old-token"))
+        XCTAssertEqual(app.getUserInstall("target")?.accessToken, "new-token")
+        XCTAssertTrue(app.invalidateInstallationAccess(id: "target", rejectedToken: "new-token"))
+        XCTAssertNil(app.getUserInstall("target"))
+        XCTAssertEqual(app.getAllUserInstall()?.map(\.id), ["current"])
+        XCTAssertEqual(app.getInstallationCatalog()?.map { $0.metadata.id }, ["current", "target"])
+        XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "current")
+    }
+
+    func testCatalogRetainsBrandingAfterTokenInvalidationForTheSameURL() throws {
+        seed()
+        let app = WebasystApp()
+        let image = Data([1, 2, 3])
+        for id in ["retained", "moved"] {
+            let installation = UserInstall(name: "Store \(id)", domain: "shop.example.invalid", id: id,
+                accessToken: "fixture-install-token", url: "https://shop.example.invalid/\(id)",
+                image: image, imageLogo: false, logoText: "S", logoTextColor: "#FFFFFF")
+            XCTAssertTrue(app.profileInstallService?.saveInstall(installation) == true)
+            XCTAssertTrue(app.invalidateInstallationAccess(id: id, rejectedToken: "fixture-install-token"))
+        }
+        let catalog = Data(#"""
+            [{"id":"retained","domain":"shop.example.invalid","url":"https://shop.example.invalid/retained"},
+             {"id":"moved","domain":"shop.example.invalid","url":"https://shop.example.invalid/new"}]
+            """#.utf8)
+        let loaded = expectation(description: "catalog loaded")
+        AuthURLProtocol.handler = { $0.reply(body: catalog) }
+        app.userNetworking.getInstallList { _ in loaded.fulfill() }
+        wait(for: [loaded], timeout: 5)
+
+        let entries = try XCTUnwrap(app.getInstallationCatalog())
+        let retained = try XCTUnwrap(entries.first { $0.metadata.id == "retained" })
+        XCTAssertEqual(retained.metadata.name, "Store retained")
+        XCTAssertEqual(retained.metadata.image, image)
+        XCTAssertEqual(retained.logoText, "S")
+        XCTAssertEqual(retained.logoTextColor, "#FFFFFF")
+        XCTAssertNil(retained.metadata.accessToken)
+        XCTAssertNil(app.getUserInstall("retained"))
+
+        let moved = try XCTUnwrap(entries.first { $0.metadata.id == "moved" })
+        XCTAssertNil(moved.metadata.name)
+        XCTAssertNil(moved.metadata.image)
+        XCTAssertNil(moved.logoText)
+    }
+
+    func testRemovedInstallationCannotBeRestoredByInFlightRetry() throws {
+        seed()
+        let app = WebasystApp()
+        let catalog = Data(#"[{"id":"target","domain":"target.example.invalid","url":"https://target.example.invalid"}]"#.utf8)
+        let first = expectation(description: "initial catalog")
+        AuthURLProtocol.handler = { $0.reply(body: catalog) }
+        app.userNetworking.getInstallList { _ in first.fulfill() }
+        wait(for: [first], timeout: 5)
+
+        let pending = expectation(description: "token request held")
+        let discarded = expectation(description: "removed retry completed without saving")
+        let empty = expectation(description: "empty catalog")
+        var held: AuthURLProtocol?
+        AuthURLProtocol.handler = { stub in
+            switch self.normalizedPath(stub) {
+            case "id/api/v1/auth/client":
+                stub.reply(body: Data(#"{"target":"code"}"#.utf8))
+            case "api.php/token-headless":
+                held = stub
+                pending.fulfill()
+            case "id/api/v1/installations":
+                stub.reply(body: Data("[]".utf8))
+            default:
+                XCTFail("Unexpected request")
+                stub.fail(URLError(.unsupportedURL))
+            }
+        }
+        app.retryInstallationAccess(id: "target") { result in
+            if case .success = result { XCTFail("Removed installation cannot open") }
+            discarded.fulfill()
+        }
+        wait(for: [pending], timeout: 5)
+        app.updateUserInstalls { result in
+            XCTAssertEqual(result?.isEmpty, true)
+            empty.fulfill()
+        }
+        wait(for: [empty, discarded], timeout: 5)
+        try XCTUnwrap(held).reply(body: Data(#"{"access_token":"late-token"}"#.utf8))
+        let settled = expectation(description: "late response settled")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { settled.fulfill() }
+        wait(for: [settled], timeout: 5)
+        XCTAssertNil(app.getUserInstall("target"))
+        XCTAssertEqual(app.getInstallationCatalog()?.isEmpty, true)
+        XCTAssertNil(UserDefaults.standard.string(forKey: "selectDomainUser"))
+    }
+
+    func testBackgroundSuccessCannotReplaceExplicitSelectionAfterActiveStoreWasRemoved() throws {
+        seed()
+        let app = WebasystApp()
+        let catalog = Data(#"""
+            [{"id":"target","domain":"target.example.invalid","url":"https://target.example.invalid"},
+             {"id":"fallback","domain":"fallback.example.invalid","url":"https://fallback.example.invalid"}]
+            """#.utf8)
+        let removed = "https://removed.example.invalid"
+        let fallback = "https://fallback.example.invalid"
+        for (id, url) in [("removed", removed), ("fallback", fallback)] {
+            XCTAssertTrue(app.profileInstallService?.saveInstall(UserInstall(name: id, domain: id,
+                id: id, accessToken: "stored-token", url: url, logoText: "", logoTextColor: "")) == true)
+        }
+        UserDefaults.standard.set("removed", forKey: "selectDomainUser")
+        let loaded = expectation(description: "active store removed")
+        AuthURLProtocol.handler = { $0.reply(body: catalog) }
+        app.userNetworking.getInstallList { _ in
+            XCTAssertNil(app.getUserInstall("removed"))
+            XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "removed")
+            loaded.fulfill()
+        }
+        wait(for: [loaded], timeout: 5)
+
+        let targetHeld = expectation(description: "explicit selection waiting")
+        let updated = expectation(description: "background fallback available")
+        let denied = expectation(description: "explicit failure delivered")
+        var exchange: AuthURLProtocol?
+        AuthURLProtocol.handler = { stub in
+            switch (stub.request.url?.host, self.normalizedPath(stub)) {
+            case ("auth.example.invalid", "id/api/v1/installations"):
+                stub.reply(body: catalog)
+            case ("auth.example.invalid", "id/api/v1/auth/client"):
+                stub.reply(body: Data(#"{"target":"target-code","fallback":"fallback-code"}"#.utf8))
+            case ("target.example.invalid", "api.php/token-headless"):
+                exchange = stub
+                targetHeld.fulfill()
+            case ("fallback.example.invalid", "api.php/token-headless"):
+                stub.reply(body: Data(#"{"access_token":"fallback-token"}"#.utf8))
+            case ("fallback.example.invalid", "api.php/webasyst.getInfo"):
+                stub.reply(status: 503)
+            default:
+                XCTFail("Unexpected fixture request")
+                stub.fail(URLError(.unsupportedURL))
+            }
+        }
+        app.retryInstallationAccess(id: "target") { result in
+            guard case .failure(let error) = result else { return XCTFail("Expected refusal") }
+            XCTAssertEqual(error.statusCode, 403)
+            XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "removed")
+            denied.fulfill()
+        }
+        wait(for: [targetHeld], timeout: 5)
+        app.updateUserInstalls { _ in
+            XCTAssertEqual(app.getUserInstall("fallback")?.accessToken, "fallback-token")
+            XCTAssertEqual(UserDefaults.standard.string(forKey: "selectDomainUser"), "removed")
+            updated.fulfill()
+        }
+        wait(for: [updated], timeout: 5)
+        try XCTUnwrap(exchange).reply(status: 403, body: Data("<html>Forbidden</html>".utf8))
+        wait(for: [denied], timeout: 5)
+    }
+
+    func testLoginTimeoutAfterCatalogKeepsAuthorizedSelectionAvailable() throws {
+        seed()
+        let app = WebasystApp()
+        let catalog = Data(#"[{"id":"slow","domain":"slow.example.invalid","url":"https://slow.example.invalid"}]"#.utf8)
+        let waiting = expectation(description: "token exchange held")
+        let completed = expectation(description: "authorized with catalog after preload deadline")
+        var held: AuthURLProtocol?
+        AuthURLProtocol.handler = { stub in
+            switch self.normalizedPath(stub) {
+            case "id/api/v1/installations":
+                stub.reply(body: catalog)
+            case "id/api/v1/auth/client":
+                stub.reply(body: Data(#"{"slow":"code"}"#.utf8))
+            case "api.php/token-headless":
+                held = stub
+                waiting.fulfill()
+            default:
+                stub.reply(status: 503)
+            }
+        }
+        app.userNetworking.preloadUserData { result in
+            switch result {
+            case .success(.authorizedButNoneInstalls), .success(.authorizedButNoneInstallsAndProfileIsEmpty):
+                break
+            default:
+                XCTFail("WAID catalog is available even though its exchange is slow")
+            }
+            XCTAssertEqual(app.getInstallationCatalog()?.map { $0.metadata.id }, ["slow"])
+            XCTAssertNil(app.getUserInstall("slow"))
+            completed.fulfill()
+        }
+        wait(for: [waiting, completed], timeout: 18)
+        try XCTUnwrap(held).fail(URLError(.timedOut))
+    }
+
+    private func normalizedPath(_ stub: AuthURLProtocol) -> String? {
+        stub.request.url?.path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+    }
+
     func testBackgroundInstallationRequestCannotUseNewGenerationWithOldCredential() {
         seed()
         let app = WebasystApp()

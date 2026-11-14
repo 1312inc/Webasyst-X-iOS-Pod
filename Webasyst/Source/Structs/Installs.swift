@@ -36,6 +36,19 @@ public struct UserInstallCodable: Decodable {
     }
 }
 
+/// An installation listed by Webasyst ID, independently of its locally saved credentials.
+public struct WebasystInstallationCatalogEntry {
+    public let metadata: UserInstallCodable
+    public let isCheckingAccess: Bool
+    public let logoText: String?
+    public let logoTextColor: String?
+}
+
+public extension Notification.Name {
+    /// The WAID catalog or an installation's connection state changed. Delivered on the main queue.
+    static let webasystInstallationsDidChange = Notification.Name("Webasyst_installations_did_change")
+}
+
 /// Structure of the settings list
 public struct UserInstall: Decodable, Equatable {
     public var name: String?

@@ -7,12 +7,18 @@ final class AuthURLProtocol: URLProtocol {
     static var requests: [URLRequest] = []
     private let lock = NSLock()
     private var stopped = false
+    private var stoppedLoading: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return stopped
+    }
 
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override func startLoading() {
         DispatchQueue.main.async {
+            guard !self.stoppedLoading else { return }
             Self.requests.append(self.request)
             guard let handler = Self.handler else {
                 XCTFail("Unexpected network request; live network is disabled")
@@ -26,8 +32,7 @@ final class AuthURLProtocol: URLProtocol {
     override func stopLoading() { lock.lock(); stopped = true; lock.unlock() }
 
     func reply(status: Int = 200, body: Data = Data()) {
-        lock.lock(); let cancelled = stopped; lock.unlock()
-        guard !cancelled else { return }
+        guard !stoppedLoading else { return }
         let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: "HTTP/1.1",
                                        headerFields: ["Content-Type": "application/json"])!
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)

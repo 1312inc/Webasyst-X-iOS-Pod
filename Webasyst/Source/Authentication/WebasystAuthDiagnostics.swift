@@ -7,7 +7,7 @@ public extension Notification.Name {
 }
 
 enum WebasystAuthFailureKind: String {
-    case configuration, missingCredentials, transport, server, decoding, keychain, rejected, superseded
+    case configuration, missingCredentials, transport, server, decoding, keychain, storage, rejected, superseded
 }
 
 struct WebasystAuthFailure: Error {
@@ -25,6 +25,7 @@ struct WebasystAuthFailure: Error {
         case .transport: key = "connectionAlertMessage"
         case .decoding: key = "unableToDecodeResponsedData"
         case .keychain: key = "error.keychainSave"
+        case .storage: key = "error.token"
         case .superseded: key = "error.token"
         case .server: key = "unownedErrorWithStatusCode"
         }
