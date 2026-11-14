@@ -642,9 +642,9 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         var request = URLRequest(url: url, timeoutInterval: timeout)
         request.httpMethod = "POST"
         do {
-            try request.setMultipartFormData(["code": code,
+            try request.setURLEncodedFormData(["code": code,
                 "scope": config.scope.replacingOccurrences(of: ".", with: ","),
-                "client_id": config.bundleId], encoding: .utf8)
+                "client_id": config.bundleId])
         } catch {
             completion(.failure(WebasystAuthFailure.make(.configuration, generation: generation).error))
             return

@@ -8,6 +8,21 @@
 import Foundation
 
 extension URLRequest {
+    mutating func setURLEncodedFormData(_ parameters: Parameters) throws {
+        let allowedCharacters = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789*-._")
+        func encode(_ value: String) throws -> String {
+            guard let encoded = value.addingPercentEncoding(withAllowedCharacters: allowedCharacters) else {
+                throw FormURLEncodingError.invalidString
+            }
+            return encoded.replacingOccurrences(of: "%20", with: "+")
+        }
+
+        let fields = try parameters.sorted { $0.key < $1.key }.map { key, value in
+            try "\(encode(key))=\(encode(value))"
+        }
+        httpBody = Data(fields.joined(separator: "&").utf8)
+        setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+    }
     
     /// Encoding query parameters into Form Data format
     /// - Parameters:
@@ -64,4 +79,8 @@ enum MultipartFormDataEncodingError: Error {
     case characterSetName
     case name(String)
     case value(String, name: String)
+}
+
+private enum FormURLEncodingError: Error {
+    case invalidString
 }
