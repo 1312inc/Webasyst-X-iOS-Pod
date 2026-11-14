@@ -99,6 +99,8 @@ final class WebasystAuthRegressionTests: AuthTestCase {
                 XCTAssertTrue(stub.request.value(forHTTPHeaderField: "Authorization")?.hasPrefix("Bearer ") == true)
                 stub.reply(body: Data(#"{"target":"fresh-code"}"#.utf8))
             case ("target.example.invalid", "api.php/token-headless"):
+                XCTAssertEqual(stub.request.httpMethod, "POST")
+                XCTAssertEqual(stub.request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
                 exchange = stub
                 tokenRequest.fulfill()
             case ("target.example.invalid", "api.php/webasyst.getInfo"):
@@ -691,6 +693,21 @@ final class WebasystAuthRegressionTests: AuthTestCase {
             done.fulfill()
         }
         wait(for: [done], timeout: 5)
+    }
+
+    func testURLEncodedFormEscapesCodeAndScopeInRequestBody() throws {
+        var request = URLRequest(url: URL(string: "https://installation.example.invalid/wa/api.php/token-headless")!)
+        request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+        try request.setURLEncodedFormData([
+            "code": "a+b/c=d&e %т",
+            "scope": "shop,webasyst",
+            "client_id": "com.webasyst.shopscript"
+        ])
+
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/x-www-form-urlencoded")
+        XCTAssertEqual(request.httpBody.map { String(decoding: $0, as: UTF8.self) },
+            "client_id=com.webasyst.shopscript&code=a%2Bb%2Fc%3Dd%26e+%25%D1%82&scope=shop%2Cwebasyst")
+        XCTAssertNil(request.url?.query)
     }
 
     func testMultipartReplacesExistingContentType() throws {
