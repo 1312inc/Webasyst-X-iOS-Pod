@@ -44,6 +44,13 @@ final class WebasystInstallationState {
 }
 
 final class WebasystUserNetworking: WebasystNetworkingManager {
+    private static let installationGradients: NSCache<NSArray, NSData> = {
+        let cache = NSCache<NSArray, NSData>()
+        cache.totalCostLimit = 2 * 1024 * 1024
+        cache.countLimit = 32
+        return cache
+    }()
+
     
     private let profileInstallService = WebasystDataModel()
     private let webasystNetworkingService = WebasystNetworking()
@@ -687,15 +694,15 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
         guard let catalog = state.catalog else { return }
         let key = UserDefaultsKeys.selectDomainUser.rawValue
         let active = UserDefaults.standard.string(forKey: key)
-        let cached = profileInstallService?.getInstallList() ?? []
-        let ready = Dictionary(cached.filter { $0.accessToken?.isEmpty == false }.map { ($0.id, $0.url) },
-                               uniquingKeysWith: { first, _ in first })
         if let active, !active.isEmpty {
             // Keep the previous choice even if it is absent, so the app can ask for a new one.
             state.needsExplicitSelection = false
             return
         }
         if state.needsExplicitSelection { return }
+        let cached = profileInstallService?.getInstallList() ?? []
+        let ready = Dictionary(cached.filter { $0.accessToken?.isEmpty == false }.map { ($0.id, $0.url) },
+                               uniquingKeysWith: { first, _ in first })
         let next = catalog.first { ready[$0.id] == $0.url }?.id
         if active != next { UserDefaults.standard.set(next, forKey: key) }
     }
@@ -1197,18 +1204,19 @@ private
 extension WebasystUserNetworking {
     
     func createDefaultGradient() -> Data? {
-        let gradientImage = UIImage.init(gradientColors: [self.hexStringToUIColor(hex: "#FF0078"),
-                                                          self.hexStringToUIColor(hex: "#FF5900")],
-                                         size: CGSize(width: 200, height: 200))
-        let imageData = gradientImage?.pngData()
-        return imageData
+        return createGradient(from: "#FF0078", to: "#FF5900")
     }
     
     func createGradient(from: String, to: String) -> Data? {
+        let key = [from, to] as NSArray
+        if let cached = Self.installationGradients.object(forKey: key) {
+            return cached as Data
+        }
         let gradientImage = UIImage.init(gradientColors: [self.hexStringToUIColor(hex: from),
                                                           self.hexStringToUIColor(hex: to)],
                                          size: CGSize(width: 200, height: 200))
-        let imageData = gradientImage?.pngData()
+        guard let imageData = gradientImage?.pngData() else { return nil }
+        Self.installationGradients.setObject(imageData as NSData, forKey: key, cost: imageData.count)
         return imageData
     }
     
