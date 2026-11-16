@@ -180,7 +180,9 @@ final class WebasystAuthRegressionTests: AuthTestCase {
         app.userNetworking.getInstallList { _ in loaded.fulfill() }
         wait(for: [loaded], timeout: 5)
 
-        let entries = try XCTUnwrap(app.getInstallationCatalog())
+        let snapshot = app.getInstallationCatalogSnapshot()
+        XCTAssertTrue(snapshot.availableInstallations.isEmpty)
+        let entries = try XCTUnwrap(snapshot.catalog)
         let retained = try XCTUnwrap(entries.first { $0.metadata.id == "retained" })
         XCTAssertEqual(retained.metadata.name, "Store retained")
         XCTAssertEqual(retained.metadata.image, image)
@@ -193,6 +195,28 @@ final class WebasystAuthRegressionTests: AuthTestCase {
         XCTAssertNil(moved.metadata.name)
         XCTAssertNil(moved.metadata.image)
         XCTAssertNil(moved.logoText)
+    }
+
+    func testCatalogSnapshotDistinguishesAnUnloadedAndAnEmptyCatalog() {
+        seed()
+        let app = WebasystApp()
+        WebasystAuthSession.onMain {
+            let state = WebasystAuthSession.shared.installations
+            for (id, token) in [("ready", "fixture-token"), ("denied", ""), ("removed", "fixture-token")] {
+                let installation = UserInstall(name: id, domain: "shop.example.invalid", id: id,
+                    accessToken: token, url: "https://shop.example.invalid/\(id)", logoText: "", logoTextColor: "")
+                XCTAssertTrue(app.profileInstallService?.saveInstall(installation) == true)
+            }
+            state.excludedInstallations.insert("removed")
+            let cached = app.getInstallationCatalogSnapshot()
+            XCTAssertEqual(cached.availableInstallations.map(\.id), ["ready"])
+            XCTAssertNil(cached.catalog)
+
+            state.catalog = []
+            let loaded = app.getInstallationCatalogSnapshot()
+            XCTAssertEqual(loaded.availableInstallations, cached.availableInstallations)
+            XCTAssertEqual(loaded.catalog?.count, 0)
+        }
     }
 
     func testRemovedInstallationCannotBeRestoredByInFlightRetry() throws {

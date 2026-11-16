@@ -156,9 +156,8 @@ public class WebasystApp {
     public func getAllUserInstall() -> [UserInstall]? {
         WebasystAuthSession.onMain {
             let excluded = WebasystAuthSession.shared.installations.excludedInstallations
-            return profileInstallService?.getInstallList()?.filter {
-                !excluded.contains($0.id) && $0.accessToken?.isEmpty == false
-            }
+            guard let savedInstalls = profileInstallService?.getInstallList() else { return nil }
+            return availableInstallations(from: savedInstalls, excluding: excluded)
         }
     }
 
@@ -169,22 +168,43 @@ public class WebasystApp {
             let state = WebasystAuthSession.shared.installations
             guard let catalog = state.catalog else { return nil }
             let savedInstalls = profileInstallService?.getInstallList() ?? []
-            let savedByID = Dictionary(savedInstalls.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-            return catalog.map { entry in
-                var metadata = entry
-                let previous = savedByID[entry.id]
-                let saved = previous?.url == entry.url ? previous : nil
-                if let name = saved?.name, !name.isEmpty, name != metadata.domain {
-                    metadata.name = name
-                }
-                metadata.image = saved?.image ?? metadata.image
-                let hasTextLogo = saved?.imageLogo == false && saved?.image != nil
-                return WebasystInstallationCatalogEntry(
-                    metadata: metadata, isCheckingAccess: state.exchanges[entry.id] != nil,
-                    logoText: hasTextLogo ? saved?.logoText : nil,
-                    logoTextColor: hasTextLogo ? saved?.logoTextColor : nil
-                )
+            return installationCatalogEntries(catalog, savedInstalls: savedInstalls, state: state)
+        }
+    }
+
+    /// Reads cached access and catalog metadata from the same local installation list.
+    /// The catalog is nil until Webasyst ID has returned its first successful list in this session.
+    public func getInstallationCatalogSnapshot() -> (availableInstallations: [UserInstall], catalog: [WebasystInstallationCatalogEntry]?) {
+        WebasystAuthSession.onMain {
+            let state = WebasystAuthSession.shared.installations
+            let savedInstalls = profileInstallService?.getInstallList() ?? []
+            let available = availableInstallations(from: savedInstalls, excluding: state.excludedInstallations)
+            let catalog = state.catalog.map { installationCatalogEntries($0, savedInstalls: savedInstalls, state: state) }
+            return (available, catalog)
+        }
+    }
+
+    private func availableInstallations(from savedInstalls: [UserInstall], excluding excluded: Set<String>) -> [UserInstall] {
+        savedInstalls.filter { !excluded.contains($0.id) && $0.accessToken?.isEmpty == false }
+    }
+
+    private func installationCatalogEntries(_ catalog: [UserInstallCodable], savedInstalls: [UserInstall],
+                                            state: WebasystInstallationState) -> [WebasystInstallationCatalogEntry] {
+        let savedByID = Dictionary(savedInstalls.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return catalog.map { entry in
+            var metadata = entry
+            let previous = savedByID[entry.id]
+            let saved = previous?.url == entry.url ? previous : nil
+            if let name = saved?.name, !name.isEmpty, name != metadata.domain {
+                metadata.name = name
             }
+            metadata.image = saved?.image ?? metadata.image
+            let hasTextLogo = saved?.imageLogo == false && saved?.image != nil
+            return WebasystInstallationCatalogEntry(
+                metadata: metadata, isCheckingAccess: state.exchanges[entry.id] != nil,
+                logoText: hasTextLogo ? saved?.logoText : nil,
+                logoTextColor: hasTextLogo ? saved?.logoTextColor : nil
+            )
         }
     }
 
