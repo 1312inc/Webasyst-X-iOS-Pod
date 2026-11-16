@@ -94,6 +94,7 @@ final class QueueTestApp: UIResponder, UIApplicationDelegate {
         checks.check(!Thread.isMainThread, "background control")
         checks.check(model.getInstallList()?.contains(where: { $0.id == "legacy" }) == true, "background list")
         checks.check(model.getInstall(with: "missing") == nil, "missing install")
+        checkSettingsArchive(model)
         let original = install("crud")
         model.saveInstall(original)
         checks.check(model.getInstall(with: "crud") == original, "install fields round trip")
@@ -106,6 +107,16 @@ final class QueueTestApp: UIResponder, UIApplicationDelegate {
         model.saveInstall(original)
         checks.check(model.getInstall(with: "crud") == original, "install recreation after batch delete")
         model.deleteInstall(clientId: "crud")
+
+        let decomposedID = "fixture-e\u{0301}"
+        let composedID = "fixture-é"
+        model.saveInstall(install(decomposedID, name: "Decomposed"))
+        checks.check(model.getInstall(with: composedID)?.name == "Decomposed", "legacy Unicode install lookup")
+        checks.check(model.saveInstall(install(composedID, name: "Composed")), "legacy Unicode ID save succeeds")
+        checks.check(model.getInstall(with: composedID)?.name == "Composed", "legacy Unicode ID changes stored fields")
+        checks.check(model.getInstallList()?.filter { $0.id == composedID }.count == 1, "legacy Unicode ID is updated in place")
+        model.deleteInstall(clientId: composedID)
+        model.deleteInstall(clientId: decomposedID)
 
         model.saveProfileData(profile("Updated profile"), avatar: Data([6, 7]))
         checks.check(model.getProfile()?.name == "Updated profile", "background profile update")
@@ -184,6 +195,38 @@ final class QueueTestApp: UIResponder, UIApplicationDelegate {
                 checks.check(model.getInstallList()?.isEmpty == true, "reset list")
                 checks.finish()
             }
+        }
+    }
+
+    private func checkSettingsArchive(_ model: WebasystDataModel) {
+        let url = WebasystApp.url()
+        let record = SettingsListModel(countSelected: 7, isLast: true, name: "Legacy", url: "https://fixture.invalid")
+        do {
+            let original = try NSKeyedArchiver.archivedData(
+                withRootObject: ["legacy": record], requiringSecureCoding: false
+            )
+            try original.write(to: url)
+            model.createNew()
+            model.createNew()
+            let unchanged = try Data(contentsOf: url)
+            checks.check(unchanged == original, "settings archive preserves existing selection")
+
+            let edited = try NSKeyedArchiver.archivedData(
+                withRootObject: ["legacy": record, "extra": record], requiringSecureCoding: false
+            )
+            try edited.write(to: url)
+            model.createNew()
+            let regenerated = try Data(contentsOf: url)
+            let archive = try NSKeyedUnarchiver.unarchivedObject(
+                ofClasses: [NSDictionary.self, SettingsListModel.self], from: regenerated
+            ) as? [String: SettingsListModel]
+            checks.check(archive?.keys.sorted() == ["legacy"], "external archive edits invalidate the cached count")
+
+            try FileManager.default.removeItem(at: url)
+            model.createNew()
+            checks.check(FileManager.default.fileExists(atPath: url.path), "missing settings archive is recreated")
+        } catch {
+            checks.check(false, "settings archive round trip")
         }
     }
 }

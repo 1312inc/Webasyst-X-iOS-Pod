@@ -62,6 +62,7 @@ class WebasystDataModel {
     }()
     
     private var managedObjectContext: NSManagedObjectContext?
+    private var settingsArchive: (data: Data, count: Int)?
     
     public init?() {
         managedObjectContext = persistentContainer?.viewContext
@@ -92,42 +93,22 @@ extension WebasystDataModel {
     func saveInstall(_ userInstall: UserInstall) -> Bool {
         enqueue { [weak self] context in
             guard let self = self else { return false }
-            
-            let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-            
+
             do {
-                guard let result = try context.fetch(request) as? [InstallList] else {
-                    print(NSError(domain: "Webasyst error: InstallList request error", code: 501, userInfo: nil))
-                    return false
-                }
-                if !result.contains(where: { $0.clientId ?? "" == userInstall.id }) {
-                    let install = NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList
-                    install.name = userInstall.name
-                    install.clientId = userInstall.id
-                    install.domain = userInstall.domain
-                    install.url = userInstall.url
-                    install.accessToken = userInstall.accessToken
-                    install.image = userInstall.image
-                    install.imageLogo = userInstall.imageLogo ?? false
-                    install.logoText = userInstall.logoText
-                    install.logoColorText = userInstall.logoTextColor
-                    install.cloudPlanId = userInstall.cloudPlanId
-                    install.cloudExpireDate = userInstall.cloudExpireDate
-                    install.cloudTrial = userInstall.cloudTrial ?? false
-                } else if let index = result.firstIndex(where: { $0.clientId ?? "" == userInstall.id }) {
-                    result[index].name = userInstall.name
-                    result[index].clientId = userInstall.id
-                    result[index].domain = userInstall.domain
-                    result[index].url = userInstall.url
-                    result[index].accessToken = userInstall.accessToken
-                    result[index].image = userInstall.image
-                    result[index].imageLogo = userInstall.imageLogo ?? false
-                    result[index].logoText = userInstall.logoText
-                    result[index].logoColorText = userInstall.logoTextColor
-                    result[index].cloudPlanId = userInstall.cloudPlanId
-                    result[index].cloudExpireDate = userInstall.cloudExpireDate
-                    result[index].cloudTrial = userInstall.cloudTrial ?? false
-                }
+                let install = try findInstallation(userInstall.id, in: context)
+                    ?? (NSEntityDescription.insertNewObject(forEntityName: installEntityName, into: context) as! InstallList)
+                install.name = userInstall.name
+                install.clientId = userInstall.id
+                install.domain = userInstall.domain
+                install.url = userInstall.url
+                install.accessToken = userInstall.accessToken
+                install.image = userInstall.image
+                install.imageLogo = userInstall.imageLogo ?? false
+                install.logoText = userInstall.logoText
+                install.logoColorText = userInstall.logoTextColor
+                install.cloudPlanId = userInstall.cloudPlanId
+                install.cloudExpireDate = userInstall.cloudExpireDate
+                install.cloudTrial = userInstall.cloudTrial ?? false
                 return true
             } catch {
                 print(NSError(domain: "Webasyst Database error(method: saveInstall): \(error.localizedDescription)", code: 502, userInfo: nil))
@@ -144,11 +125,8 @@ extension WebasystDataModel {
         var userInstall: UserInstall?
         
         context.performAndWait {
-            let request = NSFetchRequest<NSFetchRequestResult>(entityName: installEntityName)
-
             do {
-                guard let result = try context.fetch(request) as? [InstallList] else { return }
-                if let install = result.first(where: { $0.clientId ?? "" == clientId }) {
+                if let install = try findInstallation(clientId, in: context) {
                     userInstall = UserInstall(name: install.name ?? "", domain: install.domain ?? "", id: install.clientId ?? "", accessToken: install.accessToken ?? "", url: install.url ?? "", image: install.image, imageLogo: install.imageLogo, logoText: install.logoText ?? "", logoTextColor: install.logoColorText ?? "", cloudPlanId: install.cloudPlanId, cloudExpireDate: install.cloudExpireDate, cloudTrial: install.cloudTrial)
                 }
             } catch let error {
@@ -223,6 +201,20 @@ extension WebasystDataModel {
 //MARK: Private method
 private
 extension WebasystDataModel {
+    func findInstallation(_ id: String, in context: NSManagedObjectContext) throws -> InstallList? {
+        let request = NSFetchRequest<InstallList>(entityName: installEntityName)
+        request.predicate = id.isEmpty
+            ? NSPredicate(format: "clientId == nil OR clientId == %@", id)
+            : NSPredicate(format: "clientId == %@", id)
+        request.fetchLimit = 1
+        if let match = try context.fetch(request).first { return match }
+        guard !id.isEmpty else { return nil }
+
+        // Preserve Swift string equality for legacy IDs stored in a different Unicode form.
+        request.predicate = nil
+        request.fetchLimit = 0
+        return try context.fetch(request).first { $0.clientId == id }
+    }
     
     /// Adding block to queue to saving the database context.
     func enqueue(block: @escaping (_ context: NSManagedObjectContext) -> Void) {
@@ -264,14 +256,27 @@ extension WebasystDataModel {
     
     /// Saving installs data
     func createNew() {
-        let url = WebasystApp.url()
-        guard let installs = getInstallList() else { return }
-        guard let object = try? Data(contentsOf: url) else { return
+        guard let context = managedObjectContext else { return }
+        context.performAndWait {
+            let url = WebasystApp.url()
+            if let data = try? Data(contentsOf: url) {
+                guard let archivedCount = settingsCount(for: data) else { return }
+                let request = NSFetchRequest<InstallList>(entityName: installEntityName)
+                guard let count = try? context.count(for: request), count != archivedCount else { return }
+            }
+            guard let installs = getInstallList() else { return }
             creator(_installs: installs, url: url)
         }
-        if let archivedInstalls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSDictionary.self, SettingsListModel.self], from: object) as? Dictionary<String,SettingsListModel>, archivedInstalls.count != installs.count {
-            creator(_installs: installs, url: url)
-        }
+    }
+
+    // Older clients can still write Documents/settings. Reuse the count only for identical file contents.
+    private func settingsCount(for data: Data) -> Int? {
+        if let settingsArchive, settingsArchive.data == data { return settingsArchive.count }
+        guard let decoded = try? NSKeyedUnarchiver.unarchivedObject(
+            ofClasses: [NSDictionary.self, SettingsListModel.self], from: data
+        ) as? [String: SettingsListModel] else { return nil }
+        settingsArchive = (data, decoded.count)
+        return decoded.count
     }
     
     /// Saving profile data

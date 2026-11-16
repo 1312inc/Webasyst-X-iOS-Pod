@@ -726,11 +726,13 @@ final class WebasystUserNetworking: WebasystNetworkingManager {
                   catalog == nil || catalog?.catalog?.contains(where: { $0.id == install.id && $0.url == install.url }) == true,
                   var current = self.profileInstallService?.getInstall(with: install.id),
                   current.url == install.url, current.accessToken == install.accessToken else { return }
+            let previous = current
             current.name = info.name
             current.image = image
             current.imageLogo = imageLogo
             current.logoText = imageLogo ? "" : info.logo?.text.value ?? ""
             current.logoTextColor = imageLogo ? "" : info.logo?.text.color ?? ""
+            guard current != previous else { return }
             if self.profileInstallService?.saveInstall(current) == true { catalog?.notifyChanged() }
         }
         createDataTaskSession(URLRequest(url: url), generation: generation) { result in
